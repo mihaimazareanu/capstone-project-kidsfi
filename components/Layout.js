@@ -7,7 +7,7 @@ import "../public/logo.png";
 const Layout = ({children}) => {
   return (
     <>
-      <Navbar>
+      <Navbar role="navigation">
         <Logo src="/logo.png" alt="kidsFi logo" width={80} height={80} />
         <StyledList>
           <li>

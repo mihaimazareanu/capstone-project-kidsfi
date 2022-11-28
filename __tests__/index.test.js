@@ -6,9 +6,7 @@ describe("Home", () => {
   it("checks background color of the nav element", () => {
     render(<Navbar />);
 
-    const navbar = screen.getByRole("nav", {
-      style: {backgroundColor: "#5E8C49"},
-    });
+    const navbar = screen.getByRole("navigation");
 
     expect(navbar).toBeInTheDocument();
   });
