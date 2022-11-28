@@ -1,15 +1,13 @@
 import {render, screen} from "@testing-library/react";
-import Home from "../pages/index";
+import Navbar from "../components/Layout";
 import "@testing-library/jest-dom";
 
 describe("Home", () => {
-  it("renders an octopus", () => {
-    render(<Home />);
+  it("checks background color of the nav element", () => {
+    render(<Navbar />);
 
-    const heading = screen.getByRole("heading", {
-      name: /🐙/i,
-    });
+    const navbar = screen.getByRole("navigation");
 
-    expect(heading).toBeInTheDocument();
+    expect(navbar).toBeInTheDocument();
   });
 });
