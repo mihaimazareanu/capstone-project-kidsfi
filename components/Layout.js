@@ -77,7 +77,6 @@ const Navbar = styled.nav`
 const Logo = styled(Image)`
   width: 5rem;
   height: 5rem;
-  flex-grow: 1;
 `;
 
 const StyledList = styled.ul`
@@ -86,5 +85,5 @@ const StyledList = styled.ul`
   display: flex;
   align-items: center;
   gap: 3rem;
-  padding-right: 2rem;
+  padding-right: 1rem;
 `;
