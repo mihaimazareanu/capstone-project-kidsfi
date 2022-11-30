@@ -8,12 +8,14 @@ const Layout = ({children}) => {
   return (
     <>
       <Navbar role="navigation">
-        <Logo src="/logo.png" alt="kidsFi logo" width={80} height={80} />
+        <div>
+          <Logo src="/logo.png" alt="kidsFi logo" width={80} height={80} />
+        </div>
         <StyledList>
           <li>
-            <Link href="">
+            <Link href="/home">
               <svg
-                width="3.5rem"
+                width="4rem"
                 height="3.5rem"
                 viewBox="0 0 38 39"
                 fill="none"
@@ -30,7 +32,7 @@ const Layout = ({children}) => {
             </Link>
           </li>
           <li>
-            <Link href="">
+            <Link href="/accounts">
               <svg
                 width="4rem"
                 height="4rem"
@@ -51,7 +53,7 @@ const Layout = ({children}) => {
             </Link>
           </li>
           <li>
-            <Link href="">
+            <Link href="/profile">
               <svg
                 width="4rem"
                 height="4rem"
@@ -86,7 +88,7 @@ export const Navbar = styled.nav`
   left: 0;
   width: 100%;
   height: 5rem;
-  background: #688b51;
+  background-color: #688b51;
   display: flex;
   justify-content: flex-start;
   align-items: center;
