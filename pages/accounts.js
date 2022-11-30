@@ -7,17 +7,16 @@ export default function Accounts() {
       <Head>
         <title>kidsFi - Finance for kids</title>
       </Head>
-      <Body>
+      <StyledDiv>
         <p>Under Construction</p>
-      </Body>
+      </StyledDiv>
     </>
   );
 }
 
-const Body = styled.body`
+const StyledDiv = styled.div`
   margin-top: 5rem;
-  width: 100%;
-  min-height: 100vh;
+  padding: 1rem;
   background-color: #e9f2ef;
-  color: #401d1a;
+  min-height: 100vh;
 `;

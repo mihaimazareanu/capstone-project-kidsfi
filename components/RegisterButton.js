@@ -1,18 +1,14 @@
 import styled from "styled-components";
-// import {useState, useEffect} from "react";
 
-export default function RegisterButton({handleClickRegister}) {
-  const onClickRegister = () => {
-    handleClickRegister();
-  };
+export default function RegisterButton({onClickRegister}) {
   return (
     <RegButton onClick={onClickRegister}>
       <svg
         className="change-color"
         title="signin-icon"
-        width="53"
-        height="51"
-        viewBox="0 0 53 51"
+        width="50"
+        height="50"
+        viewBox="0 0 50 50"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         role="img"
@@ -30,11 +26,11 @@ const RegButton = styled.button`
   border: none;
   background-color: #e9f2ef;
 
-  :hover {
-    border-radius: 50%;
+  /* :hover {
+    border-radius: 10%;
     background-color: #5e8c49;
     stroke: #e9f2ef !important;
     stroke-width: 1px;
     fill: #e9f2ef !important;
-  }
+  } */
 `;

@@ -1,18 +1,15 @@
 import styled from "styled-components";
 import {useState} from "react";
 
-export default function RegisterForm({loginMode, setLoginMode}) {
-  const [showPassword, setShowPassword] = useState(false);
+export default function RegisterForm({
+  loginMode,
+  onClickParent,
+  onClickChild,
+  showPassword,
+  onShowPassword,
+}) {
   const [inputPassword, setInputPassword] = useState("");
   const [inputRepeatPassword, setInputRepeatPassword] = useState("");
-
-  const handleClickParent = () => {
-    setLoginMode("parent");
-  };
-
-  const handleClickChild = () => {
-    setLoginMode("child");
-  };
 
   const handleChangePassword = event => {
     setInputPassword(event.target.value);
@@ -34,14 +31,14 @@ export default function RegisterForm({loginMode, setLoginMode}) {
               name="register"
               value=""
               checked={loginMode === "parent" ? true : false}
-              onClick={handleClickParent}
+              onClick={onClickParent}
             />
             {` Parent login`}
           </label>
         </DivParentRadioButton>
         <DivChildRadioButton>
           <label>
-            <input type="radio" name="register" onClick={handleClickChild} />
+            <input type="radio" name="register" onClick={onClickChild} />
             {`    Child login`}
           </label>
         </DivChildRadioButton>
@@ -81,7 +78,7 @@ export default function RegisterForm({loginMode, setLoginMode}) {
                   placeholder="Choose a safe password..."
                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 />
-                <icon onClick={() => setShowPassword(!showPassword)}>
+                <icon onClick={onShowPassword}>
                   {showPassword ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +119,13 @@ export default function RegisterForm({loginMode, setLoginMode}) {
               />
             </label>
           </PasswordFieldset>
-          <CreateLoginButton>Create parent login</CreateLoginButton>
+          <CreateLoginButton
+            onClick={event => {
+              event.preventDefault();
+            }}
+          >
+            Create parent login
+          </CreateLoginButton>
         </>
       )}
       {loginMode === "child" && (
@@ -133,8 +136,20 @@ export default function RegisterForm({loginMode, setLoginMode}) {
             away.
           </p>
           <ButtonsDiv>
-            <SigninButton>Sign in</SigninButton>
-            <CreateLoginButton>Create parent login</CreateLoginButton>
+            <SigninButton
+              onClick={event => {
+                event.preventDefault();
+              }}
+            >
+              Sign in
+            </SigninButton>
+            <CreateLoginButton
+              onClick={event => {
+                event.preventDefault();
+              }}
+            >
+              Create parent login
+            </CreateLoginButton>
           </ButtonsDiv>
         </ChildLoginSection>
       )}
