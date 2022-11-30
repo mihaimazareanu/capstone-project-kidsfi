@@ -1,19 +1,17 @@
 import styled from "styled-components";
 import {useState} from "react";
 
-export default function RegisterForm({parent, setParent, child, setChild}) {
+export default function RegisterForm({loginMode, setLoginMode}) {
   const [showPassword, setShowPassword] = useState(false);
   const [inputPassword, setInputPassword] = useState("");
   const [inputRepeatPassword, setInputRepeatPassword] = useState("");
 
   const handleClickParent = () => {
-    setChild(false);
-    setParent(true);
+    setLoginMode("parent");
   };
 
   const handleClickChild = () => {
-    setChild(true);
-    setParent(false);
+    setLoginMode("child");
   };
 
   const handleChangePassword = event => {
@@ -35,7 +33,7 @@ export default function RegisterForm({parent, setParent, child, setChild}) {
               type="radio"
               name="register"
               value=""
-              checked="checked"
+              checked={loginMode === "parent" ? true : false}
               onClick={handleClickParent}
             />
             {` Parent login`}
@@ -48,7 +46,7 @@ export default function RegisterForm({parent, setParent, child, setChild}) {
           </label>
         </DivChildRadioButton>
       </LoginTypeFieldset>
-      {parent && (
+      {loginMode === "parent" && (
         <>
           <DetailsFieldset>
             <StyledDiv>
@@ -127,7 +125,7 @@ export default function RegisterForm({parent, setParent, child, setChild}) {
           <CreateLoginButton>Create parent login</CreateLoginButton>
         </>
       )}
-      {child && (
+      {loginMode === "child" && (
         <ChildLoginSection>
           <p style={{textAlign: "justify", textJustify: "inter-word"}}>
             To create a child login you must have a parent login. If you already
