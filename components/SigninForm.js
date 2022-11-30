@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default function SigninForm({showPassword, setShowPassword}) {
+export default function SigninForm({showPassword, onShowPassword}) {
   return (
     <RegForm>
       <DetailsFieldset>
@@ -35,7 +35,7 @@ export default function SigninForm({showPassword, setShowPassword}) {
               placeholder="Type your password..."
               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
             />
-            <icon onClick={() => setShowPassword(!showPassword)}>
+            <icon onClick={onShowPassword}>
               {showPassword ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
