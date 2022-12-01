@@ -3,12 +3,14 @@ import Layout from "../components/Layout";
 
 function MyApp({Component, pageProps}) {
   return (
-    <main>
+    <>
       <GlobalStyles />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </main>
+      <main>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </main>
+    </>
   );
 }
 

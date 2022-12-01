@@ -36,7 +36,6 @@ export default function Home() {
       <Head>
         <title>kidsFi - Finance for kids</title>
       </Head>
-
       <MainSection>
         <Heading>kidsFi - Finance for kids</Heading>
         <StyledParagraph>
