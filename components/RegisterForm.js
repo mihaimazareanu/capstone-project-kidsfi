@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useState} from "react";
+// import {useState} from "react";
 
 export default function RegisterForm({
   loginMode,
@@ -8,16 +8,16 @@ export default function RegisterForm({
   showPassword,
   onShowPassword,
 }) {
-  const [inputPassword, setInputPassword] = useState("");
-  const [inputRepeatPassword, setInputRepeatPassword] = useState("");
+  // const [inputPassword, setInputPassword] = useState("");
+  // const [inputRepeatPassword, setInputRepeatPassword] = useState("");
 
-  const handleChangePassword = event => {
-    setInputPassword(event.target.value);
-  };
+  // const handleChangePassword = event => {
+  //   setInputPassword(event.target.value);
+  // };
 
-  const handleChangeRepeatPassword = event => {
-    setInputRepeatPassword(event.target.value);
-  };
+  // const handleChangeRepeatPassword = event => {
+  //   setInputRepeatPassword(event.target.value);
+  // };
 
   return (
     <RegForm>
@@ -70,7 +70,7 @@ export default function RegisterForm({
               Choose a password
               <ChoosePasswordDiv>
                 <InputChoosePassword
-                  onChange={handleChangePassword}
+                  // onChange={handleChangePassword}
                   type={showPassword ? "text" : "password"}
                   required
                   placeholder="Choose a safe password..."
@@ -113,7 +113,7 @@ export default function RegisterForm({
                 type="password"
                 placeholder="Repeat password..."
                 required
-                onChange={handleChangeRepeatPassword}
+                // onChange={handleChangeRepeatPassword}
               />
             </label>
           </PasswordFieldset>
