@@ -12,7 +12,6 @@ async function handler(req, res) {
         const octopodes = await Octopus.find({});
         res.status(200).json(octopodes);
       } catch (error) {
-        console.log(error);
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});
       }

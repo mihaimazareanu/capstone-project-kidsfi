@@ -13,12 +13,10 @@ export default function RegisterForm({
 
   const handleChangePassword = event => {
     setInputPassword(event.target.value);
-    console.log(inputPassword);
   };
 
   const handleChangeRepeatPassword = event => {
     setInputRepeatPassword(event.target.value);
-    console.log(inputRepeatPassword);
   };
 
   return (
