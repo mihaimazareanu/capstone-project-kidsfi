@@ -36,52 +36,42 @@ export default function Home() {
       <Head>
         <title>kidsFi - Finance for kids</title>
       </Head>
-      <MainSection>
-        <Heading>kidsFi - Finance for kids</Heading>
-        <StyledParagraph>
-          The app every child needs to have a visual overview of their money.
-        </StyledParagraph>
-        <FlexContainer>
-          <StyledDiv>
-            <p>
-              Don&apos;t take our word for it though, please register and try it
-              out now.
-            </p>
-            <RegisterButton onClickRegister={handleClickRegister} />
-          </StyledDiv>
-          <StyledDiv>
-            <p>Already have an account? Awesome! Go ahead and log in.</p>
-            <SigninButton onClickSignin={handleClickSignin} />
-          </StyledDiv>
-        </FlexContainer>
-        {accessMode === "register" && (
-          <RegisterForm
-            loginMode={loginMode}
-            onClickParent={handleClickParent}
-            onClickChild={handleClickChild}
-            showPassword={showPassword}
-            onShowPassword={handleShowPassword}
-          />
-        )}
-        {accessMode === "signin" && (
-          <SigninForm
-            showPassword={showPassword}
-            onShowPassword={handleShowPassword}
-          />
-        )}
-      </MainSection>
+
+      <Heading>kidsFi - Finance for kids</Heading>
+      <StyledParagraph>
+        The app every child needs to have a visual overview of their money.
+      </StyledParagraph>
+      <FlexContainer>
+        <StyledDiv>
+          <p>
+            Don&apos;t take our word for it though, please register and try it
+            out now.
+          </p>
+          <RegisterButton onClickRegister={handleClickRegister} />
+        </StyledDiv>
+        <StyledDiv>
+          <p>Already have an account? Awesome! Go ahead and log in.</p>
+          <SigninButton onClickSignin={handleClickSignin} />
+        </StyledDiv>
+      </FlexContainer>
+      {accessMode === "register" && (
+        <RegisterForm
+          loginMode={loginMode}
+          onClickParent={handleClickParent}
+          onClickChild={handleClickChild}
+          showPassword={showPassword}
+          onShowPassword={handleShowPassword}
+        />
+      )}
+      {accessMode === "signin" && (
+        <SigninForm
+          showPassword={showPassword}
+          onShowPassword={handleShowPassword}
+        />
+      )}
     </>
   );
 }
-
-const MainSection = styled.section`
-  margin-top: 5rem;
-  font-size: 1rem;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #e9f2ef;
-  color: #401d1a;
-`;
 
 const Heading = styled.h1`
   text-align: center;

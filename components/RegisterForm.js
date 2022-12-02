@@ -1,5 +1,5 @@
 import styled from "styled-components";
-// import {useState} from "react";
+import {useState} from "react";
 
 export default function RegisterForm({
   loginMode,
@@ -8,19 +8,113 @@ export default function RegisterForm({
   showPassword,
   onShowPassword,
 }) {
-  // const [inputPassword, setInputPassword] = useState("");
-  // const [inputRepeatPassword, setInputRepeatPassword] = useState("");
+  const [input, setInput] = useState({
+    firstName: "",
+    lastName: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  // const handleChangePassword = event => {
-  //   setInputPassword(event.target.value);
-  // };
+  const [error, setError] = useState({
+    firstName: "",
+    lastName: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  // const handleChangeRepeatPassword = event => {
-  //   setInputRepeatPassword(event.target.value);
-  // };
+  const onInputChange = event => {
+    const {name, value} = event.target;
+    setInput(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+    validateInput(event);
+  };
+
+  const validateInput = event => {
+    let {name, value} = event.target;
+    setError(prev => {
+      const stateObj = {...prev, [name]: ""};
+
+      switch (name) {
+        case "firstName":
+          if (!value) {
+            stateObj[name] = "Please enter your first name";
+          }
+          break;
+
+        case "lastName":
+          if (!value) {
+            stateObj[name] = "Please enter your last name";
+          }
+          break;
+
+        case "password":
+          if (!value) {
+            stateObj[name] = "Please enter Password.";
+          } else if (input.confirmPassword && value !== input.confirmPassword) {
+            stateObj["confirmPassword"] =
+              "Password and Confirm Password does not match";
+          } else {
+            stateObj["confirmPassword"] = input.confirmPassword
+              ? ""
+              : error.confirmPassword;
+          }
+          break;
+
+        case "confirmPassword":
+          if (!value) {
+            stateObj[name] = "Please enter Confirm Password.";
+          } else if (input.password && value !== input.password) {
+            stateObj[name] = "Password and Confirm Password does not match.";
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      return stateObj;
+    });
+  };
+
+  const handleSubmitRegisterForm = async event => {
+    event.preventDefault();
+    console.log(event.target);
+    try {
+      const data = Object.fromEntries(new FormData(event.target));
+      const body = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        isParent: true,
+        isChild: false,
+      };
+
+      const endpoint = "/api/users";
+
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      };
+
+      const response = await fetch(endpoint, options);
+      if (response.ok) {
+        alert(`A new user ${data.firstName} ${data.lastName} has been added`);
+        event.target.reset();
+      } else {
+        throw new Error(`Fetch failed with status: ${response.status}`);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
-    <RegForm>
+    <RegForm onSubmit={handleSubmitRegisterForm}>
       <LoginTypeFieldset>
         <DivParentRadioButton>
           <label>
@@ -44,38 +138,46 @@ export default function RegisterForm({
       {loginMode === "parent" && (
         <>
           <DetailsFieldset>
-            <StyledDiv>
-              <label>
-                First Name
-                <InputFirstName
-                  type="text"
-                  required
-                  placeholder="Type your first name..."
-                />
-              </label>
-            </StyledDiv>
-            <StyledDiv>
-              <label>
-                Last Name
-                <InputLastName
-                  type="text"
-                  required
-                  placeholder="Type your last name..."
-                />
-              </label>
-            </StyledDiv>
+            <label>
+              First Name
+              <InputFirstName
+                type="text"
+                placeholder="Type your first name..."
+                name="firstName"
+                value={input.firstName}
+                onChange={onInputChange}
+                onBlur={validateInput}
+              />
+            </label>
+            {error.firstName && <ErrorSpan>{error.firstName}</ErrorSpan>}
+            <label>
+              Last Name
+              <InputLastName
+                type="text"
+                placeholder="Type your last name..."
+                name="lastName"
+                value={input.lastName}
+                onChange={onInputChange}
+                onBlur={validateInput}
+              />
+            </label>
+            {error.lastName && <ErrorSpan>{error.lastName}</ErrorSpan>}
           </DetailsFieldset>
           <PasswordFieldset>
             <label>
               Choose a password
               <ChoosePasswordDiv>
                 <InputChoosePassword
-                  // onChange={handleChangePassword}
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                  value={input.password}
                   type={showPassword ? "text" : "password"}
+                  name="password"
                   required
                   placeholder="Choose a safe password..."
-                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 />
+
                 <icon onClick={onShowPassword}>
                   {showPassword ? (
                     <svg
@@ -106,22 +208,25 @@ export default function RegisterForm({
                   )}
                 </icon>
               </ChoosePasswordDiv>
+              {error.password && <ErrorSpan>{error.password}</ErrorSpan>}
             </label>
             <label>
-              Repeat password
-              <InputRepeatPassword
+              Confirm password
+              <InputConfirmPassword
+                name="confirmPassword"
+                value={input.confirmPassword}
                 type="password"
-                placeholder="Repeat password..."
+                placeholder="Confirm password..."
                 required
-                // onChange={handleChangeRepeatPassword}
+                onChange={onInputChange}
+                onBlur={validateInput}
               />
             </label>
+            {error.confirmPassword && (
+              <ErrorSpan>{error.confirmPassword}</ErrorSpan>
+            )}
           </PasswordFieldset>
-          <CreateLoginButton
-            onClick={event => {
-              event.preventDefault();
-            }}
-          >
+          <CreateLoginButton type="submit">
             Create parent login
           </CreateLoginButton>
         </>
@@ -187,8 +292,9 @@ const DivChildRadioButton = styled.div`
 const DetailsFieldset = styled.fieldset`
   display: flex;
   width: 100%;
-  align-items: center;
-  justify-content: flex-start;
+  flex-direction: column;
+  /* align-items: center;
+  justify-content: flex-start; */
   gap: 1rem;
   border: none;
 `;
@@ -196,6 +302,10 @@ const DetailsFieldset = styled.fieldset`
 const InputFirstName = styled.input`
   width: 100%;
   border: none;
+
+  :focused {
+    background-color: hotpink;
+  }
 `;
 
 const InputLastName = styled.input`
@@ -226,13 +336,9 @@ const InputChoosePassword = styled.input`
   align-self: baseline;
 `;
 
-const InputRepeatPassword = styled.input`
+const InputConfirmPassword = styled.input`
   width: 100%;
   border: none;
-`;
-
-const StyledDiv = styled.div`
-  width: 50%;
 `;
 
 const CreateLoginButton = styled.button`
@@ -281,4 +387,10 @@ const ButtonsDiv = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+`;
+
+const ErrorSpan = styled.span`
+  color: red;
+  font-size: 0.9rem;
+  width: 100%;
 `;
