@@ -25,6 +25,10 @@ const UserSchema = new mongoose.Schema({
   isChild: {
     type: Boolean,
   },
+
+  accounts: {
+    type: Object,
+  },
 });
 
 // This is important in serverless environments: Check if the model exists and otherwise create a new one.

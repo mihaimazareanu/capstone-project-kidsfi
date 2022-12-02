@@ -22,8 +22,8 @@ async function handler(req, res) {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           password: req.body.password,
-          isParent: req.body.parent,
-          isChild: req.body.child,
+          isParent: req.body.isParent,
+          isChild: req.body.isChild,
         });
         await newUser.save();
         res.status(200).json(newUser);
