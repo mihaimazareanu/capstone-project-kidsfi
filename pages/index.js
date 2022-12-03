@@ -10,6 +10,7 @@ export default function Home() {
   const [accessMode, setAccessMode] = useState("");
   const [loginMode, setLoginMode] = useState("parent");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
 
   const handleClickRegister = () => {
     setAccessMode("register");
@@ -29,6 +30,10 @@ export default function Home() {
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleShowConfirmedPassword = () => {
+    setShowConfirmedPassword(!showConfirmedPassword);
   };
 
   return (
@@ -61,6 +66,10 @@ export default function Home() {
           onClickChild={handleClickChild}
           showPassword={showPassword}
           onShowPassword={handleShowPassword}
+          showConfirmedPassword={showConfirmedPassword}
+          onShowConfirmedPassword={handleShowConfirmedPassword}
+          accessMode={accessMode}
+          onClickSignin={handleClickSignin}
         />
       )}
       {accessMode === "signin" && (
@@ -85,9 +94,9 @@ const StyledParagraph = styled.p`
 `;
 
 const FlexContainer = styled.div`
-  display: flex;
   width: 100%;
-  padding: 0 1rem 0;
+  display: flex;
+  padding: 0 0.2rem;
   gap: 1rem;
 `;
 
@@ -95,6 +104,7 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   width: 50%;
   font-size: 1.2rem;
 `;

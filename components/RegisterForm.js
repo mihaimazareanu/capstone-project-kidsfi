@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import {useState} from "react";
+import React, {useState} from "react";
+import ReactPasswordChecklist from "react-password-checklist";
 
 export default function RegisterForm({
   loginMode,
@@ -7,6 +8,10 @@ export default function RegisterForm({
   onClickChild,
   showPassword,
   onShowPassword,
+  showConfirmedPassword,
+  onShowConfirmedPassword,
+  accesMode,
+  onClickSignin,
 }) {
   const [input, setInput] = useState({
     firstName: "",
@@ -54,7 +59,7 @@ export default function RegisterForm({
             stateObj[name] = "Please enter Password.";
           } else if (input.confirmPassword && value !== input.confirmPassword) {
             stateObj["confirmPassword"] =
-              "Password and Confirm Password does not match";
+              "Password and Confirm password do not match";
           } else {
             stateObj["confirmPassword"] = input.confirmPassword
               ? ""
@@ -110,6 +115,7 @@ export default function RegisterForm({
             password: "",
             confirmPassword: "",
           });
+          onClickSignin();
         } else {
           throw new Error(`Fetch failed with status: ${response.status}`);
         }
@@ -151,6 +157,7 @@ export default function RegisterForm({
                 placeholder="Type your first name..."
                 name="firstName"
                 value={input.firstName}
+                required
                 onChange={onInputChange}
                 onBlur={validateInput}
               />
@@ -163,6 +170,7 @@ export default function RegisterForm({
                 placeholder="Type your last name..."
                 name="lastName"
                 value={input.lastName}
+                required
                 onChange={onInputChange}
                 onBlur={validateInput}
               />
@@ -181,10 +189,10 @@ export default function RegisterForm({
                   name="password"
                   required
                   placeholder="Choose a safe password..."
-                  // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 />
 
-                <icon onClick={onShowPassword}>
+                <i onClick={onShowPassword}>
                   {showPassword ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -212,25 +220,80 @@ export default function RegisterForm({
                       />
                     </svg>
                   )}
-                </icon>
+                </i>
               </ChoosePasswordDiv>
+              <PasswordErrorSpan>
+                <ReactPasswordChecklist
+                  rules={[
+                    "minLength",
+                    "specialChar",
+                    "number",
+                    "capital",
+                    "lowercase",
+                  ]}
+                  minLength={8}
+                  value={input.password}
+                  valueAgain={input.confirmPassword}
+                  messages={{
+                    minLength: "Password has more than 8 characters",
+                    specialChar: "Password has special characters",
+                    number: "Password has at least a number",
+                    capital: "Password has at least a capital letter",
+                    lowercase:
+                      "Password contains at least one lower case letter",
+                  }}
+                />
+              </PasswordErrorSpan>
               {error.password && <ErrorSpan>{error.password}</ErrorSpan>}
             </label>
+
             <label>
               Confirm password
-              <InputConfirmPassword
-                name="confirmPassword"
-                value={input.confirmPassword}
-                type="password"
-                placeholder="Confirm password..."
-                required
-                onChange={onInputChange}
-                onBlur={validateInput}
-              />
+              <ChoosePasswordDiv>
+                <InputConfirmPassword
+                  name="confirmPassword"
+                  value={input.confirmPassword}
+                  type={showConfirmedPassword ? "text" : "password"}
+                  placeholder="Confirm password..."
+                  required
+                  onChange={onInputChange}
+                  onBlur={validateInput}
+                />
+
+                <i onClick={onShowConfirmedPassword}>
+                  {showConfirmedPassword ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M2 5.27L3.28 4L20 20.72L18.73 22l-3.08-3.08c-1.15.38-2.37.58-3.65.58c-5 0-9.27-3.11-11-7.5c.69-1.76 1.79-3.31 3.19-4.54L2 5.27M12 9a3 3 0 0 1 3 3a3 3 0 0 1-.17 1L11 9.17A3 3 0 0 1 12 9m0-4.5c5 0 9.27 3.11 11 7.5a11.79 11.79 0 0 1-4 5.19l-1.42-1.43A9.862 9.862 0 0 0 20.82 12A9.821 9.821 0 0 0 12 6.5c-1.09 0-2.16.18-3.16.5L7.3 5.47c1.44-.62 3.03-.97 4.7-.97M3.18 12A9.821 9.821 0 0 0 12 17.5c.69 0 1.37-.07 2-.21L11.72 15A3.064 3.064 0 0 1 9 12.28L5.6 8.87c-.99.85-1.82 1.91-2.42 3.13Z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12 9a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0a9.821 9.821 0 0 0-17.64 0Z"
+                      />
+                    </svg>
+                  )}
+                </i>
+              </ChoosePasswordDiv>
+              {error.confirmPassword && (
+                <ErrorSpan>{error.confirmPassword}</ErrorSpan>
+              )}
             </label>
-            {error.confirmPassword && (
-              <ErrorSpan>{error.confirmPassword}</ErrorSpan>
-            )}
           </PasswordFieldset>
           <CreateLoginButton type="submit">
             Create parent login
@@ -269,7 +332,7 @@ export default function RegisterForm({
 const RegForm = styled.form`
   margin: 1rem auto;
   border: 2px solid #688b51;
-  width: 80%;
+  width: 95%;
   display: flex;
   flex-direction: column;
   justify-items: center;
@@ -299,8 +362,6 @@ const DetailsFieldset = styled.fieldset`
   display: flex;
   width: 100%;
   flex-direction: column;
-  /* align-items: center;
-  justify-content: flex-start; */
   gap: 1rem;
   border: none;
 `;
@@ -398,5 +459,10 @@ const ButtonsDiv = styled.div`
 const ErrorSpan = styled.span`
   color: red;
   font-size: 0.9rem;
+  width: 100%;
+`;
+
+const PasswordErrorSpan = styled.span`
+  font-size: 0.8rem;
   width: 100%;
 `;
