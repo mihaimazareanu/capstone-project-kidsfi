@@ -10,7 +10,6 @@ export default function RegisterForm({
   onShowPassword,
   showConfirmedPassword,
   onShowConfirmedPassword,
-  accesMode,
   onClickSignin,
 }) {
   const [input, setInput] = useState({

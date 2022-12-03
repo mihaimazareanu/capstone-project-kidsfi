@@ -68,7 +68,6 @@ export default function Home() {
           onShowPassword={handleShowPassword}
           showConfirmedPassword={showConfirmedPassword}
           onShowConfirmedPassword={handleShowConfirmedPassword}
-          accessMode={accessMode}
           onClickSignin={handleClickSignin}
         />
       )}
