@@ -100,13 +100,19 @@ export default function RegisterForm({
         },
         body: JSON.stringify(body),
       };
-
-      const response = await fetch(endpoint, options);
-      if (response.ok) {
-        alert(`A new user ${data.firstName} ${data.lastName} has been added`);
-        event.target.reset();
-      } else {
-        throw new Error(`Fetch failed with status: ${response.status}`);
+      if (input.password === input.confirmPassword) {
+        const response = await fetch(endpoint, options);
+        if (response.ok) {
+          alert(`A new user ${data.firstName} ${data.lastName} has been added`);
+          setInput({
+            firstName: "",
+            lastName: "",
+            password: "",
+            confirmPassword: "",
+          });
+        } else {
+          throw new Error(`Fetch failed with status: ${response.status}`);
+        }
       }
     } catch (error) {
       alert(error.message);
