@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, {useState} from "react";
+import {useState} from "react";
 import ReactPasswordChecklist from "react-password-checklist";
 
 export default function RegisterForm({
