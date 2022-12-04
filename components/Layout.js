@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Link from "next/link";
 // import Image from "next/legacy/image";
 import {useState} from "react";
+// import "jest-styled-components/native";
 
 import "../public/logo.png";
 

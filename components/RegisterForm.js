@@ -1,6 +1,12 @@
 import styled from "styled-components";
 import {useState} from "react";
-import ReactPasswordChecklist from "react-password-checklist";
+import dynamic from "next/dynamic";
+const ReactPasswordChecklist = dynamic(
+  () => import("react-password-checklist"),
+  {
+    ssr: false,
+  }
+);
 
 export default function RegisterForm({
   loginMode,
@@ -314,11 +320,7 @@ export default function RegisterForm({
             >
               Sign in
             </SigninButton>
-            <CreateLoginButton
-              onClick={event => {
-                event.preventDefault();
-              }}
-            >
+            <CreateLoginButton onClick={onClickParent}>
               Create parent login
             </CreateLoginButton>
           </ButtonsDiv>
