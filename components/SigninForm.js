@@ -9,7 +9,8 @@ export default function SigninForm({showPassword, onShowPassword}) {
     password: "",
   });
   const [shouldReload, setShouldReload] = useState(true);
-  const [signedin, setSignedin] = useState(false);
+  // const [signedin, setSignedin] = useState(false);
+  console.log(users);
 
   useEffect(() => {
     const getUsers = async () => {
