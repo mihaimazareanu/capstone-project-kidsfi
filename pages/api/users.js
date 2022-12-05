@@ -18,16 +18,16 @@ async function handler(req, res) {
       break;
     case "POST":
       try {
+        const body = req.body;
         const newUser = new User({
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          password: req.body.password,
-          isParent: req.body.isParent,
-          isChild: req.body.isChild,
+          firstName: body.firstName,
+          lastName: body.lastName,
+          password: body.password,
+          isParent: body.isParent,
+          isChild: body.isChild,
         });
         await newUser.save();
         res.status(200).json(newUser);
-        console.log(newUser);
       } catch (error) {
         res.status(500).json({error: error.message});
       }

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Link from "next/link";
-import Image from "next/legacy/image";
 import {useState} from "react";
 
 import "../public/logo.png";
@@ -15,14 +14,14 @@ const Layout = ({children}) => {
     <>
       <Navbar role="navigation">
         <div>
-          <Logo src="/logo.png" alt="kidsFi logo" width={80} height={80} />
+          <Logo src="/logo.png" alt="kidsFi logo" layout="fill" />
         </div>
         <StyledList>
           <li>
             <Link href="/" onClick={() => handleClickLink("home")}>
               {page === "home" ? (
                 <svg
-                  width="3.3rem"
+                  width="150%"
                   height="3.3rem"
                   viewBox="0 0 38 39"
                   fill="none"
@@ -40,7 +39,7 @@ const Layout = ({children}) => {
                 </svg>
               ) : (
                 <svg
-                  width="3.3rem"
+                  width="150%"
                   height="3.3rem"
                   viewBox="0 0 38 39"
                   fill="none"
@@ -64,7 +63,7 @@ const Layout = ({children}) => {
             <Link href="/accounts" onClick={() => handleClickLink("accounts")}>
               {page === "accounts" ? (
                 <svg
-                  width="4rem"
+                  width="150%"
                   height="4rem"
                   viewBox="0 0 48 48"
                   fill="none"
@@ -82,7 +81,7 @@ const Layout = ({children}) => {
                 </svg>
               ) : (
                 <svg
-                  width="4rem"
+                  width="150%"
                   height="4rem"
                   viewBox="0 0 48 48"
                   fill="none"
@@ -105,7 +104,7 @@ const Layout = ({children}) => {
             <Link href="/profile" onClick={() => handleClickLink("profile")}>
               {page === "profile" ? (
                 <svg
-                  width="4rem"
+                  width="150%"
                   height="4rem"
                   viewBox="0 0 48 48"
                   fill="none"
@@ -123,8 +122,8 @@ const Layout = ({children}) => {
                 </svg>
               ) : (
                 <svg
-                  width="4rem"
-                  height="4rem"
+                  width="150%"
+                  height="4em"
                   viewBox="0 0 48 48"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -155,25 +154,26 @@ export const Navbar = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   height: 5rem;
   background-color: #688b51;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 `;
 
-const Logo = styled(Image)`
+const Logo = styled.img`
   width: 5rem;
   height: 5rem;
 `;
 
 const StyledList = styled.ul`
+  width: calc(100vw-5rem);
   margin-left: auto;
   list-style: none;
   display: flex;
   align-items: center;
   gap: 3rem;
-  padding-right: 1rem;
+  padding: 0 2rem 0 3rem;
 `;

@@ -11,10 +11,16 @@ const GlobalStyles = createGlobalStyle`
 }
     html,
     body {
-        padding: 0;
+        padding: 0 0.3rem;
         margin: 0;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         font-family: "Mulish";
+        margin-top: 2.5rem;
+        font-size: 1rem;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #e9f2ef;
+        color: #401d1a;
     }
     * {
         box-sizing: border-box;
@@ -22,6 +28,14 @@ const GlobalStyles = createGlobalStyle`
 
     p {
         font-family: "Mulish-light";
+    }
+
+    .invalid {
+        align-items: flex-end;
+    }
+
+    .valid {
+        align-items: flex-end;
     }
 `;
 

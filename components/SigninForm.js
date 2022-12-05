@@ -35,7 +35,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
               placeholder="Type your password..."
               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
             />
-            <icon onClick={onShowPassword}>
+            <i onClick={onShowPassword}>
               {showPassword ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
                   />
                 </svg>
               )}
-            </icon>
+            </i>
           </PasswordDiv>
         </label>
         <SigninButton
@@ -80,7 +80,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
 const RegForm = styled.form`
   margin: 1rem auto;
   border: 2px solid #688b51;
-  width: 80%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   justify-items: center;
