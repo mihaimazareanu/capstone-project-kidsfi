@@ -29,6 +29,14 @@ const GlobalStyles = createGlobalStyle`
     p {
         font-family: "Mulish-light";
     }
+
+    .invalid {
+        align-items: flex-end;
+    }
+
+    .valid {
+        align-items: flex-end;
+    }
 `;
 
 export default GlobalStyles;

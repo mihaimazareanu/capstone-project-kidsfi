@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {useState} from "react";
 import dynamic from "next/dynamic";
+
 const ReactPasswordChecklist = dynamic(
   () => import("react-password-checklist"),
   {
@@ -244,9 +245,9 @@ export default function RegisterForm({
                     specialChar: "Password has special characters",
                     number: "Password has at least a number",
                     capital: "Password has at least a capital letter",
-                    lowercase:
-                      "Password contains at least one lower case letter",
+                    lowercase: "Password has at least one lower case letter",
                   }}
+                  iconSize={12}
                 />
               </PasswordErrorSpan>
               {error.password && <ErrorSpan>{error.password}</ErrorSpan>}
@@ -370,10 +371,6 @@ const DetailsFieldset = styled.fieldset`
 const InputFirstName = styled.input`
   width: 100%;
   border: none;
-
-  :focused {
-    background-color: hotpink;
-  }
 `;
 
 const InputLastName = styled.input`
@@ -466,4 +463,6 @@ const ErrorSpan = styled.span`
 const PasswordErrorSpan = styled.span`
   font-size: 0.8rem;
   width: 100%;
+  display: flex;
+  align-items: flex-end;
 `;
