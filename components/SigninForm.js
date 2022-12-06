@@ -8,9 +8,8 @@ export default function SigninForm({showPassword, onShowPassword}) {
     lastName: "",
     password: "",
   });
-  const [shouldReload, setShouldReload] = useState(true);
-  // const [signedin, setSignedin] = useState(false);
-  console.log(users);
+  // const [shouldReload, setShouldReload] = useState(true);
+  const [signedin, setSignedin] = useState(false);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -22,7 +21,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
         if (response.ok) {
           const data = await response.json();
           setUsers(data);
-          setShouldReload(false);
+          // setShouldReload(false);
         } else {
           throw new Error(`Fetch failed with Status: ${response.status}`);
         }
@@ -31,95 +30,109 @@ export default function SigninForm({showPassword, onShowPassword}) {
         alert(error.message);
       }
     };
-    shouldReload ? getUsers() : "";
-  }, [loginFilter, shouldReload]);
+    getUsers();
+    // shouldReload ? getUsers() : "";
+  }, [loginFilter]);
+
+  // console.log(users);
+
+  // const [userFirstName, setUserFirstName] = useState("");
 
   const handleSubmitSigninForm = event => {
     event.preventDefault();
+    users.map(user => {
+      user.firstName === loginFilter.firstName
+        ? setSignedin(true)
+        : alert(`User not found`);
+    });
   };
 
   return (
-    <RegForm onSubmit={handleSubmitSigninForm}>
-      <DetailsFieldset>
-        <StyledDiv>
-          <label>
-            First Name
-            <InputFirstName
-              type="text"
-              required
-              placeholder="Type your first name..."
-              onChange={event => {
-                const firstNameInput = event.target.value;
-                setLoginFilter({...loginFilter, firstName: firstNameInput});
-              }}
-            />
-          </label>
-        </StyledDiv>
-        <StyledDiv>
-          <label>
-            Last Name
-            <InputLastName
-              type="text"
-              required
-              placeholder="Type your last name..."
-              onChange={event => {
-                const lastNameInput = event.target.value;
-                setLoginFilter({...loginFilter, lastName: lastNameInput});
-              }}
-            />
-          </label>
-        </StyledDiv>
-      </DetailsFieldset>
-      <PasswordFieldset>
-        <label>
-          Password
-          <PasswordDiv>
-            <InputPassword
-              type={showPassword ? "text" : "password"}
-              required
-              placeholder="Type your password..."
-              onChange={event => {
-                const passwordInput = event.target.value;
-                setLoginFilter({...loginFilter, password: passwordInput});
-              }}
-            />
-            <i onClick={onShowPassword}>
-              {showPassword ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1em"
-                  height="1em"
-                  preserveAspectRatio="xMidYMid meet"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M2 5.27L3.28 4L20 20.72L18.73 22l-3.08-3.08c-1.15.38-2.37.58-3.65.58c-5 0-9.27-3.11-11-7.5c.69-1.76 1.79-3.31 3.19-4.54L2 5.27M12 9a3 3 0 0 1 3 3a3 3 0 0 1-.17 1L11 9.17A3 3 0 0 1 12 9m0-4.5c5 0 9.27 3.11 11 7.5a11.79 11.79 0 0 1-4 5.19l-1.42-1.43A9.862 9.862 0 0 0 20.82 12A9.821 9.821 0 0 0 12 6.5c-1.09 0-2.16.18-3.16.5L7.3 5.47c1.44-.62 3.03-.97 4.7-.97M3.18 12A9.821 9.821 0 0 0 12 17.5c.69 0 1.37-.07 2-.21L11.72 15A3.064 3.064 0 0 1 9 12.28L5.6 8.87c-.99.85-1.82 1.91-2.42 3.13Z"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1em"
-                  height="1em"
-                  preserveAspectRatio="xMidYMid meet"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M12 9a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0a9.821 9.821 0 0 0-17.64 0Z"
-                  />
-                </svg>
-              )}
-            </i>
-          </PasswordDiv>
-        </label>
-        <p>First Name: {loginFilter.firstName}</p>
-        <p>Last Name: {loginFilter.lastName}</p>
-        <p>Password: {loginFilter.password}</p>
-        <SigninButton>Sign in</SigninButton>
-      </PasswordFieldset>
-    </RegForm>
+    <>
+      {!signedin && (
+        <RegForm onSubmit={handleSubmitSigninForm}>
+          <DetailsFieldset>
+            <StyledDiv>
+              <label>
+                First Name
+                <InputFirstName
+                  type="text"
+                  required
+                  placeholder="Type your first name..."
+                  onChange={event => {
+                    const firstNameInput = event.target.value;
+                    setLoginFilter({...loginFilter, firstName: firstNameInput});
+                  }}
+                />
+              </label>
+            </StyledDiv>
+            <StyledDiv>
+              <label>
+                Last Name
+                <InputLastName
+                  type="text"
+                  required
+                  placeholder="Type your last name..."
+                  onChange={event => {
+                    const lastNameInput = event.target.value;
+                    setLoginFilter({...loginFilter, lastName: lastNameInput});
+                  }}
+                />
+              </label>
+            </StyledDiv>
+          </DetailsFieldset>
+          <PasswordFieldset>
+            <label>
+              Password
+              <PasswordDiv>
+                <InputPassword
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="Type your password..."
+                  onChange={event => {
+                    const passwordInput = event.target.value;
+                    setLoginFilter({...loginFilter, password: passwordInput});
+                  }}
+                />
+                <i onClick={onShowPassword}>
+                  {showPassword ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M2 5.27L3.28 4L20 20.72L18.73 22l-3.08-3.08c-1.15.38-2.37.58-3.65.58c-5 0-9.27-3.11-11-7.5c.69-1.76 1.79-3.31 3.19-4.54L2 5.27M12 9a3 3 0 0 1 3 3a3 3 0 0 1-.17 1L11 9.17A3 3 0 0 1 12 9m0-4.5c5 0 9.27 3.11 11 7.5a11.79 11.79 0 0 1-4 5.19l-1.42-1.43A9.862 9.862 0 0 0 20.82 12A9.821 9.821 0 0 0 12 6.5c-1.09 0-2.16.18-3.16.5L7.3 5.47c1.44-.62 3.03-.97 4.7-.97M3.18 12A9.821 9.821 0 0 0 12 17.5c.69 0 1.37-.07 2-.21L11.72 15A3.064 3.064 0 0 1 9 12.28L5.6 8.87c-.99.85-1.82 1.91-2.42 3.13Z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      preserveAspectRatio="xMidYMid meet"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M12 9a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0a9.821 9.821 0 0 0-17.64 0Z"
+                      />
+                    </svg>
+                  )}
+                </i>
+              </PasswordDiv>
+            </label>
+            {/* <p>loginFilter First Name: {loginFilter.firstName}</p>
+            <p>User's First Name: {userFirstName}</p> */}
+            <SigninButton>Sign in</SigninButton>
+          </PasswordFieldset>
+        </RegForm>
+      )}
+      {signedin && <p>You are signed in.</p>}
+    </>
   );
 }
 const RegForm = styled.form`
