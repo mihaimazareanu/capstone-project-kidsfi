@@ -314,13 +314,7 @@ export default function RegisterForm({
             away.
           </p>
           <ButtonsDiv>
-            <SigninButton
-              onClick={event => {
-                event.preventDefault();
-              }}
-            >
-              Sign in
-            </SigninButton>
+            <SigninButton onClick={onClickSignin}>Sign in</SigninButton>
             <CreateLoginButton onClick={onClickParent}>
               Create parent login
             </CreateLoginButton>

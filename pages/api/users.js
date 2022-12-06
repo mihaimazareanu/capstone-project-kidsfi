@@ -8,8 +8,8 @@ async function handler(req, res) {
         const filter = {};
         if (req.query.firstName) {
           filter.firstName = req.query.firstName;
-          filter.lastName = req.query.lastName;
-          filter.password = req.query.password;
+          // filter.lastName = req.query.lastName;
+          // filter.password = req.query.password;
         }
         const users = await User.find(filter);
         res.status(200).json(users);

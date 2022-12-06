@@ -11,6 +11,7 @@ export default function Home() {
   const [loginMode, setLoginMode] = useState("parent");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
+  const [signedin, setSignedin] = useState(false);
 
   const handleClickRegister = () => {
     setAccessMode("register");
@@ -36,46 +37,57 @@ export default function Home() {
     setShowConfirmedPassword(!showConfirmedPassword);
   };
 
+  const handleSignin = () => {
+    setSignedin(true);
+  };
+
   return (
     <>
       <Head>
         <title>kidsFi - Finance for kids</title>
       </Head>
-
-      <Heading>kidsFi - Finance for kids</Heading>
-      <StyledParagraph>
-        The app every child needs to have a visual overview of their money.
-      </StyledParagraph>
-      <FlexContainer>
-        <StyledDiv>
-          <p>
-            Don&apos;t take our word for it though, please register and try it
-            out now.
-          </p>
-          <RegisterButton onClickRegister={handleClickRegister} />
-        </StyledDiv>
-        <StyledDiv>
-          <p>Already have an account? Awesome! Go ahead and log in.</p>
-          <SigninButton onClickSignin={handleClickSignin} />
-        </StyledDiv>
-      </FlexContainer>
-      {accessMode === "register" && (
-        <RegisterForm
-          loginMode={loginMode}
-          onClickParent={handleClickParent}
-          onClickChild={handleClickChild}
-          showPassword={showPassword}
-          onShowPassword={handleShowPassword}
-          showConfirmedPassword={showConfirmedPassword}
-          onShowConfirmedPassword={handleShowConfirmedPassword}
-          onClickSignin={handleClickSignin}
-        />
-      )}
-      {accessMode === "signin" && (
-        <SigninForm
-          showPassword={showPassword}
-          onShowPassword={handleShowPassword}
-        />
+      {signedin === false ? (
+        <>
+          <Heading>kidsFi - Finance for kids</Heading>
+          <StyledParagraph>
+            The app every child needs to have a visual overview of their money.
+          </StyledParagraph>
+          <FlexContainer>
+            <StyledDiv>
+              <p>
+                Don&apos;t take our word for it though, please register and try
+                it out now.
+              </p>
+              <RegisterButton onClickRegister={handleClickRegister} />
+            </StyledDiv>
+            <StyledDiv>
+              <p>Already have an account? Awesome! Go ahead and log in.</p>
+              <SigninButton onClickSignin={handleClickSignin} />
+            </StyledDiv>
+          </FlexContainer>
+          {accessMode === "register" && (
+            <RegisterForm
+              loginMode={loginMode}
+              onClickParent={handleClickParent}
+              onClickChild={handleClickChild}
+              showPassword={showPassword}
+              onShowPassword={handleShowPassword}
+              showConfirmedPassword={showConfirmedPassword}
+              onShowConfirmedPassword={handleShowConfirmedPassword}
+              onClickSignin={handleClickSignin}
+            />
+          )}
+          {accessMode === "signin" && (
+            <SigninForm
+              showPassword={showPassword}
+              onShowPassword={handleShowPassword}
+              signedin={signedin}
+              onSignin={handleSignin}
+            />
+          )}
+        </>
+      ) : (
+        <p style={{textAlign: "center"}}>You are signed in.</p>
       )}
     </>
   );

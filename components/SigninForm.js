@@ -1,15 +1,18 @@
 import styled from "styled-components";
 import {useState, useEffect} from "react";
 
-export default function SigninForm({showPassword, onShowPassword}) {
+export default function SigninForm({
+  showPassword,
+  onShowPassword,
+  signedin,
+  onSignin,
+}) {
   const [users, setUsers] = useState([]);
   const [loginFilter, setLoginFilter] = useState({
     firstName: "",
     lastName: "",
     password: "",
   });
-  // const [shouldReload, setShouldReload] = useState(true);
-  const [signedin, setSignedin] = useState(false);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -21,7 +24,6 @@ export default function SigninForm({showPassword, onShowPassword}) {
         if (response.ok) {
           const data = await response.json();
           setUsers(data);
-          // setShouldReload(false);
         } else {
           throw new Error(`Fetch failed with Status: ${response.status}`);
         }
@@ -31,18 +33,16 @@ export default function SigninForm({showPassword, onShowPassword}) {
       }
     };
     getUsers();
-    // shouldReload ? getUsers() : "";
   }, [loginFilter]);
 
-  // console.log(users);
-
-  // const [userFirstName, setUserFirstName] = useState("");
+  console.log(users);
 
   const handleSubmitSigninForm = event => {
     event.preventDefault();
     users.map(user => {
+      console.log(user.firstName);
       user.firstName === loginFilter.firstName
-        ? setSignedin(true)
+        ? onSignin()
         : alert(`User not found`);
     });
   };
@@ -59,6 +59,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
                   type="text"
                   required
                   placeholder="Type your first name..."
+                  value={loginFilter.firstName}
                   onChange={event => {
                     const firstNameInput = event.target.value;
                     setLoginFilter({...loginFilter, firstName: firstNameInput});
@@ -73,6 +74,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
                   type="text"
                   required
                   placeholder="Type your last name..."
+                  value={loginFilter.lastName}
                   onChange={event => {
                     const lastNameInput = event.target.value;
                     setLoginFilter({...loginFilter, lastName: lastNameInput});
@@ -89,6 +91,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
                   type={showPassword ? "text" : "password"}
                   required
                   placeholder="Type your password..."
+                  value={loginFilter.password}
                   onChange={event => {
                     const passwordInput = event.target.value;
                     setLoginFilter({...loginFilter, password: passwordInput});
@@ -125,13 +128,11 @@ export default function SigninForm({showPassword, onShowPassword}) {
                 </i>
               </PasswordDiv>
             </label>
-            {/* <p>loginFilter First Name: {loginFilter.firstName}</p>
-            <p>User's First Name: {userFirstName}</p> */}
             <SigninButton>Sign in</SigninButton>
           </PasswordFieldset>
         </RegForm>
       )}
-      {signedin && <p>You are signed in.</p>}
+      {signedin && <p style={{textAlign: "center"}}>You are signed in.</p>}
     </>
   );
 }
