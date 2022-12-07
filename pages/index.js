@@ -2,7 +2,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import RegisterButton from "../components/RegisterButton";
 import RegisterForm from "../components/RegisterForm";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import SigninForm from "../components/SigninForm";
 import SigninButton from "../components/SigninButton";
 
@@ -11,7 +11,15 @@ export default function Home() {
   const [loginMode, setLoginMode] = useState("parent");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
-  const [signedin, setSignedin] = useState(false);
+  const [signedin, setSignedin] = useState(
+    useEffect(() => {
+      localStorage.getItem("signedinValue") ?? false;
+    })
+  );
+
+  useEffect(() => {
+    localStorage.setItem("signedinValue", signedin);
+  }, [signedin]);
 
   const handleClickRegister = () => {
     setAccessMode("register");
@@ -41,12 +49,14 @@ export default function Home() {
     setSignedin(true);
   };
 
+  console.log(signedin);
+
   return (
     <>
       <Head>
         <title>kidsFi - Finance for kids</title>
       </Head>
-      {signedin === false ? (
+      {!signedin ? (
         <>
           <Heading>kidsFi - Finance for kids</Heading>
           <StyledParagraph>
@@ -87,7 +97,10 @@ export default function Home() {
           )}
         </>
       ) : (
-        <p style={{textAlign: "center"}}>You are signed in.</p>
+        <>
+          <h1 style={{textAlign: "center"}}>Dashboard</h1>
+          <p style={{textAlign: "center"}}>Under construction</p>
+        </>
       )}
     </>
   );

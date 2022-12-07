@@ -13,6 +13,11 @@ export default function SigninForm({
     lastName: "",
     password: "",
   });
+  const [loginFailed, setLoginFailed] = useState(false);
+
+  const handleLogin = () => {
+    setLoginFailed(true);
+  };
 
   useEffect(() => {
     const getUsers = async () => {
@@ -35,22 +40,20 @@ export default function SigninForm({
     getUsers();
   }, [loginFilter]);
 
-  console.log(users);
-
   const handleSubmitSigninForm = event => {
     event.preventDefault();
-    users.map(user => {
-      console.log(user.firstName);
-      user.firstName === loginFilter.firstName
-        ? onSignin()
-        : alert(`User not found`);
-    });
+    console.log(users);
+    users.length === 0
+      ? handleLogin()
+      : users.map(user => {
+          user.firstName === loginFilter.firstName && onSignin();
+        });
   };
 
   return (
     <>
       {!signedin && (
-        <RegForm onSubmit={handleSubmitSigninForm}>
+        <SignForm onSubmit={handleSubmitSigninForm}>
           <DetailsFieldset>
             <StyledDiv>
               <label>
@@ -128,15 +131,15 @@ export default function SigninForm({
                 </i>
               </PasswordDiv>
             </label>
+            {loginFailed && <ErrorText>User not found</ErrorText>}
             <SigninButton>Sign in</SigninButton>
           </PasswordFieldset>
-        </RegForm>
+        </SignForm>
       )}
-      {signedin && <p style={{textAlign: "center"}}>You are signed in.</p>}
     </>
   );
 }
-const RegForm = styled.form`
+const SignForm = styled.form`
   margin: 1rem auto;
   border: 2px solid #688b51;
   width: 90%;
@@ -209,4 +212,11 @@ const SigninButton = styled.button`
     background-color: #224024;
     transform: scale(1.1);
   }
+`;
+
+const ErrorText = styled.p`
+  margin: -0.5rem 0;
+  color: red;
+  font-size: 0.9rem;
+  width: 100%;
 `;
