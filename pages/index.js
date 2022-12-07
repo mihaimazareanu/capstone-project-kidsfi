@@ -2,24 +2,17 @@ import Head from "next/head";
 import styled from "styled-components";
 import RegisterButton from "../components/RegisterButton";
 import RegisterForm from "../components/RegisterForm";
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import SigninForm from "../components/SigninForm";
 import SigninButton from "../components/SigninButton";
+import {useLocalStorage} from "../hooks/useLocalStorage";
 
 export default function Home() {
   const [accessMode, setAccessMode] = useState("");
   const [loginMode, setLoginMode] = useState("parent");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
-  const [signedin, setSignedin] = useState(
-    useEffect(() => {
-      localStorage.getItem("signedinValue") ?? false;
-    })
-  );
-
-  useEffect(() => {
-    localStorage.setItem("signedinValue", signedin);
-  }, [signedin]);
+  const [signedin, setSignedin] = useLocalStorage("signedin", false);
 
   const handleClickRegister = () => {
     setAccessMode("register");
