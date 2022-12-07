@@ -1,14 +1,19 @@
 import styled from "styled-components";
 import {useState, useEffect} from "react";
 
-export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
-  const [users, setUsers] = useState([]);
+export default function SigninForm({
+  showPassword,
+  onShowPassword,
+  onSignIn,
+  onUsers,
+  users,
+}) {
+  const [loginFailed, setLoginFailed] = useState(false);
   const [loginFilter, setLoginFilter] = useState({
     firstName: "",
     lastName: "",
     password: "",
   });
-  const [loginFailed, setLoginFailed] = useState(false);
 
   const handleLoginFailed = () => {
     setLoginFailed(true);
@@ -18,13 +23,13 @@ export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
     const getUsers = async () => {
       try {
         const url =
-          loginFilter.length === 0
+          loginFilter.firstName.length === 0
             ? `/api/users`
             : `/api/users?firstName=${loginFilter.firstName}`;
         const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
-          setUsers(data);
+          onUsers(data);
         } else {
           throw new Error(`Fetch failed with Status: ${response.status}`);
         }

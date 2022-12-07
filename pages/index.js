@@ -18,6 +18,7 @@ export default function Home({
   showConfirmedPassword,
   onShowConfirmedPassword,
   onSignIn,
+  users,
 }) {
   return (
     <>
@@ -64,6 +65,8 @@ export default function Home({
               onShowPassword={onShowPassword}
               signedIn={signedIn}
               onSignIn={onSignIn}
+              loginFilter={loginFilter}
+              users={users}
             />
           )}
         </>
