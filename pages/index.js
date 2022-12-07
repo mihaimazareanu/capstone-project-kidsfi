@@ -65,7 +65,6 @@ export default function Home({
               onShowPassword={onShowPassword}
               signedIn={signedIn}
               onSignIn={onSignIn}
-              loginFilter={loginFilter}
               users={users}
             />
           )}
