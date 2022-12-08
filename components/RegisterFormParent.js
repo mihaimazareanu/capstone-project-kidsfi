@@ -9,7 +9,7 @@ const ReactPasswordChecklist = dynamic(
   }
 );
 
-export default function RegisterForm({
+export default function RegisterFormParent({
   loginMode,
   onClickParent,
   onClickChild,
@@ -92,7 +92,7 @@ export default function RegisterForm({
     });
   };
 
-  const handleSubmitRegisterForm = async event => {
+  const handleSubmitRegisterFormParent = async event => {
     event.preventDefault();
     try {
       const data = Object.fromEntries(new FormData(event.target));
@@ -134,7 +134,7 @@ export default function RegisterForm({
   };
 
   return (
-    <RegForm onSubmit={handleSubmitRegisterForm}>
+    <RegForm onSubmit={handleSubmitRegisterFormParent}>
       <LoginTypeFieldset>
         <DivParentRadioButton>
           <label>

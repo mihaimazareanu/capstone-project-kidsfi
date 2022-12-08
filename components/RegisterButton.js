@@ -30,11 +30,7 @@ const RegButton = styled.button`
   border: none;
   background-color: #e9f2ef;
 
-  /* :hover {
-    border-radius: 10%;
-    background-color: #5e8c49;
-    stroke: #e9f2ef !important;
-    stroke-width: 1px;
-    fill: #e9f2ef !important;
-  } */
+  :hover {
+    transform: scale(1.2);
+  }
 `;
