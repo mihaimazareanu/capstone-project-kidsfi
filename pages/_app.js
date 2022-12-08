@@ -28,7 +28,6 @@ function MyApp({Component, pageProps}) {
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
-    console.log(showPassword);
   };
 
   const handleShowConfirmedPassword = () => {

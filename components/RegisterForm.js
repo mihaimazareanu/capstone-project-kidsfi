@@ -94,7 +94,6 @@ export default function RegisterForm({
 
   const handleSubmitRegisterForm = async event => {
     event.preventDefault();
-    console.log(event.target);
     try {
       const data = Object.fromEntries(new FormData(event.target));
       const body = {
