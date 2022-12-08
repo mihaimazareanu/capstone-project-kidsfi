@@ -83,6 +83,7 @@ export default function Home({
               >
                 Add child login
               </AddChildButton>
+              <LogoutButton onClick={onSignIn}>Logout</LogoutButton>
             </ButtonContainer>
           </FlexSection>
           {loginMode === "child" && (
@@ -146,15 +147,18 @@ const ChildrenContainer = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
+  align-items: flex-end;
   width: 50%;
   padding-right: 2rem;
+  gap: 1rem;
 `;
 
 const AddChildButton = styled.button`
   background: #401d1a;
   color: #e9f2ef;
-  min-width: 3rem;
+  width: 7rem;
   box-shadow: 4px 4px 8px 1px rgba(64, 29, 26, 0.65);
   border-radius: 5px;
   border: none;
@@ -171,11 +175,26 @@ const ChildButton = styled.button`
   border-radius: 5px;
   color: #e9f2ef;
   border: none;
-  width: 50%;
+  width: 7rem;
 
   :hover {
     background: #224024;
     box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
+    transform: scale(1.1);
+  }
+`;
+
+const LogoutButton = styled.button`
+  background-color: #a61f2b;
+  border-radius: 5px;
+  color: #e9f2ef;
+  border: none;
+  width: 7rem;
+  box-shadow: 4px 4px 8px 1px rgba(166, 31, 43, 0.65);
+
+  :hover {
+    background-color: #a61f43;
+    box-shadow: 4px 4px 8px 1px rgba(166, 31, 67, 0.65);
     transform: scale(1.1);
   }
 `;

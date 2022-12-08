@@ -305,9 +305,7 @@ export default function RegisterFormParent({
               )}
             </label>
           </PasswordFieldset>
-          <CreateLoginButton type="submit">
-            Create parent login
-          </CreateLoginButton>
+          <SigninButton type="submit">Create parent login</SigninButton>
         </>
       )}
       {loginMode === "child" && (
@@ -319,9 +317,9 @@ export default function RegisterFormParent({
           </p>
           <ButtonsDiv>
             <SigninButton onClick={onClickSignIn}>Sign in</SigninButton>
-            <CreateLoginButton onClick={onClickParent}>
+            <SigninButton onClick={onClickParent}>
               Create parent login
-            </CreateLoginButton>
+            </SigninButton>
           </ButtonsDiv>
         </ChildLoginSection>
       )}
@@ -404,34 +402,36 @@ const InputConfirmPassword = styled.input`
   border: none;
 `;
 
-const CreateLoginButton = styled.button`
-  background-color: #688b51;
-  border: none;
-  border-radius: 8px;
-  color: #e9f2ef;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  width: 10rem;
-  padding: 0.5rem 0;
+// const CreateLoginButton = styled.button`
+//   background-color: #688b51;
+//   border: none;
+//   border-radius: 8px;
+//   color: #e9f2ef;
+//   margin-bottom: 0.5rem;
+//   font-size: 1rem;
+//   width: 10rem;
+//   padding: 0.5rem 0;
 
-  :hover {
-    background-color: #224024;
-    transform: scale(1.1);
-  }
-`;
+//   :hover {
+//     background-color: #224024;
+//     transform: scale(1.1);
+//   }
+// `;
 
 const SigninButton = styled.button`
-  background-color: #688b51;
-  border: none;
-  border-radius: 8px;
-  color: #e9f2ef;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   width: 10rem;
   padding: 0.5rem 0;
+  background: #5e8c49;
+  box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
+  border-radius: 5px;
+  color: #e9f2ef;
+  border: none;
 
   :hover {
-    background-color: #224024;
+    background: #224024;
+    box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
     transform: scale(1.1);
   }
 `;

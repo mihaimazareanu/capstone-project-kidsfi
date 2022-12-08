@@ -202,14 +202,21 @@ const StyledDiv = styled.div`
 
 const SigninButton = styled.button`
   align-self: center;
-  background-color: #688b51;
   border: none;
-  border-radius: 8px;
-  color: #e9f2ef;
-  /* margin-bottom: 0.5rem; */
   font-size: 1rem;
   width: 10rem;
   padding: 0.5rem 0;
+  background: #5e8c49;
+  box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
+  border-radius: 5px;
+  color: #e9f2ef;
+  border: none;
+
+  :hover {
+    background: #224024;
+    box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
+    transform: scale(1.1);
+  }
 
   :hover {
     background-color: #224024;

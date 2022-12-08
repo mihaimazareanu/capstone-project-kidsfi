@@ -365,38 +365,6 @@ const CreateLoginButton = styled.button`
   }
 `;
 
-// const SigninButton = styled.button`
-//   background-color: #688b51;
-//   border: none;
-//   border-radius: 8px;
-//   color: #e9f2ef;
-//   margin-bottom: 0.5rem;
-//   font-size: 1rem;
-//   width: 10rem;
-//   padding: 0.5rem 0;
-
-//   :hover {
-//     background-color: #224024;
-//     transform: scale(1.1);
-//   }
-// `;
-
-// const ChildLoginSection = styled.section`
-//   width: 90%;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-// `;
-
-// const ButtonsDiv = styled.div`
-//   width: 100%;
-//   margin: 0 auto;
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   gap: 1rem;
-// `;
-
 const ErrorSpan = styled.span`
   color: red;
   font-size: 0.9rem;
