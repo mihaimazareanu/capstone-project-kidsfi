@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
   },
 
+  children: {
+    type: Object,
+  },
+
   accounts: {
     type: Object,
   },

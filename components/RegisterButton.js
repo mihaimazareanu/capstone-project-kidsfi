@@ -2,7 +2,11 @@ import styled from "styled-components";
 
 export default function RegisterButton({onClickRegister}) {
   return (
-    <RegButton onClick={onClickRegister}>
+    <RegButton
+      onClick={() => {
+        onClickRegister();
+      }}
+    >
       <svg
         className="change-color"
         title="signin-icon"

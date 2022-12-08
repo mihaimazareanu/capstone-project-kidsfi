@@ -6,10 +6,12 @@ async function handler(req, res) {
     case "GET":
       try {
         const filter = {};
-        if (req.query._id) {
-          filter._id = req.query._id;
+        if (req.query.firstName) {
+          filter.firstName = req.query.firstName;
+          // filter.lastName = req.query.lastName;
+          // filter.password = req.query.password;
         }
-        const users = await User.find({filter});
+        const users = await User.find(filter);
         res.status(200).json(users);
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...

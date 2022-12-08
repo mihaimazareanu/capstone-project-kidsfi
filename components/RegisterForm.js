@@ -17,9 +17,9 @@ export default function RegisterForm({
   onShowPassword,
   showConfirmedPassword,
   onShowConfirmedPassword,
-  onClickSignin,
+  onClickSignIn,
 }) {
-  const [input, setInput] = useState({
+  const [regInput, setRegInput] = useState({
     firstName: "",
     lastName: "",
     password: "",
@@ -35,7 +35,7 @@ export default function RegisterForm({
 
   const onInputChange = event => {
     const {name, value} = event.target;
-    setInput(prev => ({
+    setRegInput(prev => ({
       ...prev,
       [name]: value,
     }));
@@ -63,11 +63,14 @@ export default function RegisterForm({
         case "password":
           if (!value) {
             stateObj[name] = "Please enter Password.";
-          } else if (input.confirmPassword && value !== input.confirmPassword) {
+          } else if (
+            regInput.confirmPassword &&
+            value !== regInput.confirmPassword
+          ) {
             stateObj["confirmPassword"] =
               "Password and Confirm password do not match";
           } else {
-            stateObj["confirmPassword"] = input.confirmPassword
+            stateObj["confirmPassword"] = regInput.confirmPassword
               ? ""
               : error.confirmPassword;
           }
@@ -76,7 +79,7 @@ export default function RegisterForm({
         case "confirmPassword":
           if (!value) {
             stateObj[name] = "Please enter Confirm Password.";
-          } else if (input.password && value !== input.password) {
+          } else if (regInput.password && value !== regInput.password) {
             stateObj[name] = "Password and Confirm Password does not match.";
           }
           break;
@@ -91,7 +94,6 @@ export default function RegisterForm({
 
   const handleSubmitRegisterForm = async event => {
     event.preventDefault();
-    console.log(event.target);
     try {
       const data = Object.fromEntries(new FormData(event.target));
       const body = {
@@ -111,17 +113,17 @@ export default function RegisterForm({
         },
         body: JSON.stringify(body),
       };
-      if (input.password === input.confirmPassword) {
+      if (regInput.password === regInput.confirmPassword) {
         const response = await fetch(endpoint, options);
         if (response.ok) {
           alert(`A new user ${data.firstName} ${data.lastName} has been added`);
-          setInput({
+          setRegInput({
             firstName: "",
             lastName: "",
             password: "",
             confirmPassword: "",
           });
-          onClickSignin();
+          onClickSignIn();
         } else {
           throw new Error(`Fetch failed with status: ${response.status}`);
         }
@@ -162,7 +164,7 @@ export default function RegisterForm({
                 type="text"
                 placeholder="Type your first name..."
                 name="firstName"
-                value={input.firstName}
+                value={regInput.firstName}
                 required
                 onChange={onInputChange}
                 onBlur={validateInput}
@@ -175,7 +177,7 @@ export default function RegisterForm({
                 type="text"
                 placeholder="Type your last name..."
                 name="lastName"
-                value={input.lastName}
+                value={regInput.lastName}
                 required
                 onChange={onInputChange}
                 onBlur={validateInput}
@@ -190,7 +192,7 @@ export default function RegisterForm({
                 <InputChoosePassword
                   onChange={onInputChange}
                   onBlur={validateInput}
-                  value={input.password}
+                  value={regInput.password}
                   type={showPassword ? "text" : "password"}
                   name="password"
                   required
@@ -238,8 +240,8 @@ export default function RegisterForm({
                     "lowercase",
                   ]}
                   minLength={8}
-                  value={input.password}
-                  valueAgain={input.confirmPassword}
+                  value={regInput.password}
+                  valueAgain={regInput.confirmPassword}
                   messages={{
                     minLength: "Password has more than 8 characters",
                     specialChar: "Password has special characters",
@@ -258,7 +260,7 @@ export default function RegisterForm({
               <ChoosePasswordDiv>
                 <InputConfirmPassword
                   name="confirmPassword"
-                  value={input.confirmPassword}
+                  value={regInput.confirmPassword}
                   type={showConfirmedPassword ? "text" : "password"}
                   placeholder="Confirm password..."
                   required
@@ -314,13 +316,7 @@ export default function RegisterForm({
             away.
           </p>
           <ButtonsDiv>
-            <SigninButton
-              onClick={event => {
-                event.preventDefault();
-              }}
-            >
-              Sign in
-            </SigninButton>
+            <SigninButton onClick={onClickSignIn}>Sign in</SigninButton>
             <CreateLoginButton onClick={onClickParent}>
               Create parent login
             </CreateLoginButton>
