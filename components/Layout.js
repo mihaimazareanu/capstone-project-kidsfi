@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import Link from "next/link";
 import {useState} from "react";
-
 import "../public/logo.png";
 
 const Layout = ({children}) => {

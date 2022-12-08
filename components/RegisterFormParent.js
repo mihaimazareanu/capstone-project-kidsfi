@@ -104,7 +104,7 @@ export default function RegisterFormParent({
         isChild: false,
       };
 
-      const endpoint = "/api/users";
+      const endpoint = "/api/parents";
 
       const options = {
         method: "POST",
@@ -116,7 +116,9 @@ export default function RegisterFormParent({
       if (regInput.password === regInput.confirmPassword) {
         const response = await fetch(endpoint, options);
         if (response.ok) {
-          alert(`A new user ${data.firstName} ${data.lastName} has been added`);
+          alert(
+            `A new parent ${data.firstName} ${data.lastName} has been added`
+          );
           setRegInput({
             firstName: "",
             lastName: "",

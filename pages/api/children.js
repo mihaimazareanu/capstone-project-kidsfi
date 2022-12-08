@@ -1,5 +1,5 @@
 import connectDB from "./_db/connect-db";
-import {User} from "./_db/models/User";
+import {Child} from "./_db/models/Child";
 
 async function handler(req, res) {
   switch (req.method) {
@@ -11,7 +11,7 @@ async function handler(req, res) {
           // filter.lastName = req.query.lastName;
           // filter.password = req.query.password;
         }
-        const users = await User.find(filter);
+        const users = await Child.find(filter);
         res.status(200).json(users);
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
@@ -21,15 +21,14 @@ async function handler(req, res) {
     case "POST":
       try {
         const body = req.body;
-        const newUser = new User({
+        const newChild = new Child({
           firstName: body.firstName,
           lastName: body.lastName,
           password: body.password,
-          isParent: body.isParent,
           isChild: body.isChild,
         });
-        await newUser.save();
-        res.status(200).json(newUser);
+        await newChild.save();
+        res.status(200).json(newChild);
       } catch (error) {
         res.status(500).json({error: error.message});
       }

@@ -10,9 +10,9 @@ const ReactPasswordChecklist = dynamic(
 );
 
 export default function RegisterFormChild({
-  // loginMode,
+  loginMode,
   onClickParent,
-  //   onClickChild,
+  onClickChild,
   showPassword,
   onShowPassword,
   showConfirmedPassword,
@@ -104,7 +104,7 @@ export default function RegisterFormChild({
         isChild: true,
       };
 
-      const endpoint = "/api/users";
+      const endpoint = "/api/children";
 
       const options = {
         method: "POST",
@@ -116,7 +116,9 @@ export default function RegisterFormChild({
       if (regInput.password === regInput.confirmPassword) {
         const response = await fetch(endpoint, options);
         if (response.ok) {
-          alert(`A new user ${data.firstName} ${data.lastName} has been added`);
+          alert(
+            `A new child ${data.firstName} ${data.lastName} has been added`
+          );
           setRegInput({
             firstName: "",
             lastName: "",

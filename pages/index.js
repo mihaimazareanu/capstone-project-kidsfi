@@ -78,7 +78,9 @@ export default function Home({
               <ChildButton>Denise</ChildButton>
             </ChildrenContainer>
             <ButtonContainer>
-              <AddChildButton onClick={onClickChild}>
+              <AddChildButton
+                onClick={loginMode === "child" ? onClickParent : onClickChild}
+              >
                 Add child login
               </AddChildButton>
             </ButtonContainer>
@@ -86,9 +88,9 @@ export default function Home({
           {loginMode === "child" && (
             <>
               <RegisterFormChild
-                // loginMode={loginMode}
+                loginMode={loginMode}
                 onClickParent={onClickParent}
-                // onClickChild={onClickChild}
+                onClickChild={onClickChild}
                 showPassword={showPassword}
                 onShowPassword={onShowPassword}
                 showConfirmedPassword={showConfirmedPassword}

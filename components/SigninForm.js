@@ -17,16 +17,26 @@ export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const url =
+        const urlParents =
           loginFilter.firstName.length === 0
-            ? `/api/users`
-            : `/api/users?firstName=${loginFilter.firstName}`;
-        const response = await fetch(url);
-        if (response.ok) {
-          const data = await response.json();
-          setUsers(data);
+            ? `/api/parents`
+            : `/api/parents?firstName=${loginFilter.firstName}`;
+        const urlChildren =
+          loginFilter.firstName.length === 0
+            ? `/api/children`
+            : `/api/children?firstName=${loginFilter.firstName}`;
+        const parentsResponse = await fetch(urlParents);
+        if (parentsResponse.ok) {
+          const parentsData = await parentsResponse.json();
+          if (parentsData.length > 0) {
+            setUsers(parentsData);
+          } else {
+            const childrenResponse = await fetch(urlChildren);
+            const childrenData = await childrenResponse.json();
+            setUsers(childrenData);
+          }
         } else {
-          throw new Error(`Fetch failed with Status: ${response.status}`);
+          throw new Error(`Fetch failed`);
         }
       } catch (error) {
         console.log(error);
