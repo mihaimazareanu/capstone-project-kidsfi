@@ -316,7 +316,7 @@ export default function RegisterForm({
             away.
           </p>
           <ButtonsDiv>
-            <SigninButton onClick={onClickSignin}>Sign in</SigninButton>
+            <SigninButton onClick={onClickSignIn}>Sign in</SigninButton>
             <CreateLoginButton onClick={onClickParent}>
               Create parent login
             </CreateLoginButton>
