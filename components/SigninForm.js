@@ -1,13 +1,8 @@
 import styled from "styled-components";
 import {useState, useEffect} from "react";
 
-export default function SigninForm({
-  showPassword,
-  onShowPassword,
-  onSignIn,
-  onUsers,
-  users,
-}) {
+export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
+  const [users, setUsers] = useState([]);
   const [loginFailed, setLoginFailed] = useState(false);
   const [loginFilter, setLoginFilter] = useState({
     firstName: "",
@@ -29,7 +24,8 @@ export default function SigninForm({
         const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
-          onUsers(data);
+          setUsers(data);
+          console.log(users);
         } else {
           throw new Error(`Fetch failed with Status: ${response.status}`);
         }

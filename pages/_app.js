@@ -9,7 +9,6 @@ function MyApp({Component, pageProps}) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
   const [signedIn, setSignedIn] = useLocalStorage("signedIn", false);
-  const [users, setUsers] = useState([]);
 
   const handleClickRegister = () => {
     setAccessMode("register");
@@ -40,10 +39,6 @@ function MyApp({Component, pageProps}) {
     setSignedIn(!signedIn);
   };
 
-  const handleUsers = data => {
-    setUsers(data);
-  };
-
   return (
     <>
       <GlobalStyles />
@@ -63,8 +58,6 @@ function MyApp({Component, pageProps}) {
             onShowPassword={handleShowPassword}
             onShowConfirmedPassword={handleShowConfirmedPassword}
             onSignIn={handleSignIn}
-            users={users}
-            onUsers={handleUsers}
           />
         </Layout>
       </main>
