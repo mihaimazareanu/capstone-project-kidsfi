@@ -1,7 +1,7 @@
-import Head from "next/head";
 import styled from "styled-components";
 import RegisterButton from "../components/RegisterButton";
-import RegisterForm from "../components/RegisterForm";
+import RegisterFormParent from "../components/RegisterFormParent";
+import RegisterFormChild from "../components/RegisterFormChild";
 import SigninForm from "../components/SigninForm";
 import SigninButton from "../components/SigninButton";
 
@@ -22,9 +22,6 @@ export default function Home({
 }) {
   return (
     <>
-      <Head>
-        <title>kidsFi - Finance for kids</title>
-      </Head>
       {!signedIn ? (
         <>
           <Heading>kidsFi - Finance for kids</Heading>
@@ -47,7 +44,7 @@ export default function Home({
           </FlexContainer>
           {accessMode === "register" && (
             <>
-              <RegisterForm
+              <RegisterFormParent
                 loginMode={loginMode}
                 onClickParent={onClickParent}
                 onClickChild={onClickChild}
@@ -73,8 +70,33 @@ export default function Home({
         <>
           <h1 style={{textAlign: "center"}}>Dashboard</h1>
           <p style={{textAlign: "center"}}>
-            Children accounts linked to your account{" "}
+            Children accounts linked to your account
           </p>
+          <FlexSection>
+            <ChildrenContainer>
+              <ChildButton>Kevin</ChildButton>
+              <ChildButton>Denise</ChildButton>
+            </ChildrenContainer>
+            <ButtonContainer>
+              <AddChildButton onClick={onClickChild}>
+                Add child login
+              </AddChildButton>
+            </ButtonContainer>
+          </FlexSection>
+          {loginMode === "child" && (
+            <>
+              <RegisterFormChild
+                // loginMode={loginMode}
+                onClickParent={onClickParent}
+                // onClickChild={onClickChild}
+                showPassword={showPassword}
+                onShowPassword={onShowPassword}
+                showConfirmedPassword={showConfirmedPassword}
+                onShowConfirmedPassword={onShowConfirmedPassword}
+                onClickSignIn={onClickSignIn}
+              />
+            </>
+          )}
         </>
       )}
     </>
@@ -106,4 +128,52 @@ const StyledDiv = styled.div`
   justify-content: space-between;
   width: 50%;
   font-size: 1.2rem;
+`;
+const FlexSection = styled.section`
+  display: flex;
+`;
+
+const ChildrenContainer = styled.div`
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 50%;
+  padding-right: 2rem;
+`;
+
+const AddChildButton = styled.button`
+  background: #401d1a;
+  color: #e9f2ef;
+  min-width: 3rem;
+  box-shadow: 4px 4px 8px 1px rgba(64, 29, 26, 0.65);
+  border-radius: 5px;
+  border: none;
+  height: 2rem;
+
+  :hover {
+    transform: scale(1.1);
+  }
+`;
+
+const ChildButton = styled.button`
+  background: #5e8c49;
+  box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
+  border-radius: 5px;
+  color: #e9f2ef;
+  border: none;
+  width: 50%;
+
+  :hover {
+    background: #224024;
+    box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
+    transform: scale(1.1);
+  }
 `;

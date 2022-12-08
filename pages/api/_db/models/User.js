@@ -27,11 +27,11 @@ const UserSchema = new mongoose.Schema({
   },
 
   children: {
-    type: Object,
+    type: Array,
   },
 
   accounts: {
-    type: Object,
+    type: Array,
   },
 });
 
