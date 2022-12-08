@@ -17,7 +17,7 @@ export default function RegisterForm({
   onShowPassword,
   showConfirmedPassword,
   onShowConfirmedPassword,
-  onClickSignin,
+  onClickSignIn,
 }) {
   const [regInput, setRegInput] = useState({
     firstName: "",
@@ -123,7 +123,7 @@ export default function RegisterForm({
             password: "",
             confirmPassword: "",
           });
-          onClickSignin();
+          onClickSignIn();
         } else {
           throw new Error(`Fetch failed with status: ${response.status}`);
         }

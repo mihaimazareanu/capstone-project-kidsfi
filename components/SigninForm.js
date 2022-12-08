@@ -25,7 +25,6 @@ export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
         if (response.ok) {
           const data = await response.json();
           setUsers(data);
-          console.log(users);
         } else {
           throw new Error(`Fetch failed with Status: ${response.status}`);
         }
