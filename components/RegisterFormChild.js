@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import {useState} from "react";
+import {useState, useContext} from "react";
 import dynamic from "next/dynamic";
+import {UserContext} from "./UserContext";
 
 const ReactPasswordChecklist = dynamic(
   () => import("react-password-checklist"),
@@ -10,15 +11,14 @@ const ReactPasswordChecklist = dynamic(
 );
 
 export default function RegisterFormChild({
-  loginMode,
   onClickParent,
-  onClickChild,
   showPassword,
   onShowPassword,
   showConfirmedPassword,
   onShowConfirmedPassword,
   onClickSignIn,
 }) {
+  const {user} = useContext(UserContext);
   const [regInput, setRegInput] = useState({
     firstName: "",
     lastName: "",
@@ -100,8 +100,8 @@ export default function RegisterFormChild({
         firstName: data.firstName,
         lastName: data.lastName,
         password: data.password,
-        isParent: false,
         isChild: true,
+        parentID: user[0]._id,
       };
 
       const endpoint = "/api/children";

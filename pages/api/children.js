@@ -26,6 +26,7 @@ async function handler(req, res) {
           lastName: body.lastName,
           password: body.password,
           isChild: body.isChild,
+          parentID: body.parentID,
         });
         await newChild.save();
         res.status(200).json(newChild);

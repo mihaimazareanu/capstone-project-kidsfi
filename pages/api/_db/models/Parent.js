@@ -21,10 +21,6 @@ const ParentSchema = new mongoose.Schema({
   isParent: {
     type: Boolean,
   },
-
-  children: {
-    type: Array,
-  },
 });
 
 // This is important in serverless environments: Check if the model exists and otherwise create a new one.

@@ -22,6 +22,10 @@ const ChildSchema = new mongoose.Schema({
     type: Boolean,
   },
 
+  parentID: {
+    type: mongoose.Types.ObjectId,
+  },
+
   accounts: {
     type: Array,
   },

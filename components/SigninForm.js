@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
+import {UserContext} from "./UserContext";
 
 export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
-  const [users, setUsers] = useState([]);
+  const {user, setUser} = useContext(UserContext);
   const [loginFailed, setLoginFailed] = useState(false);
   const [loginFilter, setLoginFilter] = useState({
     firstName: "",
@@ -29,11 +30,11 @@ export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
         if (parentsResponse.ok) {
           const parentsData = await parentsResponse.json();
           if (parentsData.length > 0) {
-            setUsers(parentsData);
+            setUser(parentsData);
           } else {
             const childrenResponse = await fetch(urlChildren);
             const childrenData = await childrenResponse.json();
-            setUsers(childrenData);
+            setUser(childrenData);
           }
         } else {
           throw new Error(`Fetch failed`);
@@ -48,10 +49,13 @@ export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
 
   const handleSubmitSigninForm = event => {
     event.preventDefault();
-    users.length === 0
+    user.length === 0
       ? handleLoginFailed()
-      : users.map(user => {
-          user.firstName === loginFilter.firstName && onSignIn();
+      : user.map(use => {
+          use.firstName === loginFilter.firstName && onSignIn();
+          setUser(user);
+          // console.log(user);
+          // console.log(use.firstName);
         });
   };
 

@@ -4,6 +4,8 @@ import RegisterFormParent from "../components/RegisterFormParent";
 import RegisterFormChild from "../components/RegisterFormChild";
 import SigninForm from "../components/SigninForm";
 import SigninButton from "../components/SigninButton";
+import {UserContext} from "../components/UserContext";
+import {useContext} from "react";
 
 export default function Home({
   accessMode,
@@ -18,8 +20,10 @@ export default function Home({
   showConfirmedPassword,
   onShowConfirmedPassword,
   onSignIn,
-  users,
 }) {
+  const {user} = useContext(UserContext);
+  // console.log(user);
+  // console.log(user[0]._id);
   return (
     <>
       {!signedIn ? (
@@ -62,13 +66,31 @@ export default function Home({
               onShowPassword={onShowPassword}
               signedIn={signedIn}
               onSignIn={onSignIn}
-              users={users}
             />
           )}
         </>
       ) : (
         <>
-          <h1 style={{textAlign: "center"}}>Dashboard</h1>
+          {user &&
+            user.map(newUser => {
+              console.log(newUser);
+              return (
+                <>
+                  <h1 style={{textAlign: "center"}}>
+                    {newUser.firstName}&apos;s Dashboard
+                  </h1>
+                  {newUser.children &&
+                    newUser.children.map(child => {
+                      return (
+                        <>
+                          <p>{child.firstName}</p>
+                        </>
+                      );
+                    })}
+                </>
+              );
+            })}
+
           <p style={{textAlign: "center"}}>
             Children accounts linked to your account
           </p>
