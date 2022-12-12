@@ -16,7 +16,7 @@ export default function RegisterFormChild({
   onShowPassword,
   showConfirmedPassword,
   onShowConfirmedPassword,
-  onClickSignIn,
+  // onClickSignIn,
 }) {
   const {user, setUser} = useContext(UserContext);
   const [regInput, setRegInput] = useState({
@@ -125,9 +125,8 @@ export default function RegisterFormChild({
             password: "",
             confirmPassword: "",
           });
-          onClickSignIn();
+          // onClickSignIn();
           onClickParent();
-          console.log("user: ", user);
           setUser({...user, children: [...user.children, body]});
         } else {
           throw new Error(`Fetch failed with status: ${response.status}`);
@@ -352,18 +351,21 @@ const InputConfirmPassword = styled.input`
 `;
 
 const CreateLoginButton = styled.button`
-  background-color: #688b51;
   border: none;
   border-radius: 8px;
   color: #e9f2ef;
+  background-color: #688b51;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   width: 10rem;
   padding: 0.5rem 0;
+  box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
 
   :hover {
     background-color: #224024;
+    box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
     transform: scale(1.1);
+    transition: ease-in 0.2s;
   }
 `;
 

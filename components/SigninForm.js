@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {useState, useContext} from "react";
 import {UserContext} from "./UserContext";
+import {FormButton} from "./StyledComponents";
 
 export default function SigninForm({
   showPassword,
@@ -173,7 +174,16 @@ export default function SigninForm({
             </PasswordDiv>
           </label>
           {loginFailed && <ErrorText>User not found</ErrorText>}
-          <SigninButton>Sign in</SigninButton>
+          <FormButton
+            style={{
+              alignSelf: "center",
+              fontSize: "1rem",
+              width: "10rem",
+              padding: "0.5rem 0",
+            }}
+          >
+            Sign in
+          </FormButton>
         </PasswordFieldset>
       </SignForm>
     </>
@@ -237,29 +247,25 @@ const StyledDiv = styled.div`
   width: 50%;
 `;
 
-const SigninButton = styled.button`
-  align-self: center;
-  border: none;
-  font-size: 1rem;
-  width: 10rem;
-  padding: 0.5rem 0;
-  background: #5e8c49;
-  box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
-  border-radius: 5px;
-  color: #e9f2ef;
-  border: none;
+// const SigninButton = styled.button`
+//   border: none;
+//   align-self: center;
+//   font-size: 1rem;
+//   width: 10rem;
+//   padding: 0.5rem 0;
+//   background: #5e8c49;
+//   box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
+//   border-radius: 5px;
+//   color: #e9f2ef;
+//   border: none;
 
-  :hover {
-    background: #224024;
-    box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
-    transform: scale(1.1);
-  }
-
-  :hover {
-    background-color: #224024;
-    transform: scale(1.1);
-  }
-`;
+//   :hover {
+//     background: #224024;
+//     box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
+//     transform: scale(1.1);
+//     transition: ease-in 0.2s;
+//   }
+// `;
 
 const ErrorText = styled.p`
   margin: -0.5rem 0;

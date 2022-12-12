@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {useState} from "react";
 import dynamic from "next/dynamic";
+import {FormButton} from "./StyledComponents";
 
 const ReactPasswordChecklist = dynamic(
   () => import("react-password-checklist"),
@@ -304,7 +305,17 @@ export default function RegisterFormParent({
               )}
             </label>
           </PasswordFieldset>
-          <SigninButton type="submit">Create parent login</SigninButton>
+          <FormButton
+            style={{
+              marginBottom: "0.5rem",
+              fontSize: "1rem",
+              width: "10rem",
+              padding: "0.5rem 0",
+            }}
+            type="submit"
+          >
+            Create parent login
+          </FormButton>
         </>
       )}
       {loginMode === "child" && (
@@ -315,10 +326,28 @@ export default function RegisterFormParent({
             away.
           </p>
           <ButtonsDiv>
-            <SigninButton onClick={onClickSignIn}>Sign in</SigninButton>
-            <SigninButton onClick={onClickParent}>
+            <FormButton
+              style={{
+                marginBottom: "0.5rem",
+                fontSize: "1rem",
+                width: "10rem",
+                padding: "0.5rem 0",
+              }}
+              onClick={onClickSignIn}
+            >
+              Sign in
+            </FormButton>
+            <FormButton
+              style={{
+                marginBottom: "0.5rem",
+                fontSize: "1rem",
+                width: "10rem",
+                padding: "0.5rem 0",
+              }}
+              onClick={onClickParent}
+            >
               Create parent login
-            </SigninButton>
+            </FormButton>
           </ButtonsDiv>
         </ChildLoginSection>
       )}
@@ -399,40 +428,6 @@ const InputChoosePassword = styled.input`
 const InputConfirmPassword = styled.input`
   width: 100%;
   border: none;
-`;
-
-// const CreateLoginButton = styled.button`
-//   background-color: #688b51;
-//   border: none;
-//   border-radius: 8px;
-//   color: #e9f2ef;
-//   margin-bottom: 0.5rem;
-//   font-size: 1rem;
-//   width: 10rem;
-//   padding: 0.5rem 0;
-
-//   :hover {
-//     background-color: #224024;
-//     transform: scale(1.1);
-//   }
-// `;
-
-const SigninButton = styled.button`
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  width: 10rem;
-  padding: 0.5rem 0;
-  background: #5e8c49;
-  box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
-  border-radius: 5px;
-  color: #e9f2ef;
-  border: none;
-
-  :hover {
-    background: #224024;
-    box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
-    transform: scale(1.1);
-  }
 `;
 
 const ChildLoginSection = styled.section`

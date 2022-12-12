@@ -155,7 +155,8 @@ export const Navbar = styled.nav`
   left: 0;
   width: 100vw;
   height: 5rem;
-  background-color: #688b51;
+  background: #688b51;
+  box-shadow: inset -50px -50px 100px #5e7d49, inset 50px 50px 100px #729959;
   display: flex;
   justify-content: flex-start;
   align-items: center;
