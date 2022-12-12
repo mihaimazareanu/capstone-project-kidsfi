@@ -18,7 +18,7 @@ export default function RegisterFormChild({
   onShowConfirmedPassword,
   onClickSignIn,
 }) {
-  const {user} = useContext(UserContext);
+  const {user, setUser} = useContext(UserContext);
   const [regInput, setRegInput] = useState({
     firstName: "",
     lastName: "",
@@ -101,7 +101,7 @@ export default function RegisterFormChild({
         lastName: data.lastName,
         password: data.password,
         isChild: true,
-        parentID: user[0]._id,
+        parentID: user._id,
       };
 
       const endpoint = "/api/children";
@@ -127,6 +127,8 @@ export default function RegisterFormChild({
           });
           onClickSignIn();
           onClickParent();
+          console.log("user: ", user);
+          setUser({...user, children: [...user.children, body]});
         } else {
           throw new Error(`Fetch failed with status: ${response.status}`);
         }

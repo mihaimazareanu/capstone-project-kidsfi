@@ -26,7 +26,7 @@ async function handler(req, res) {
             },
           },
         ]).exec();
-        res.status(200).json(parents);
+        res.status(200).json(parents[0]);
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});

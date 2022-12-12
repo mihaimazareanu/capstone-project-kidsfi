@@ -9,7 +9,6 @@ import {useContext} from "react";
 
 export default function Home({
   accessMode,
-  signedIn,
   onClickRegister,
   onClickSignIn,
   loginMode,
@@ -19,13 +18,12 @@ export default function Home({
   onShowPassword,
   showConfirmedPassword,
   onShowConfirmedPassword,
-  onSignIn,
 }) {
-  const {user} = useContext(UserContext);
+  const {user, setUser} = useContext(UserContext);
   console.log(user);
   return (
     <>
-      {!signedIn ? (
+      {user === null || user.length === 0 ? (
         <>
           <Heading>kidsFi - Finance for kids</Heading>
           <StyledParagraph>
@@ -43,7 +41,6 @@ export default function Home({
               <p>Already have an account? Awesome! Go ahead and log in.</p>
               <SigninButton onClickSignin={onClickSignIn} />
             </StyledDiv>
-            {/* <p>Acces Mode: {accessMode}</p> */}
           </FlexContainer>
           {accessMode === "register" && (
             <>
@@ -63,83 +60,72 @@ export default function Home({
             <SigninForm
               showPassword={showPassword}
               onShowPassword={onShowPassword}
-              signedIn={signedIn}
-              onSignIn={onSignIn}
             />
           )}
         </>
       ) : (
         <>
-          {user &&
-            user.map(newUser => {
-              return (
-                <>
-                  {newUser.isParent && (
-                    <>
-                      <h1 style={{textAlign: "center"}}>
-                        {newUser.firstName}&apos;s Dashboard
-                      </h1>
-                      <p style={{textAlign: "center"}}>
-                        Children accounts linked to your account
-                      </p>
-                      <FlexSection>
-                        <ChildrenContainer>
-                          {newUser.children && newUser.children.length === 0 ? (
-                            <NoChildLogins>
-                              You didn&apos;t create any child logins yet
-                            </NoChildLogins>
-                          ) : (
-                            newUser.children.map(child => {
-                              return (
-                                <>
-                                  <ChildButton>{child.firstName}</ChildButton>
-                                </>
-                              );
-                            })
-                          )}
-                        </ChildrenContainer>
-                        <ButtonContainer>
-                          <AddChildButton
-                            onClick={
-                              loginMode === "child"
-                                ? onClickParent
-                                : onClickChild
-                            }
-                          >
-                            Add child login
-                          </AddChildButton>
-                          <LogoutButton onClick={onSignIn}>Logout</LogoutButton>
-                        </ButtonContainer>
-                      </FlexSection>
-                      {loginMode === "child" && (
+          {user.isParent && (
+            <>
+              <h1 style={{textAlign: "center"}}>
+                {user.firstName}&apos;s Dashboard
+              </h1>
+              <p style={{textAlign: "center"}}>
+                Children accounts linked to your account
+              </p>
+              <FlexSection>
+                <ChildrenContainer>
+                  {user.children && user.children.length === 0 ? (
+                    <NoChildLogins>
+                      You didn&apos;t create any child logins yet
+                    </NoChildLogins>
+                  ) : (
+                    user.children.map(child => {
+                      return (
                         <>
-                          <RegisterFormChild
-                            loginMode={loginMode}
-                            onClickParent={onClickParent}
-                            onClickChild={onClickChild}
-                            showPassword={showPassword}
-                            onShowPassword={onShowPassword}
-                            showConfirmedPassword={showConfirmedPassword}
-                            onShowConfirmedPassword={onShowConfirmedPassword}
-                            onClickSignIn={onClickSignIn}
-                          />
+                          <ChildButton>{child.firstName}</ChildButton>
                         </>
-                      )}
-                    </>
+                      );
+                    })
                   )}
-                  {newUser.isChild && (
-                    <>
-                      <h1 style={{textAlign: "center"}}>
-                        Welcome {newUser.firstName}{" "}
-                      </h1>
-                      <ChildLogoutButton onClick={onSignIn}>
-                        Logout
-                      </ChildLogoutButton>
-                    </>
-                  )}
+                </ChildrenContainer>
+                <ButtonContainer>
+                  <AddChildButton
+                    onClick={
+                      loginMode === "child" ? onClickParent : onClickChild
+                    }
+                  >
+                    Add child login
+                  </AddChildButton>
+                  <LogoutButton onClick={() => setUser(null)}>
+                    Logout
+                  </LogoutButton>
+                </ButtonContainer>
+              </FlexSection>
+              {loginMode === "child" && (
+                <>
+                  <RegisterFormChild
+                    loginMode={loginMode}
+                    onClickParent={onClickParent}
+                    onClickChild={onClickChild}
+                    showPassword={showPassword}
+                    onShowPassword={onShowPassword}
+                    showConfirmedPassword={showConfirmedPassword}
+                    onShowConfirmedPassword={onShowConfirmedPassword}
+                    onClickSignIn={onClickSignIn}
+                  />
                 </>
-              );
-            })}
+              )}
+            </>
+          )}
+          {user.isChild && (
+            <>
+              <h1 style={{textAlign: "center"}}>Welcome {user.firstName} </h1>
+              <ChildLogoutButton onClick={() => setUser(null)}>
+                Logout
+              </ChildLogoutButton>
+            </>
+          )}
         </>
       )}
     </>
@@ -188,7 +174,7 @@ const ChildrenContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-end;
   width: 50%;
   padding-right: 2rem;
