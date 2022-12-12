@@ -73,7 +73,7 @@ export default function Home({
         </>
       ) : (
         <>
-          {user.isParent && (
+          {user.isParent ? (
             <>
               <h1 style={{textAlign: "center"}}>
                 {user.firstName}&apos;s Dashboard
@@ -149,7 +149,6 @@ export default function Home({
                   </LogoutButton>
                 </ButtonContainer>
               </FlexSection>
-
               {loginMode === "child" && (
                 <>
                   <RegisterFormChild
@@ -165,8 +164,7 @@ export default function Home({
                 </>
               )}
             </>
-          )}
-          {user.isChild && (
+          ) : (
             <>
               <h1 style={{textAlign: "center"}}>Welcome {user.firstName} </h1>
               <LogoutButton onClick={() => setUser(null)}>Logout</LogoutButton>

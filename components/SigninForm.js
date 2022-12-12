@@ -61,19 +61,20 @@ export default function SigninForm({
             ? `/api/children`
             :*/ `/api/children?firstName=${loginFilter.firstName}`;
         const parentsResponse = await fetch(urlParents);
+        // console.log(parentsResponse);
         if (parentsResponse.ok) {
-          const parentsData = await parentsResponse.json();
-          console.log(parentsData);
-          if (parentsData.firstName === loginFilter.firstName) {
-            setUser(parentsData);
-          } else {
+          try {
+            const parentsData = await parentsResponse.json();
+            console.log(parentsData);
+            if (parentsData.firstName === loginFilter.firstName) {
+              setUser(parentsData);
+            }
+          } catch {
             const childrenResponse = await fetch(urlChildren);
             if (childrenResponse.ok) {
               const childrenData = await childrenResponse.json();
               console.log(childrenData);
-              if (childrenData.firstName === loginFilter.firstName) {
-                setUser(childrenData);
-              }
+              setUser(childrenData);
             }
           }
         } else {
