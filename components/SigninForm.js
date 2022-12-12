@@ -1,8 +1,13 @@
 import styled from "styled-components";
-import {useState, useEffect} from "react";
+import {useState, useContext} from "react";
+import {UserContext} from "./UserContext";
+import {FormButton} from "./StyledComponents";
 
-export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
-  const [users, setUsers] = useState([]);
+export default function SigninForm({
+  showPassword,
+  onShowPassword /*onSignIn*/,
+}) {
+  const {setUser} = useContext(UserContext);
   const [loginFailed, setLoginFailed] = useState(false);
   const [loginFilter, setLoginFilter] = useState({
     firstName: "",
@@ -14,35 +19,79 @@ export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
     setLoginFailed(true);
   };
 
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const url =
-          loginFilter.firstName.length === 0
-            ? `/api/users`
-            : `/api/users?firstName=${loginFilter.firstName}`;
-        const response = await fetch(url);
-        if (response.ok) {
-          const data = await response.json();
-          setUsers(data);
-        } else {
-          throw new Error(`Fetch failed with Status: ${response.status}`);
-        }
-      } catch (error) {
-        console.log(error);
-        alert(error.message);
-      }
-    };
-    getUsers();
-  }, [loginFilter]);
+  // useEffect(() => {
+  //   const getUsers = async () => {
+  //     try {
+  //       const urlParents = /*loginFilter.firstName.length === 0
+  //           ? `/api/parents`
+  //           :*/ `/api/parents?firstName=${loginFilter.firstName}`;
+  //       const urlChildren = /*loginFilter.firstName.length === 0
+  //           ? `/api/children`
+  //           :*/ `/api/children?firstName=${loginFilter.firstName}`;
+  //       const parentsResponse = await fetch(urlParents);
+  //       if (parentsResponse.ok) {
+  //         const parentsData = await parentsResponse.json();
+  //         if (parentsData.length > 0) {
+  //           setUser(parentsData);
+  //         } else {
+  //           const childrenResponse = await fetch(urlChildren);
+  //           const childrenData = await childrenResponse.json();
+  //           setUser(childrenData);
+  //         }
+  //       } else {
+  //         throw new Error(`Fetch failed`);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       alert(error.message);
+  //     }
+  //   };
+  //   getUsers();
+  //   console.log("hallo");
+  // }, [loginFilter, setUser]);
 
   const handleSubmitSigninForm = event => {
     event.preventDefault();
-    users.length === 0
-      ? handleLoginFailed()
-      : users.map(user => {
-          user.firstName === loginFilter.firstName && onSignIn();
-        });
+    const getUser = async () => {
+      try {
+        const urlParents = /*loginFilter.firstName.length === 0
+            ? `/api/parents`
+            :*/ `/api/parents?firstName=${loginFilter.firstName}`;
+        const urlChildren = /*loginFilter.firstName.length === 0
+            ? `/api/children`
+            :*/ `/api/children?firstName=${loginFilter.firstName}`;
+        const parentsResponse = await fetch(urlParents);
+        // console.log(parentsResponse);
+        if (parentsResponse.ok) {
+          try {
+            const parentsData = await parentsResponse.json();
+            console.log(parentsData);
+            if (parentsData.firstName === loginFilter.firstName) {
+              setUser(parentsData);
+            }
+          } catch {
+            const childrenResponse = await fetch(urlChildren);
+            if (childrenResponse.ok) {
+              const childrenData = await childrenResponse.json();
+              console.log(childrenData);
+              setUser(childrenData);
+            }
+          }
+        } else {
+          throw new Error(`Fetch failed`);
+        }
+      } catch (error) {
+        console.log(error);
+        handleLoginFailed();
+        // alert(error.message);
+      }
+    };
+    getUser();
+    // user.length === 0
+    //   ? handleLoginFailed()
+    //   :
+    //       user.firstName === loginFilter.firstName && setUser(loginFilter);
+    //       onSignIn();
   };
 
   return (
@@ -126,7 +175,16 @@ export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
             </PasswordDiv>
           </label>
           {loginFailed && <ErrorText>User not found</ErrorText>}
-          <SigninButton>Sign in</SigninButton>
+          <FormButton
+            style={{
+              alignSelf: "center",
+              fontSize: "1rem",
+              width: "10rem",
+              padding: "0.5rem 0",
+            }}
+          >
+            Sign in
+          </FormButton>
         </PasswordFieldset>
       </SignForm>
     </>
@@ -190,22 +248,25 @@ const StyledDiv = styled.div`
   width: 50%;
 `;
 
-const SigninButton = styled.button`
-  align-self: center;
-  background-color: #688b51;
-  border: none;
-  border-radius: 8px;
-  color: #e9f2ef;
-  /* margin-bottom: 0.5rem; */
-  font-size: 1rem;
-  width: 10rem;
-  padding: 0.5rem 0;
+// const SigninButton = styled.button`
+//   border: none;
+//   align-self: center;
+//   font-size: 1rem;
+//   width: 10rem;
+//   padding: 0.5rem 0;
+//   background: #5e8c49;
+//   box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
+//   border-radius: 5px;
+//   color: #e9f2ef;
+//   border: none;
 
-  :hover {
-    background-color: #224024;
-    transform: scale(1.1);
-  }
-`;
+//   :hover {
+//     background: #224024;
+//     box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
+//     transform: scale(1.1);
+//     transition: ease-in 0.2s;
+//   }
+// `;
 
 const ErrorText = styled.p`
   margin: -0.5rem 0;

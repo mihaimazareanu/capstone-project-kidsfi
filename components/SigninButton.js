@@ -1,8 +1,11 @@
-import styled from "styled-components";
+import {StartPageButton} from "./StyledComponents";
 
 export default function SigninButton({onClickSignin}) {
   return (
-    <SignButton onClick={onClickSignin}>
+    <StartPageButton
+      style={{display: "flex", alignItems: "center", justifyContent: "center"}}
+      onClick={onClickSignin}
+    >
       <svg
         aria-labelledby="signin-icon"
         role="img"
@@ -23,18 +26,6 @@ export default function SigninButton({onClickSignin}) {
           strokeWidth="0.9"
         />
       </svg>
-    </SignButton>
+    </StartPageButton>
   );
 }
-
-const SignButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: #e9f2ef;
-
-  :hover {
-    transform: scale(1.2);
-  }
-`;

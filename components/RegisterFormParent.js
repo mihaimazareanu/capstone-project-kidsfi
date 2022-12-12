@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {useState} from "react";
 import dynamic from "next/dynamic";
+import {FormButton} from "./StyledComponents";
 
 const ReactPasswordChecklist = dynamic(
   () => import("react-password-checklist"),
@@ -80,7 +81,7 @@ export default function RegisterFormParent({
           if (!value) {
             stateObj[name] = "Please enter Confirm Password.";
           } else if (regInput.password && value !== regInput.password) {
-            stateObj[name] = "Password and Confirm Password does not match.";
+            stateObj[name] = "Password and Confirm Password do not match.";
           }
           break;
 
@@ -101,10 +102,9 @@ export default function RegisterFormParent({
         lastName: data.lastName,
         password: data.password,
         isParent: true,
-        isChild: false,
       };
 
-      const endpoint = "/api/users";
+      const endpoint = "/api/parents";
 
       const options = {
         method: "POST",
@@ -116,7 +116,9 @@ export default function RegisterFormParent({
       if (regInput.password === regInput.confirmPassword) {
         const response = await fetch(endpoint, options);
         if (response.ok) {
-          alert(`A new user ${data.firstName} ${data.lastName} has been added`);
+          alert(
+            `A new parent ${data.firstName} ${data.lastName} has been added`
+          );
           setRegInput({
             firstName: "",
             lastName: "",
@@ -303,9 +305,17 @@ export default function RegisterFormParent({
               )}
             </label>
           </PasswordFieldset>
-          <CreateLoginButton type="submit">
+          <FormButton
+            style={{
+              marginBottom: "0.5rem",
+              fontSize: "1rem",
+              width: "10rem",
+              padding: "0.5rem 0",
+            }}
+            type="submit"
+          >
             Create parent login
-          </CreateLoginButton>
+          </FormButton>
         </>
       )}
       {loginMode === "child" && (
@@ -316,10 +326,28 @@ export default function RegisterFormParent({
             away.
           </p>
           <ButtonsDiv>
-            <SigninButton onClick={onClickSignIn}>Sign in</SigninButton>
-            <CreateLoginButton onClick={onClickParent}>
+            <FormButton
+              style={{
+                marginBottom: "0.5rem",
+                fontSize: "1rem",
+                width: "10rem",
+                padding: "0.5rem 0",
+              }}
+              onClick={onClickSignIn}
+            >
+              Sign in
+            </FormButton>
+            <FormButton
+              style={{
+                marginBottom: "0.5rem",
+                fontSize: "1rem",
+                width: "10rem",
+                padding: "0.5rem 0",
+              }}
+              onClick={onClickParent}
+            >
               Create parent login
-            </CreateLoginButton>
+            </FormButton>
           </ButtonsDiv>
         </ChildLoginSection>
       )}
@@ -400,38 +428,6 @@ const InputChoosePassword = styled.input`
 const InputConfirmPassword = styled.input`
   width: 100%;
   border: none;
-`;
-
-const CreateLoginButton = styled.button`
-  background-color: #688b51;
-  border: none;
-  border-radius: 8px;
-  color: #e9f2ef;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  width: 10rem;
-  padding: 0.5rem 0;
-
-  :hover {
-    background-color: #224024;
-    transform: scale(1.1);
-  }
-`;
-
-const SigninButton = styled.button`
-  background-color: #688b51;
-  border: none;
-  border-radius: 8px;
-  color: #e9f2ef;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  width: 10rem;
-  padding: 0.5rem 0;
-
-  :hover {
-    background-color: #224024;
-    transform: scale(1.1);
-  }
 `;
 
 const ChildLoginSection = styled.section`

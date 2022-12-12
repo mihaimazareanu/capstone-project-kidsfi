@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import {useState} from "react";
+import {useState, useContext} from "react";
 import dynamic from "next/dynamic";
+import {UserContext} from "./UserContext";
 
 const ReactPasswordChecklist = dynamic(
   () => import("react-password-checklist"),
@@ -10,15 +11,14 @@ const ReactPasswordChecklist = dynamic(
 );
 
 export default function RegisterFormChild({
-  // loginMode,
   onClickParent,
-  //   onClickChild,
   showPassword,
   onShowPassword,
   showConfirmedPassword,
   onShowConfirmedPassword,
-  onClickSignIn,
+  // onClickSignIn,
 }) {
+  const {user, setUser} = useContext(UserContext);
   const [regInput, setRegInput] = useState({
     firstName: "",
     lastName: "",
@@ -80,7 +80,7 @@ export default function RegisterFormChild({
           if (!value) {
             stateObj[name] = "Please enter Confirm Password.";
           } else if (regInput.password && value !== regInput.password) {
-            stateObj[name] = "Password and Confirm Password does not match.";
+            stateObj[name] = "Password and Confirm Password do not match.";
           }
           break;
 
@@ -100,11 +100,11 @@ export default function RegisterFormChild({
         firstName: data.firstName,
         lastName: data.lastName,
         password: data.password,
-        isParent: false,
         isChild: true,
+        parentID: user._id,
       };
 
-      const endpoint = "/api/users";
+      const endpoint = "/api/children";
 
       const options = {
         method: "POST",
@@ -116,15 +116,18 @@ export default function RegisterFormChild({
       if (regInput.password === regInput.confirmPassword) {
         const response = await fetch(endpoint, options);
         if (response.ok) {
-          alert(`A new user ${data.firstName} ${data.lastName} has been added`);
+          alert(
+            `A new child ${data.firstName} ${data.lastName} has been added`
+          );
           setRegInput({
             firstName: "",
             lastName: "",
             password: "",
             confirmPassword: "",
           });
-          onClickSignIn();
+          // onClickSignIn();
           onClickParent();
+          setUser({...user, children: [...user.children, body]});
         } else {
           throw new Error(`Fetch failed with status: ${response.status}`);
         }
@@ -348,52 +351,23 @@ const InputConfirmPassword = styled.input`
 `;
 
 const CreateLoginButton = styled.button`
-  background-color: #688b51;
   border: none;
   border-radius: 8px;
   color: #e9f2ef;
+  background-color: #688b51;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   width: 10rem;
   padding: 0.5rem 0;
+  box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
 
   :hover {
     background-color: #224024;
+    box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
     transform: scale(1.1);
+    transition: ease-in 0.2s;
   }
 `;
-
-// const SigninButton = styled.button`
-//   background-color: #688b51;
-//   border: none;
-//   border-radius: 8px;
-//   color: #e9f2ef;
-//   margin-bottom: 0.5rem;
-//   font-size: 1rem;
-//   width: 10rem;
-//   padding: 0.5rem 0;
-
-//   :hover {
-//     background-color: #224024;
-//     transform: scale(1.1);
-//   }
-// `;
-
-// const ChildLoginSection = styled.section`
-//   width: 90%;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-// `;
-
-// const ButtonsDiv = styled.div`
-//   width: 100%;
-//   margin: 0 auto;
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   gap: 1rem;
-// `;
 
 const ErrorSpan = styled.span`
   color: red;

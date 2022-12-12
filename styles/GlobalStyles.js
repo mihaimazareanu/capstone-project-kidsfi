@@ -19,8 +19,10 @@ const GlobalStyles = createGlobalStyle`
         font-size: 1rem;
         width: 100%;
         min-height: 100vh;
-        background-color: #e9f2ef;
         color: #401d1a;
+        background: #e9f2ef;
+        box-shadow: inset -50px 50px 100px #d2dad7,
+                    inset 50px -50px 100px #ffffff;
     }
     * {
         box-sizing: border-box;

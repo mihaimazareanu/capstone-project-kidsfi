@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import {StartPageButton} from "./StyledComponents";
 
 export default function RegisterButton({onClickRegister}) {
   return (
-    <RegButton
+    <StartPageButton
       onClick={() => {
         onClickRegister();
       }}
@@ -22,15 +22,6 @@ export default function RegisterButton({onClickRegister}) {
           fill="#5E8C49"
         />
       </svg>
-    </RegButton>
+    </StartPageButton>
   );
 }
-
-const RegButton = styled.button`
-  border: none;
-  background-color: #e9f2ef;
-
-  :hover {
-    transform: scale(1.2);
-  }
-`;
