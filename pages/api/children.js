@@ -11,8 +11,8 @@ async function handler(req, res) {
           // filter.lastName = req.query.lastName;
           // filter.password = req.query.password;
         }
-        const users = await Child.find(filter);
-        res.status(200).json(users);
+        const children = await Child.find(filter);
+        res.status(200).json(children);
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});

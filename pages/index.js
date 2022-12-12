@@ -22,8 +22,7 @@ export default function Home({
   onSignIn,
 }) {
   const {user} = useContext(UserContext);
-  // console.log(user);
-  // console.log(user[0]._id);
+  console.log(user);
   return (
     <>
       {!signedIn ? (
@@ -73,55 +72,74 @@ export default function Home({
         <>
           {user &&
             user.map(newUser => {
-              console.log(newUser);
               return (
                 <>
-                  <h1 style={{textAlign: "center"}}>
-                    {newUser.firstName}&apos;s Dashboard
-                  </h1>
-                  {newUser.children &&
-                    newUser.children.map(child => {
-                      return (
+                  {newUser.isParent && (
+                    <>
+                      <h1 style={{textAlign: "center"}}>
+                        {newUser.firstName}&apos;s Dashboard
+                      </h1>
+                      <p style={{textAlign: "center"}}>
+                        Children accounts linked to your account
+                      </p>
+                      <FlexSection>
+                        <ChildrenContainer>
+                          {newUser.children && newUser.children.length === 0 ? (
+                            <NoChildLogins>
+                              You didn&apos;t create any child logins yet
+                            </NoChildLogins>
+                          ) : (
+                            newUser.children.map(child => {
+                              return (
+                                <>
+                                  <ChildButton>{child.firstName}</ChildButton>
+                                </>
+                              );
+                            })
+                          )}
+                        </ChildrenContainer>
+                        <ButtonContainer>
+                          <AddChildButton
+                            onClick={
+                              loginMode === "child"
+                                ? onClickParent
+                                : onClickChild
+                            }
+                          >
+                            Add child login
+                          </AddChildButton>
+                          <LogoutButton onClick={onSignIn}>Logout</LogoutButton>
+                        </ButtonContainer>
+                      </FlexSection>
+                      {loginMode === "child" && (
                         <>
-                          <p>{child.firstName}</p>
+                          <RegisterFormChild
+                            loginMode={loginMode}
+                            onClickParent={onClickParent}
+                            onClickChild={onClickChild}
+                            showPassword={showPassword}
+                            onShowPassword={onShowPassword}
+                            showConfirmedPassword={showConfirmedPassword}
+                            onShowConfirmedPassword={onShowConfirmedPassword}
+                            onClickSignIn={onClickSignIn}
+                          />
                         </>
-                      );
-                    })}
+                      )}
+                    </>
+                  )}
+                  {newUser.isChild && (
+                    <>
+                      <h1 style={{textAlign: "center"}}>
+                        Welcome {newUser.firstName}{" "}
+                      </h1>
+                      <ChildLogoutButton onClick={onSignIn}>
+                        Logout
+                      </ChildLogoutButton>
+                    </>
+                  )}
                 </>
               );
             })}
-
-          <p style={{textAlign: "center"}}>
-            Children accounts linked to your account
-          </p>
-          <FlexSection>
-            <ChildrenContainer>
-              <ChildButton>Kevin</ChildButton>
-              <ChildButton>Denise</ChildButton>
-            </ChildrenContainer>
-            <ButtonContainer>
-              <AddChildButton
-                onClick={loginMode === "child" ? onClickParent : onClickChild}
-              >
-                Add child login
-              </AddChildButton>
-              <LogoutButton onClick={onSignIn}>Logout</LogoutButton>
-            </ButtonContainer>
-          </FlexSection>
-          {loginMode === "child" && (
-            <>
-              <RegisterFormChild
-                loginMode={loginMode}
-                onClickParent={onClickParent}
-                onClickChild={onClickChild}
-                showPassword={showPassword}
-                onShowPassword={onShowPassword}
-                showConfirmedPassword={showConfirmedPassword}
-                onShowConfirmedPassword={onShowConfirmedPassword}
-                onClickSignIn={onClickSignIn}
-              />
-            </>
-          )}
         </>
       )}
     </>
@@ -164,13 +182,13 @@ const ChildrenContainer = styled.div`
   flex-direction: column;
   gap: 1rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: flex-end;
   width: 50%;
   padding-right: 2rem;
@@ -184,7 +202,6 @@ const AddChildButton = styled.button`
   box-shadow: 4px 4px 8px 1px rgba(64, 29, 26, 0.65);
   border-radius: 5px;
   border: none;
-  height: 2rem;
 
   :hover {
     transform: scale(1.1);
@@ -219,4 +236,24 @@ const LogoutButton = styled.button`
     box-shadow: 4px 4px 8px 1px rgba(166, 31, 67, 0.65);
     transform: scale(1.1);
   }
+`;
+
+const ChildLogoutButton = styled.button`
+  background-color: #a61f2b;
+  border-radius: 5px;
+  color: #e9f2ef;
+  border: none;
+  width: 7rem;
+  box-shadow: 4px 4px 8px 1px rgba(166, 31, 43, 0.65);
+
+  :hover {
+    background-color: #a61f43;
+    box-shadow: 4px 4px 8px 1px rgba(166, 31, 67, 0.65);
+    transform: scale(1.1);
+  }
+`;
+
+const NoChildLogins = styled.p`
+  width: 100%;
+  text-align: center;
 `;

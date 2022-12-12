@@ -54,8 +54,6 @@ export default function SigninForm({showPassword, onShowPassword, onSignIn}) {
       : user.map(use => {
           use.firstName === loginFilter.firstName && onSignIn();
           setUser(user);
-          // console.log(user);
-          // console.log(use.firstName);
         });
   };
 

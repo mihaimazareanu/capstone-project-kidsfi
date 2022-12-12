@@ -1,44 +1,32 @@
 import connectDB from "./_db/connect-db";
 import {Parent} from "./_db/models/Parent";
 
-const mongodb = require("mongodb");
-
-const url =
-  "mongodb+srv://mihaimazareanu:Decembrie2405@kidsfi.jnbdwx0.mongodb.net/test";
-
 async function handler(req, res) {
-  const client = await mongodb.MongoClient.connect(url);
-  const db = client.db();
-  const parents = db.collection("parents");
   switch (req.method) {
     case "GET":
       try {
-        const filter = {};
-        if (req.query.firstName) {
-          filter.firstName = req.query.firstName;
-          // filter.lastName = req.query.lastName;
-          // filter.password = req.query.password;
-        }
-        const users = await Parent.find(filter);
-
-        const children = await parents
-          .aggregate([
-            {
-              $lookup: {
-                from: "children",
-                localField: "_id",
-                foreignField: "parentID",
-                as: "children",
-              },
+        // const filter = {};
+        // if (req.query.firstName) {
+        //   filter.firstName = req.query.firstName;
+        //   filter.lastName = req.query.lastName;
+        //   filter.password = req.query.password;
+        // }
+        const parents = await Parent.aggregate([
+          {
+            $match: {
+              firstName: req.query.firstName,
             },
-            {
-              $project: {
-                children: 1,
-              },
+          },
+          {
+            $lookup: {
+              from: "children",
+              localField: "_id",
+              foreignField: "parentID",
+              as: "children",
             },
-          ])
-          .toArray();
-        res.status(200).json(users, children);
+          },
+        ]).exec();
+        res.status(200).json(parents);
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});

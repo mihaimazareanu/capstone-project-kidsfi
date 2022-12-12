@@ -80,7 +80,7 @@ export default function RegisterFormChild({
           if (!value) {
             stateObj[name] = "Please enter Confirm Password.";
           } else if (regInput.password && value !== regInput.password) {
-            stateObj[name] = "Password and Confirm Password does not match.";
+            stateObj[name] = "Password and Confirm Password do not match.";
           }
           break;
 

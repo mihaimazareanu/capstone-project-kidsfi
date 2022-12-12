@@ -80,7 +80,7 @@ export default function RegisterFormParent({
           if (!value) {
             stateObj[name] = "Please enter Confirm Password.";
           } else if (regInput.password && value !== regInput.password) {
-            stateObj[name] = "Password and Confirm Password does not match.";
+            stateObj[name] = "Password and Confirm Password do not match.";
           }
           break;
 
@@ -101,7 +101,6 @@ export default function RegisterFormParent({
         lastName: data.lastName,
         password: data.password,
         isParent: true,
-        isChild: false,
       };
 
       const endpoint = "/api/parents";
