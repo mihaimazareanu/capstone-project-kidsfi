@@ -164,8 +164,8 @@ export const Navbar = styled.nav`
 `;
 
 const Logo = styled.img`
-  width: 5rem;
-  height: 5rem;
+  width: 4rem;
+  height: 4rem;
 `;
 
 const StyledList = styled.ul`
