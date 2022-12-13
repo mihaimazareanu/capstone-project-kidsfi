@@ -201,7 +201,7 @@ export default function Home({
                               >
                                 <label>
                                   {`Current amount €   `}
-                                  <input />
+                                  <input type="text" />
                                 </label>
                                 <AddChildButton
                                   style={{
@@ -211,6 +211,38 @@ export default function Home({
                                   Add account
                                 </AddChildButton>
                               </ChildSection>
+                            </>
+                          )}
+                          {addAccount == "Savings account" && (
+                            <>
+                              <StyledForm>
+                                <StyledFieldset>
+                                  <label>
+                                    {`Start date    `}
+                                    <StyledInput type="date" />
+                                  </label>
+                                  <label>
+                                    {`Start amount €    `}
+                                    <StyledInput
+                                      type="text"
+                                      style={{width: "3rem"}}
+                                    />
+                                  </label>
+                                </StyledFieldset>
+                                <StyledFieldset>
+                                  <label>
+                                    {`Interest rate    `}
+                                    <StyledInput
+                                      type="text"
+                                      style={{width: "3rem"}}
+                                    />
+                                    {` %`}
+                                  </label>
+                                  <AddChildButton style={{alignSelf: "center"}}>
+                                    Add account
+                                  </AddChildButton>
+                                </StyledFieldset>
+                              </StyledForm>
                             </>
                           )}
                         </>
@@ -333,5 +365,30 @@ const StyledSelect = styled.select`
   border: 1px solid #5e8c49;
   border-radius: 5px;
   margin: 0 1rem 1rem 1rem;
+  color: #401d1a;
+`;
+
+const StyledForm = styled.form`
+  width: 100%;
+  border: 3px solid #5e8c49;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 1rem;
+`;
+
+const StyledFieldset = styled.fieldset`
+  width: 100%;
+  border: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const StyledInput = styled.input`
+  border: 1px solid #5e8c49;
+  border-radius: 5px;
   color: #401d1a;
 `;
