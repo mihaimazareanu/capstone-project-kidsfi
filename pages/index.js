@@ -245,6 +245,50 @@ export default function Home({
                               </StyledForm>
                             </>
                           )}
+                          {addAccount == "Stocks account" && (
+                            <>
+                              <StyledForm>
+                                <StyledFieldset>
+                                  <label>
+                                    {`Stock name    `}
+                                    <StyledInput type="text" />
+                                  </label>
+                                  <label>
+                                    {`WKN    `}
+                                    <StyledInput
+                                      type="text"
+                                      style={{width: "3rem"}}
+                                    />
+                                  </label>
+                                </StyledFieldset>
+                                <StyledFieldset>
+                                  <label>
+                                    {`Buy date   `}
+                                    <StyledInput type="date" />
+                                  </label>
+                                  <label>
+                                    {`Buy amount €    `}
+                                    <StyledInput
+                                      type="text"
+                                      style={{width: "3rem"}}
+                                    />
+                                  </label>
+                                </StyledFieldset>
+                                <StyledFieldset>
+                                  <label>
+                                    {`No of stocks    `}
+                                    <StyledInput
+                                      type="text"
+                                      style={{width: "3rem"}}
+                                    />
+                                  </label>
+                                  <AddChildButton style={{alignSelf: "center"}}>
+                                    Add account
+                                  </AddChildButton>
+                                </StyledFieldset>
+                              </StyledForm>
+                            </>
+                          )}
                         </>
                       )}
                     </>
