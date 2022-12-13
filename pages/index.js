@@ -190,7 +190,7 @@ export default function Home({
                               <option value="Loan account">Loan account</option>
                             </StyledSelect>
                           </ChildSection>
-                          {addAccount == "Piggy bank" && (
+                          {addAccount === "Piggy bank" && (
                             <>
                               <ChildSection
                                 style={{
@@ -213,7 +213,8 @@ export default function Home({
                               </ChildSection>
                             </>
                           )}
-                          {addAccount == "Savings account" && (
+                          {(addAccount === "Savings account" ||
+                            addAccount === "Loan account") && (
                             <>
                               <StyledForm>
                                 <StyledFieldset>
@@ -245,7 +246,7 @@ export default function Home({
                               </StyledForm>
                             </>
                           )}
-                          {addAccount == "Stocks account" && (
+                          {addAccount === "Stocks account" && (
                             <>
                               <StyledForm>
                                 <StyledFieldset>
