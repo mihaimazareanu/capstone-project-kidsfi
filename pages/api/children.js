@@ -12,7 +12,7 @@ async function handler(req, res) {
           // filter.password = req.query.password;
         }
         const children = await Child.find(filter);
-        res.status(200).json(children);
+        res.status(200).json(children[0]);
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});
