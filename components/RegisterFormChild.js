@@ -46,7 +46,6 @@ export default function RegisterFormChild({
     let {name, value} = event.target;
     setError(prev => {
       const stateObj = {...prev, [name]: ""};
-
       switch (name) {
         case "firstName":
           if (!value) {
@@ -125,7 +124,6 @@ export default function RegisterFormChild({
             password: "",
             confirmPassword: "",
           });
-          // onClickSignIn();
           onClickParent();
           setUser({...user, children: [...user.children, body]});
         } else {

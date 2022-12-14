@@ -1,5 +1,5 @@
-import connectDB from "./_db/connect-db";
-import {Child} from "./_db/models/Child";
+import connectDB from "../_db/connect-db";
+import {Child} from "../_db/models/Child";
 
 async function handler(req, res) {
   switch (req.method) {
@@ -8,6 +8,7 @@ async function handler(req, res) {
         const filter = {};
         if (req.query.firstName) {
           filter.firstName = req.query.firstName;
+          // filter._id = req.query._id;
           // filter.lastName = req.query.lastName;
           // filter.password = req.query.password;
         }
@@ -36,7 +37,6 @@ async function handler(req, res) {
       break;
     case "DELETE":
     case "PUT":
-    case "PATCH":
     default:
       res.status(405).json({error: "method not allowed"});
   }

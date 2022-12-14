@@ -26,9 +26,40 @@ export default function Home({
   const [showAccounts, setShowAccounts] = useState(false);
   const [showAddAccount, setShowAddAccount] = useState(false);
   const [addAccount, setAddAccount] = useState("");
+  const [account, setAccount] = useState({});
 
   const toggleShowAccounts = id => {
     showAccounts === id ? setShowAccounts(false) : setShowAccounts(id);
+  };
+
+  const handleSubmitAccount = async event => {
+    event.preventDefault();
+    try {
+      if (addAccount === "Piggy bank") {
+        console.log(account);
+      }
+      const body = {
+        name: addAccount,
+        startAmount: account.startAmount,
+      };
+      const endpoint = `/api/children/${showAccounts}`;
+
+      const options = {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      };
+      const response = await fetch(endpoint, options);
+      if (response.ok) {
+        console.log("hallo");
+      } else {
+        throw new Error(`Fetch failed with status: ${response.status}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -192,7 +223,8 @@ export default function Home({
                           </ChildSection>
                           {addAccount === "Piggy bank" && (
                             <>
-                              <ChildSection
+                              <AccountForm
+                                onSubmit={handleSubmitAccount}
                                 style={{
                                   flexDirection: "row",
                                   gap: "1rem",
@@ -201,16 +233,26 @@ export default function Home({
                               >
                                 <label>
                                   {`Current amount €   `}
-                                  <input type="text" />
+                                  <input
+                                    onChange={event =>
+                                      setAccount({
+                                        ...account,
+                                        name: "Piggy bank",
+                                        startAmount: event.target.value,
+                                      })
+                                    }
+                                    type="text"
+                                  />
                                 </label>
                                 <AddChildButton
+                                  type="submit"
                                   style={{
                                     alignSelf: "center",
                                   }}
                                 >
                                   Add account
                                 </AddChildButton>
-                              </ChildSection>
+                              </AccountForm>
                             </>
                           )}
                           {(addAccount === "Savings account" ||
@@ -436,4 +478,15 @@ const StyledInput = styled.input`
   border: 1px solid #5e8c49;
   border-radius: 5px;
   color: #401d1a;
+`;
+
+const AccountForm = styled.form`
+  width: 100%;
+  border: 3px solid #5e8c49;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 1rem;
 `;
