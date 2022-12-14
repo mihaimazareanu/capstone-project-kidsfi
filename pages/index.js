@@ -190,7 +190,7 @@ export default function Home({
                               <option value="Loan account">Loan account</option>
                             </StyledSelect>
                           </ChildSection>
-                          {addAccount == "Piggy bank" && (
+                          {addAccount === "Piggy bank" && (
                             <>
                               <ChildSection
                                 style={{
@@ -213,7 +213,8 @@ export default function Home({
                               </ChildSection>
                             </>
                           )}
-                          {addAccount == "Savings account" && (
+                          {(addAccount === "Savings account" ||
+                            addAccount === "Loan account") && (
                             <>
                               <StyledForm>
                                 <StyledFieldset>
@@ -237,6 +238,50 @@ export default function Home({
                                       style={{width: "3rem"}}
                                     />
                                     {` %`}
+                                  </label>
+                                  <AddChildButton style={{alignSelf: "center"}}>
+                                    Add account
+                                  </AddChildButton>
+                                </StyledFieldset>
+                              </StyledForm>
+                            </>
+                          )}
+                          {addAccount === "Stocks account" && (
+                            <>
+                              <StyledForm>
+                                <StyledFieldset>
+                                  <label>
+                                    {`Stock name    `}
+                                    <StyledInput type="text" />
+                                  </label>
+                                  <label>
+                                    {`WKN    `}
+                                    <StyledInput
+                                      type="text"
+                                      style={{width: "3rem"}}
+                                    />
+                                  </label>
+                                </StyledFieldset>
+                                <StyledFieldset>
+                                  <label>
+                                    {`Buy date   `}
+                                    <StyledInput type="date" />
+                                  </label>
+                                  <label>
+                                    {`Buy amount €    `}
+                                    <StyledInput
+                                      type="text"
+                                      style={{width: "3rem"}}
+                                    />
+                                  </label>
+                                </StyledFieldset>
+                                <StyledFieldset>
+                                  <label>
+                                    {`No of stocks    `}
+                                    <StyledInput
+                                      type="text"
+                                      style={{width: "3rem"}}
+                                    />
                                   </label>
                                   <AddChildButton style={{alignSelf: "center"}}>
                                     Add account
