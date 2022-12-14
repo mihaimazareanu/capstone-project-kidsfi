@@ -9,6 +9,8 @@ import {useContext, useState} from "react";
 import {LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
 import {StartPageButton} from "../components/StyledComponents";
+import Lottie from "react-lottie";
+import animationData from "../public/Welcome.json";
 
 export default function Home({
   accessMode,
@@ -30,6 +32,15 @@ export default function Home({
 
   const toggleShowAccounts = id => {
     showAccounts === id ? setShowAccounts(false) : setShowAccounts(id);
+  };
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
   };
 
   const handleSubmitAccount = async event => {
@@ -357,6 +368,11 @@ export default function Home({
             user !== null && (
               <div>
                 <h1 style={{textAlign: "center"}}>Welcome {user.firstName}</h1>
+                <Lottie
+                  options={defaultOptions}
+                  height={175}
+                  width={225}
+                ></Lottie>
                 <LogoutButton onClick={() => setUser(null)}>
                   Logout
                 </LogoutButton>
