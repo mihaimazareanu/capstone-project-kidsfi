@@ -25,15 +25,12 @@ export default function Home({
   onShowConfirmedPassword,
 }) {
   const {user, setUser} = useContext(UserContext);
-  const [showAccounts, setShowAccounts] = useState(false);
+  const [selectedChild, setSelectedChild] = useState(null);
   const [showAddAccount, setShowAddAccount] = useState(false);
   const [addAccount, setAddAccount] = useState("");
   const [account, setAccount] = useState({});
 
-  const toggleShowAccounts = id => {
-    showAccounts === id ? setShowAccounts(false) : setShowAccounts(id);
-  };
-
+  // default Options for Lottie animation
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -43,6 +40,12 @@ export default function Home({
     },
   };
 
+  // function to toggle if the section to add money accounts should be displayed or not
+  const toggleShowAccounts = id => {
+    selectedChild === id ? setSelectedChild(null) : setSelectedChild(id);
+  };
+
+  // function to be executed when "Add account" button is pressed
   const handleSubmitAccount = async event => {
     event.preventDefault();
     try {
@@ -53,10 +56,9 @@ export default function Home({
         name: addAccount,
         startAmount: account.startAmount,
       };
-      const endpoint = `/api/children/${showAccounts}`;
-
+      const endpoint = `/api/children/${selectedChild}/accounts`;
       const options = {
-        method: "PATCH",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -65,6 +67,22 @@ export default function Home({
       const response = await fetch(endpoint, options);
       if (response.ok) {
         console.log("hallo");
+        setUser(prevUser => {
+          const updatedUser = {
+            ...prevUser,
+            children: prevUser.children.map(child => {
+              if (child._id === selectedChild) {
+                return {
+                  ...child,
+                  accounts: [...child.accounts, account],
+                };
+              }
+              return child;
+            }),
+          };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          return updatedUser;
+        });
       } else {
         throw new Error(`Fetch failed with status: ${response.status}`);
       }
@@ -160,7 +178,7 @@ export default function Home({
                     onClick={() => {
                       setUser(null);
                       onClickParent();
-                      setShowAccounts(false);
+                      setSelectedChild(null);
                     }}
                   >
                     Logout
@@ -169,7 +187,7 @@ export default function Home({
               </FlexSection>
               {user.children.map(child => {
                 return (
-                  showAccounts === child._id && (
+                  selectedChild === child._id && (
                     <>
                       <ChildSection>
                         <article
@@ -202,7 +220,15 @@ export default function Home({
                             </svg>
                           </StartPageButton>
                         </article>
-                        <ul>Under construction</ul>
+                        <AccountsList>
+                          {child.accounts &&
+                            child.accounts.map(account => (
+                              <>
+                                <li>{account.name}</li>
+                                <li>{account.startAmount} €</li>
+                              </>
+                            ))}
+                        </AccountsList>
                       </ChildSection>
                       {showAddAccount && (
                         <>
@@ -234,7 +260,7 @@ export default function Home({
                           </ChildSection>
                           {addAccount === "Piggy bank" && (
                             <>
-                              <AccountForm
+                              <StyledForm
                                 onSubmit={handleSubmitAccount}
                                 style={{
                                   flexDirection: "row",
@@ -263,7 +289,7 @@ export default function Home({
                                 >
                                   Add account
                                 </AddChildButton>
-                              </AccountForm>
+                              </StyledForm>
                             </>
                           )}
                           {(addAccount === "Savings account" ||
@@ -366,17 +392,24 @@ export default function Home({
             </>
           ) : (
             user !== null && (
-              <div>
-                <h1 style={{textAlign: "center"}}>Welcome {user.firstName}</h1>
-                <Lottie
-                  options={defaultOptions}
-                  height={175}
-                  width={225}
-                ></Lottie>
-                <LogoutButton onClick={() => setUser(null)}>
+              <>
+                <StyledAnimationContainer>
+                  <h1 style={{textAlign: "center"}}>
+                    Welcome {user.firstName}
+                  </h1>
+                  <Lottie
+                    options={defaultOptions}
+                    width={"13.5rem"}
+                    height={"10.5rem"}
+                  ></Lottie>
+                </StyledAnimationContainer>
+                <LogoutButton
+                  style={{marginLeft: "1rem"}}
+                  onClick={() => setUser(null)}
+                >
                   Logout
                 </LogoutButton>
-              </div>
+              </>
             )
           )}
         </>
@@ -496,13 +529,31 @@ const StyledInput = styled.input`
   color: #401d1a;
 `;
 
-const AccountForm = styled.form`
+// const AccountForm = styled.form`
+//   width: 100%;
+//   border: 3px solid #5e8c49;
+//   border-radius: 12px;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: flex-start;
+//   margin-top: 1rem;
+// `;
+
+const StyledAnimationContainer = styled.div`
   width: 100%;
-  border: 3px solid #5e8c49;
-  border-radius: 12px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  margin-top: 1rem;
+  justify-content: flex-start;
+  /* background-color: hotpink; */
+  margin-left: 1rem;
+  /* align-items: center; */
+`;
+
+const AccountsList = styled.ul`
+  list-style: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  /* justify-content: flex-start; */
+  gap: 5rem;
 `;

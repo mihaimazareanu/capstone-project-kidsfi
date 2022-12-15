@@ -33,7 +33,7 @@ const ChildSchema = new mongoose.Schema({
       name: {
         type: String,
       },
-      amount: {
+      startAmount: {
         type: Number,
       },
     },
