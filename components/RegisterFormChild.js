@@ -43,7 +43,7 @@ export default function RegisterFormChild({
   };
 
   const validateInput = event => {
-    let {name, value} = event.target;
+    const {name, value} = event.target;
     setError(prev => {
       const stateObj = {...prev, [name]: ""};
       switch (name) {

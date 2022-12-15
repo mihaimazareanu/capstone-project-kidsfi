@@ -8,9 +8,6 @@ async function handler(req, res) {
         const filter = {};
         if (req.query._id) {
           filter._id = req.query._id;
-          // filter._id = req.query._id;
-          // filter.lastName = req.query.lastName;
-          // filter.password = req.query.password;
         }
         const children = await Child.find(filter);
         res.status(200).json(children);

@@ -33,7 +33,28 @@ const ChildSchema = new mongoose.Schema({
       name: {
         type: String,
       },
+
       startAmount: {
+        type: Number,
+      },
+
+      interestRate: {
+        type: Number,
+      },
+
+      stockName: {
+        type: String,
+      },
+
+      WKN: {
+        type: String,
+      },
+
+      startDate: {
+        type: Date,
+      },
+
+      pcs: {
         type: Number,
       },
     },

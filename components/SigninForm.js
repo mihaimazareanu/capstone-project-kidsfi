@@ -31,7 +31,6 @@ export default function SigninForm({showPassword, onShowPassword}) {
         if (parentsResponse.ok) {
           try {
             const parentsData = await parentsResponse.json();
-            console.log(parentsData);
             if (parentsData.firstName === loginFilter.firstName) {
               setUser(parentsData);
             }
@@ -39,7 +38,6 @@ export default function SigninForm({showPassword, onShowPassword}) {
             const childrenResponse = await fetch(urlChildren);
             if (childrenResponse.ok) {
               const childrenData = await childrenResponse.json();
-              console.log(childrenData);
               setUser(childrenData);
             }
           }
