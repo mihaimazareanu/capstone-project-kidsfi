@@ -25,7 +25,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
             :*/ `/api/parents?firstName=${loginFilter.firstName}`;
         const urlChildren = /*loginFilter.firstName.length === 0
             ? `/api/children`
-            :*/ `/api/children?firstName=${loginFilter.firstName}`;
+            :*/ `/api/children/?firstName=${loginFilter.firstName}`;
         const parentsResponse = await fetch(urlParents);
         // console.log(parentsResponse);
         if (parentsResponse.ok) {
@@ -38,7 +38,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
             const childrenResponse = await fetch(urlChildren);
             if (childrenResponse.ok) {
               const childrenData = await childrenResponse.json();
-              setUser(childrenData);
+              setUser(childrenData[0]);
             }
           }
         } else {
@@ -47,15 +47,9 @@ export default function SigninForm({showPassword, onShowPassword}) {
       } catch (error) {
         console.log(error);
         handleLoginFailed();
-        // alert(error.message);
       }
     };
     getUser();
-    // user.length === 0
-    //   ? handleLoginFailed()
-    //   :
-    //       user.firstName === loginFilter.firstName && setUser(loginFilter);
-    //       onSignIn();
   };
 
   return (

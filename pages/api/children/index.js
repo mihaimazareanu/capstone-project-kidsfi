@@ -6,8 +6,8 @@ async function handler(req, res) {
     case "GET":
       try {
         const filter = {};
-        if (req.query._id) {
-          filter._id = req.query._id;
+        if (req.query.firstName) {
+          filter.firstName = req.query.firstName;
         }
         const children = await Child.find(filter);
         res.status(200).json(children);
