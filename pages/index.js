@@ -224,7 +224,8 @@ export default function Home({
                           </StartPageButton>
                         </article>
                         <AccountsList>
-                          {child.accounts && child.accounts.length !== 0 ? (
+                          {child.accounts.length !== 0 ? (
+                            child.accounts &&
                             child.accounts.map(account => (
                               <>
                                 <ListElementsContainer>
