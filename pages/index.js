@@ -290,6 +290,7 @@ export default function Home({
                                         startAmount: event.target.value,
                                       })
                                     }
+                                    required
                                     type="text"
                                   />
                                 </label>
@@ -319,6 +320,7 @@ export default function Home({
                                         })
                                       }
                                       type="date"
+                                      required
                                     />
                                   </label>
                                   <label>
@@ -331,6 +333,7 @@ export default function Home({
                                         })
                                       }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                   </label>
@@ -346,6 +349,7 @@ export default function Home({
                                         })
                                       }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                     {` %`}
@@ -372,6 +376,7 @@ export default function Home({
                                         })
                                       }
                                       type="text"
+                                      required
                                     />
                                   </label>
                                   <label>
@@ -384,6 +389,7 @@ export default function Home({
                                         })
                                       }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                   </label>
@@ -399,6 +405,7 @@ export default function Home({
                                         })
                                       }
                                       type="date"
+                                      required
                                     />
                                   </label>
                                   <label>
@@ -411,6 +418,7 @@ export default function Home({
                                         })
                                       }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                   </label>
@@ -426,6 +434,7 @@ export default function Home({
                                         })
                                       }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                   </label>
@@ -451,6 +460,7 @@ export default function Home({
                                         })
                                       }
                                       type="date"
+                                      required
                                     />
                                   </label>
                                   <label>
@@ -463,6 +473,7 @@ export default function Home({
                                         })
                                       }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                   </label>
@@ -478,6 +489,7 @@ export default function Home({
                                         })
                                       }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                     {` %`}
