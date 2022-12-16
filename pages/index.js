@@ -58,6 +58,8 @@ export default function Home({
         startDate: account.startDate,
         pcs: account.pcs,
       };
+      console.log("Body default before posting", body);
+      console.log("Selected Child ID: ", selectedChild);
       const endpoint = `/api/children/${selectedChild}/accounts`;
       const options = {
         method: "POST",
@@ -68,6 +70,8 @@ export default function Home({
       };
       const response = await fetch(endpoint, options);
       if (response.ok) {
+        console.log(account);
+        console.log(user);
         setUser(prevUser => {
           const updatedUser = {
             ...prevUser,
@@ -225,7 +229,6 @@ export default function Home({
                         </article>
                         <AccountsList>
                           {child.accounts.length !== 0 ? (
-                            child.accounts &&
                             child.accounts.map(account => (
                               <>
                                 <ListElementsContainer>
