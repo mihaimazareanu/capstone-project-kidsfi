@@ -3,10 +3,7 @@ import {useState, useContext} from "react";
 import {UserContext} from "./UserContext";
 import {FormButton} from "./StyledComponents";
 
-export default function SigninForm({
-  showPassword,
-  onShowPassword /*onSignIn*/,
-}) {
+export default function SigninForm({showPassword, onShowPassword}) {
   const {setUser} = useContext(UserContext);
   const [loginFailed, setLoginFailed] = useState(false);
   const [loginFilter, setLoginFilter] = useState({
@@ -19,37 +16,6 @@ export default function SigninForm({
     setLoginFailed(true);
   };
 
-  // useEffect(() => {
-  //   const getUsers = async () => {
-  //     try {
-  //       const urlParents = /*loginFilter.firstName.length === 0
-  //           ? `/api/parents`
-  //           :*/ `/api/parents?firstName=${loginFilter.firstName}`;
-  //       const urlChildren = /*loginFilter.firstName.length === 0
-  //           ? `/api/children`
-  //           :*/ `/api/children?firstName=${loginFilter.firstName}`;
-  //       const parentsResponse = await fetch(urlParents);
-  //       if (parentsResponse.ok) {
-  //         const parentsData = await parentsResponse.json();
-  //         if (parentsData.length > 0) {
-  //           setUser(parentsData);
-  //         } else {
-  //           const childrenResponse = await fetch(urlChildren);
-  //           const childrenData = await childrenResponse.json();
-  //           setUser(childrenData);
-  //         }
-  //       } else {
-  //         throw new Error(`Fetch failed`);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //       alert(error.message);
-  //     }
-  //   };
-  //   getUsers();
-  //   console.log("hallo");
-  // }, [loginFilter, setUser]);
-
   const handleSubmitSigninForm = event => {
     event.preventDefault();
     const getUser = async () => {
@@ -59,13 +25,12 @@ export default function SigninForm({
             :*/ `/api/parents?firstName=${loginFilter.firstName}`;
         const urlChildren = /*loginFilter.firstName.length === 0
             ? `/api/children`
-            :*/ `/api/children?firstName=${loginFilter.firstName}`;
+            :*/ `/api/children/?firstName=${loginFilter.firstName}`;
         const parentsResponse = await fetch(urlParents);
         // console.log(parentsResponse);
         if (parentsResponse.ok) {
           try {
             const parentsData = await parentsResponse.json();
-            console.log(parentsData);
             if (parentsData.firstName === loginFilter.firstName) {
               setUser(parentsData);
             }
@@ -73,8 +38,7 @@ export default function SigninForm({
             const childrenResponse = await fetch(urlChildren);
             if (childrenResponse.ok) {
               const childrenData = await childrenResponse.json();
-              console.log(childrenData);
-              setUser(childrenData);
+              setUser(childrenData[0]);
             }
           }
         } else {
@@ -83,15 +47,9 @@ export default function SigninForm({
       } catch (error) {
         console.log(error);
         handleLoginFailed();
-        // alert(error.message);
       }
     };
     getUser();
-    // user.length === 0
-    //   ? handleLoginFailed()
-    //   :
-    //       user.firstName === loginFilter.firstName && setUser(loginFilter);
-    //       onSignIn();
   };
 
   return (

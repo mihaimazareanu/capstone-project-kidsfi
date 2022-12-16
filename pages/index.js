@@ -9,6 +9,8 @@ import {useContext, useState} from "react";
 import {LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
 import {StartPageButton} from "../components/StyledComponents";
+import Lottie from "react-lottie";
+import animationData from "../public/Welcome.json";
 
 export default function Home({
   accessMode,
@@ -23,12 +25,77 @@ export default function Home({
   onShowConfirmedPassword,
 }) {
   const {user, setUser} = useContext(UserContext);
-  const [showAccounts, setShowAccounts] = useState(false);
+  const [selectedChild, setSelectedChild] = useState(null);
   const [showAddAccount, setShowAddAccount] = useState(false);
-  const [addAccount, setAddAccount] = useState("");
+  const [accountType, setAccountType] = useState("");
+  const [account, setAccount] = useState({});
 
-  const toggleShowAccounts = id => {
-    showAccounts === id ? setShowAccounts(false) : setShowAccounts(id);
+  // default Options for Lottie animation
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  // function to toggle if the section to add money accounts should be displayed or not
+  const toggleSelectedChild = id => {
+    selectedChild === id ? setSelectedChild(null) : setSelectedChild(id);
+  };
+
+  // function to be executed when "Add account" button is pressed
+  const handleSubmitAccount = async event => {
+    event.preventDefault();
+    try {
+      const body = {
+        name: accountType,
+        startAmount: account.startAmount,
+        interestRate: account.interestRate,
+        stockName: account.stockName,
+        WKN: account.WKN,
+        startDate: account.startDate,
+        pcs: account.pcs,
+      };
+      console.log("Body default before posting", body);
+      console.log("Selected Child ID: ", selectedChild);
+      const endpoint = `/api/children/${selectedChild}/accounts`;
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      };
+      const response = await fetch(endpoint, options);
+      if (response.ok) {
+        console.log(account);
+        console.log(user);
+        setUser(prevUser => {
+          const updatedUser = {
+            ...prevUser,
+            children: prevUser.children.map(child => {
+              if (child._id === selectedChild) {
+                return {
+                  ...child,
+                  accounts: [...child.accounts, account],
+                };
+              }
+              return child;
+            }),
+          };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          return updatedUser;
+        });
+        setShowAddAccount(!showAddAccount);
+        console.log(account);
+      } else {
+        throw new Error(`Fetch failed with status: ${response.status}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -96,7 +163,7 @@ export default function Home({
                           <section>
                             <FormButton
                               style={{width: "7rem"}}
-                              onClick={() => toggleShowAccounts(child._id)}
+                              onClick={() => toggleSelectedChild(child._id)}
                             >
                               {child.firstName}
                             </FormButton>
@@ -118,7 +185,7 @@ export default function Home({
                     onClick={() => {
                       setUser(null);
                       onClickParent();
-                      setShowAccounts(false);
+                      setSelectedChild(null);
                     }}
                   >
                     Logout
@@ -127,7 +194,7 @@ export default function Home({
               </FlexSection>
               {user.children.map(child => {
                 return (
-                  showAccounts === child._id && (
+                  selectedChild === child._id && (
                     <>
                       <ChildSection>
                         <article
@@ -160,7 +227,20 @@ export default function Home({
                             </svg>
                           </StartPageButton>
                         </article>
-                        <ul>Under construction</ul>
+                        <AccountsList>
+                          {child.accounts.length !== 0 ? (
+                            child.accounts.map(account => (
+                              <>
+                                <ListElementsContainer>
+                                  <li>{account.name}</li>
+                                  <li>{account.startAmount} €</li>
+                                </ListElementsContainer>
+                              </>
+                            ))
+                          ) : (
+                            <p>No accounts yet.</p>
+                          )}
+                        </AccountsList>
                       </ChildSection>
                       {showAddAccount && (
                         <>
@@ -175,8 +255,8 @@ export default function Home({
                               id="addAccount"
                               required
                               onChange={event => {
-                                setAddAccount(event.target.value);
-                                console.log(addAccount);
+                                setAccountType(event.target.value);
+                                console.log(accountType);
                               }}
                             >
                               <option value="">Select an option...</option>
@@ -190,9 +270,10 @@ export default function Home({
                               <option value="Loan account">Loan account</option>
                             </StyledSelect>
                           </ChildSection>
-                          {addAccount === "Piggy bank" && (
+                          {accountType === "Piggy bank" && (
                             <>
-                              <ChildSection
+                              <StyledForm
+                                onSubmit={handleSubmitAccount}
                                 style={{
                                   flexDirection: "row",
                                   gap: "1rem",
@@ -201,31 +282,58 @@ export default function Home({
                               >
                                 <label>
                                   {`Current amount €   `}
-                                  <input type="text" />
+                                  <StyledInput
+                                    onChange={event =>
+                                      setAccount({
+                                        ...account,
+                                        name: "Piggy bank",
+                                        startAmount: event.target.value,
+                                      })
+                                    }
+                                    required
+                                    type="text"
+                                  />
                                 </label>
                                 <AddChildButton
+                                  type="submit"
                                   style={{
                                     alignSelf: "center",
                                   }}
                                 >
                                   Add account
                                 </AddChildButton>
-                              </ChildSection>
+                              </StyledForm>
                             </>
                           )}
-                          {(addAccount === "Savings account" ||
-                            addAccount === "Loan account") && (
+                          {accountType === "Savings account" && (
                             <>
-                              <StyledForm>
+                              <StyledForm onSubmit={handleSubmitAccount}>
                                 <StyledFieldset>
                                   <label>
                                     {`Start date    `}
-                                    <StyledInput type="date" />
+                                    <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          name: "Savings account",
+                                          startDate: event.target.value,
+                                        })
+                                      }
+                                      type="date"
+                                      required
+                                    />
                                   </label>
                                   <label>
                                     {`Start amount €    `}
                                     <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          startAmount: event.target.value,
+                                        })
+                                      }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                   </label>
@@ -234,7 +342,14 @@ export default function Home({
                                   <label>
                                     {`Interest rate    `}
                                     <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          interestRate: event.target.value,
+                                        })
+                                      }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                     {` %`}
@@ -246,18 +361,35 @@ export default function Home({
                               </StyledForm>
                             </>
                           )}
-                          {addAccount === "Stocks account" && (
+                          {accountType === "Stocks account" && (
                             <>
-                              <StyledForm>
+                              <StyledForm onSubmit={handleSubmitAccount}>
                                 <StyledFieldset>
                                   <label>
                                     {`Stock name    `}
-                                    <StyledInput type="text" />
+                                    <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          name: "Stocks account",
+                                          stockName: event.target.value,
+                                        })
+                                      }
+                                      type="text"
+                                      required
+                                    />
                                   </label>
                                   <label>
                                     {`WKN    `}
                                     <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          WKN: event.target.value,
+                                        })
+                                      }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                   </label>
@@ -265,12 +397,28 @@ export default function Home({
                                 <StyledFieldset>
                                   <label>
                                     {`Buy date   `}
-                                    <StyledInput type="date" />
+                                    <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          startDate: event.target.value,
+                                        })
+                                      }
+                                      type="date"
+                                      required
+                                    />
                                   </label>
                                   <label>
                                     {`Buy amount €    `}
                                     <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          startAmount: event.target.value,
+                                        })
+                                      }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
                                   </label>
@@ -279,9 +427,72 @@ export default function Home({
                                   <label>
                                     {`No of stocks    `}
                                     <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          pcs: event.target.value,
+                                        })
+                                      }
                                       type="text"
+                                      required
                                       style={{width: "3rem"}}
                                     />
+                                  </label>
+                                  <AddChildButton style={{alignSelf: "center"}}>
+                                    Add account
+                                  </AddChildButton>
+                                </StyledFieldset>
+                              </StyledForm>
+                            </>
+                          )}
+                          {accountType === "Loan account" && (
+                            <>
+                              <StyledForm onSubmit={handleSubmitAccount}>
+                                <StyledFieldset>
+                                  <label>
+                                    {`Start date    `}
+                                    <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          name: "Loan account",
+                                          startDate: event.target.value,
+                                        })
+                                      }
+                                      type="date"
+                                      required
+                                    />
+                                  </label>
+                                  <label>
+                                    {`Start amount €    `}
+                                    <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          startAmount: event.target.value,
+                                        })
+                                      }
+                                      type="text"
+                                      required
+                                      style={{width: "3rem"}}
+                                    />
+                                  </label>
+                                </StyledFieldset>
+                                <StyledFieldset>
+                                  <label>
+                                    {`Interest rate    `}
+                                    <StyledInput
+                                      onChange={event =>
+                                        setAccount({
+                                          ...account,
+                                          interestRate: event.target.value,
+                                        })
+                                      }
+                                      type="text"
+                                      required
+                                      style={{width: "3rem"}}
+                                    />
+                                    {` %`}
                                   </label>
                                   <AddChildButton style={{alignSelf: "center"}}>
                                     Add account
@@ -313,12 +524,24 @@ export default function Home({
             </>
           ) : (
             user !== null && (
-              <div>
-                <h1 style={{textAlign: "center"}}>Welcome {user.firstName}</h1>
-                <LogoutButton onClick={() => setUser(null)}>
+              <>
+                <StyledAnimationContainer>
+                  <h1 style={{textAlign: "center"}}>
+                    Welcome {user.firstName}
+                  </h1>
+                  <Lottie
+                    options={defaultOptions}
+                    width={"13.5rem"}
+                    height={"10.5rem"}
+                  ></Lottie>
+                </StyledAnimationContainer>
+                <LogoutButton
+                  style={{marginLeft: "1rem"}}
+                  onClick={() => setUser(null)}
+                >
                   Logout
                 </LogoutButton>
-              </div>
+              </>
             )
           )}
         </>
@@ -422,6 +645,7 @@ const StyledForm = styled.form`
   justify-content: center;
   align-items: flex-start;
   margin-top: 1rem;
+  padding: 0 1rem;
 `;
 
 const StyledFieldset = styled.fieldset`
@@ -436,4 +660,27 @@ const StyledInput = styled.input`
   border: 1px solid #5e8c49;
   border-radius: 5px;
   color: #401d1a;
+`;
+
+const StyledAnimationContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 1rem;
+`;
+
+const AccountsList = styled.ul`
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+`;
+const ListElementsContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 5rem;
 `;

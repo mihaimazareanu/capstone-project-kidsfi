@@ -153,7 +153,7 @@ export const Navbar = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 5rem;
   background: #688b51;
   box-shadow: inset -50px -50px 100px #5e7d49, inset 50px 50px 100px #729959;
@@ -161,6 +161,7 @@ export const Navbar = styled.nav`
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
+  z-index: 5;
 `;
 
 const Logo = styled.img`

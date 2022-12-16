@@ -1,7 +1,6 @@
 import GlobalStyles from "../styles/GlobalStyles";
 import Layout from "../components/Layout";
 import {useState} from "react";
-// import {useLocalStorage} from "../hooks/useLocalStorage";
 import {UserContextProvider} from "../components/UserContext";
 
 function MyApp({Component, pageProps}) {
@@ -9,7 +8,6 @@ function MyApp({Component, pageProps}) {
   const [loginMode, setLoginMode] = useState("parent");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmedPassword, setShowConfirmedPassword] = useState(false);
-  // const [signedIn, setSignedIn] = useLocalStorage("signedIn", false);
 
   const handleClickRegister = () => {
     setAccessMode("register");

@@ -26,9 +26,39 @@ const ChildSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
   },
 
-  accounts: {
-    type: Array,
-  },
+  accounts: [
+    {
+      id: {type: mongoose.Types.ObjectId},
+
+      name: {
+        type: String,
+      },
+
+      startAmount: {
+        type: Number,
+      },
+
+      interestRate: {
+        type: Number,
+      },
+
+      stockName: {
+        type: String,
+      },
+
+      WKN: {
+        type: String,
+      },
+
+      startDate: {
+        type: Date,
+      },
+
+      pcs: {
+        type: Number,
+      },
+    },
+  ],
 });
 
 // This is important in serverless environments: Check if the model exists and otherwise create a new one.

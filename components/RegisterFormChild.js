@@ -43,10 +43,9 @@ export default function RegisterFormChild({
   };
 
   const validateInput = event => {
-    let {name, value} = event.target;
+    const {name, value} = event.target;
     setError(prev => {
       const stateObj = {...prev, [name]: ""};
-
       switch (name) {
         case "firstName":
           if (!value) {
@@ -102,6 +101,7 @@ export default function RegisterFormChild({
         password: data.password,
         isChild: true,
         parentID: user._id,
+        accounts: [],
       };
 
       const endpoint = "/api/children";
@@ -115,7 +115,9 @@ export default function RegisterFormChild({
       };
       if (regInput.password === regInput.confirmPassword) {
         const response = await fetch(endpoint, options);
+
         if (response.ok) {
+          const data = await response.json();
           alert(
             `A new child ${data.firstName} ${data.lastName} has been added`
           );
@@ -125,9 +127,8 @@ export default function RegisterFormChild({
             password: "",
             confirmPassword: "",
           });
-          // onClickSignIn();
           onClickParent();
-          setUser({...user, children: [...user.children, body]});
+          setUser({...user, children: [...user.children, data]});
         } else {
           throw new Error(`Fetch failed with status: ${response.status}`);
         }

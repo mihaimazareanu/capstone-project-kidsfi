@@ -1,5 +1,5 @@
-import connectDB from "./_db/connect-db";
-import {Child} from "./_db/models/Child";
+import connectDB from "../_db/connect-db";
+import {Child} from "../_db/models/Child";
 
 async function handler(req, res) {
   switch (req.method) {
@@ -8,11 +8,9 @@ async function handler(req, res) {
         const filter = {};
         if (req.query.firstName) {
           filter.firstName = req.query.firstName;
-          // filter.lastName = req.query.lastName;
-          // filter.password = req.query.password;
         }
         const children = await Child.find(filter);
-        res.status(200).json(children[0]);
+        res.status(200).json(children);
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});
