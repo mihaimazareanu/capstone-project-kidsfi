@@ -10,8 +10,8 @@ import {LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
 import {StartPageButton} from "../components/StyledComponents";
 import Lottie from "react-lottie";
-import animationDataWelcome from "../public/Welcome.json";
-import animationDataFinance from "../public/Finance.json";
+import animationDataWelcome from "../public/lotties/Welcome.json";
+import animationDataFinance from "../public/lotties/Finance.json";
 
 export default function Home({
   accessMode,

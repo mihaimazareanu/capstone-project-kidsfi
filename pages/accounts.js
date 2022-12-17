@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Lottie from "react-lottie";
-import animationData from "../public/under-construction.json";
+import animationData from "../public/lotties/under-construction.json";
 
 export default function Accounts() {
   // default Options for Lottie animation
