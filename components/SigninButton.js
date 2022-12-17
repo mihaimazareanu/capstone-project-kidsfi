@@ -8,7 +8,7 @@ export default function SigninButton({onClickSignin}) {
     >
       <svg
         aria-labelledby="signin-icon"
-        role="img"
+        role="svg"
         width="50"
         height="50"
         viewBox="0 0 50 50"

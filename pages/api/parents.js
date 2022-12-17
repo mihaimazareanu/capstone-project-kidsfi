@@ -11,7 +11,12 @@ async function handler(req, res) {
         //   filter.lastName = req.query.lastName;
         //   filter.password = req.query.password;
         // }
-        const parents = await Parent.aggregate([
+
+        // const parents = await Parent.find(filter);
+        // console.log(parents);
+        // res.status(200).json(parents[0]);
+
+        const parent = await Parent.aggregate([
           {
             $match: {
               firstName: req.query.firstName,
@@ -26,7 +31,7 @@ async function handler(req, res) {
             },
           },
         ]).exec();
-        res.status(200).json(parents[0]);
+        res.status(200).json(parent[0]);
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});
