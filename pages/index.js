@@ -89,7 +89,7 @@ export default function Home({
           return updatedUser;
         });
         setShowAddAccount(!showAddAccount);
-        console.log(account);
+        setAccountType("");
       } else {
         throw new Error(`Fetch failed with status: ${response.status}`);
       }
@@ -186,6 +186,7 @@ export default function Home({
                       setUser(null);
                       onClickParent();
                       setSelectedChild(null);
+                      setShowAddAccount(false);
                     }}
                   >
                     Logout
@@ -256,7 +257,6 @@ export default function Home({
                               required
                               onChange={event => {
                                 setAccountType(event.target.value);
-                                console.log(accountType);
                               }}
                             >
                               <option value="">Select an option...</option>
@@ -531,8 +531,8 @@ export default function Home({
                   </h1>
                   <Lottie
                     options={defaultOptions}
-                    width={"13.5rem"}
-                    height={"10.5rem"}
+                    width={"36%"}
+                    height={"28%"}
                   ></Lottie>
                 </StyledAnimationContainer>
                 <LogoutButton
@@ -606,6 +606,7 @@ const AddChildButton = styled.button`
   box-shadow: 4px 4px 8px 1px rgba(64, 29, 26, 0.65);
   border-radius: 5px;
   border: none;
+  height: 2rem;
 
   :hover {
     transform: scale(1.1);
@@ -634,6 +635,9 @@ const StyledSelect = styled.select`
   border-radius: 5px;
   margin: 0 1rem 1rem 1rem;
   color: #401d1a;
+  position: relative;
+  top: 0;
+  left: 0;
 `;
 
 const StyledForm = styled.form`

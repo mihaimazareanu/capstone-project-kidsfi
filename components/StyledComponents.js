@@ -6,6 +6,7 @@ export const LogoutButton = styled.button`
   color: #e9f2ef;
   border: none;
   width: 7rem;
+  height: 2rem;
   box-shadow: 4px 4px 8px 1px rgba(166, 31, 43, 0.65);
 
   :hover {
@@ -32,6 +33,7 @@ export const FormButton = styled.button`
   box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
   border-radius: 5px;
   color: #e9f2ef;
+  height: 2rem;
 
   :hover {
     background: #224024;
