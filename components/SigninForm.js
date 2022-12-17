@@ -27,29 +27,34 @@ export default function SigninForm({showPassword, onShowPassword}) {
             ? `/api/children`
             :*/ `/api/children/?firstName=${loginFilter.firstName}`;
         const parentsResponse = await fetch(urlParents);
-        // console.log(parentsResponse);
+        console.log(parentsResponse);
         if (parentsResponse.ok) {
           try {
             const parentsData = await parentsResponse.json();
-            if (parentsData.firstName === loginFilter.firstName) {
-              setUser(parentsData);
-            }
+            // if (parentsData.firstName === loginFilter.firstName) {
+            setUser(parentsData);
+            // }
           } catch {
-            const childrenResponse = await fetch(urlChildren);
-            if (childrenResponse.ok) {
-              const childrenData = await childrenResponse.json();
-              setUser(childrenData[0]);
+            try {
+              const childrenResponse = await fetch(urlChildren);
+              if (childrenResponse.ok) {
+                const childrenData = await childrenResponse.json();
+                setUser(childrenData[0]);
+              }
+            } catch {
+              handleLoginFailed();
+              setUser(null);
             }
           }
+          console.log("Login failed?", loginFailed);
         } else {
           throw new Error(`Fetch failed`);
         }
       } catch (error) {
         console.log(error);
-        handleLoginFailed();
       }
     };
-    getUser();
+    !loginFailed && getUser();
   };
 
   return (

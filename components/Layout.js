@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import Link from "next/link";
-import {useState} from "react";
+// import {PageContext} from "./PageContext";
 import "../public/logo.png";
+import {useState /*useContext*/} from "react";
 
 const Layout = ({children}) => {
   const [page, setPage] = useState("home");
@@ -9,6 +10,7 @@ const Layout = ({children}) => {
   const handleClickLink = state => {
     setPage(state);
   };
+  // const {page, handleClickLink} = useContext(PageContext);
   return (
     <>
       <Navbar role="navigation">

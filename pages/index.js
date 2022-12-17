@@ -5,6 +5,7 @@ import RegisterFormChild from "../components/RegisterFormChild";
 import SigninForm from "../components/SigninForm";
 import SigninButton from "../components/SigninButton";
 import {UserContext} from "../components/UserContext";
+// import {PageContext} from "../components/PageContext";
 import {useContext, useState} from "react";
 import {LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
@@ -12,6 +13,8 @@ import {StartPageButton} from "../components/StyledComponents";
 import Lottie from "react-lottie";
 import animationDataWelcome from "../public/lotties/Welcome.json";
 import animationDataFinance from "../public/lotties/Finance.json";
+import animationDataPiggyBank from "../public/lotties/piggy-bank.json";
+// import Link from "next/link";
 
 export default function Home({
   accessMode,
@@ -26,6 +29,7 @@ export default function Home({
   onShowConfirmedPassword,
 }) {
   const {user, setUser} = useContext(UserContext);
+  // const {handleClickLink} = useContext(PageContext);
   const [selectedChild, setSelectedChild] = useState(null);
   const [showAddAccount, setShowAddAccount] = useState(false);
   const [accountType, setAccountType] = useState("");
@@ -45,6 +49,15 @@ export default function Home({
     loop: true,
     autoplay: true,
     animationData: animationDataFinance,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  const defaultOptionsPiggyBank = {
+    loop: true,
+    autoplay: true,
+    animationData: animationDataPiggyBank,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -157,7 +170,7 @@ export default function Home({
         </>
       ) : (
         <>
-          {user.isParent ? (
+          {user && user.isParent ? (
             <>
               <h1 style={{textAlign: "center"}}>
                 {user.firstName}&apos;s Dashboard
@@ -202,6 +215,7 @@ export default function Home({
                       onClickParent();
                       setSelectedChild(null);
                       setShowAddAccount(false);
+                      setAccount("");
                     }}
                   >
                     Logout
@@ -274,9 +288,7 @@ export default function Home({
                                 setAccountType(event.target.value);
                               }}
                             >
-                              <option default value="">
-                                Select an option...
-                              </option>
+                              <option value="">Select an option...</option>
                               <option value="Piggy bank">Piggy bank</option>
                               <option value="Savings account">
                                 Savings account
@@ -540,24 +552,36 @@ export default function Home({
               )}
             </>
           ) : (
-            user !== null && (
+            user && (
               <>
                 <StyledAnimationContainer>
-                  <h1 style={{textAlign: "center"}}>
-                    Welcome {user.firstName}
-                  </h1>
+                  <div>
+                    <h1 style={{textAlign: "center"}}>
+                      Welcome {user.firstName}
+                    </h1>
+                    <p>Want to see your accounts?</p>
+                  </div>
                   <Lottie
                     options={defaultOptionsWelcome}
-                    width={"36%"}
-                    height={"28%"}
+                    width={"50%"}
+                    height={"50%"}
                   ></Lottie>
                 </StyledAnimationContainer>
-                <LogoutButton
-                  style={{marginLeft: "1rem"}}
-                  onClick={() => setUser(null)}
-                >
-                  Logout
-                </LogoutButton>
+                <PiggyBankAnimationContainer>
+                  {/* <Link href="/accounts" onClick={handleClickLink("accounts")}> */}
+                  <Lottie
+                    options={defaultOptionsPiggyBank}
+                    width={"50%"}
+                    height={"50%"}
+                  />
+                  {/* </Link> */}
+                  <LogoutButton
+                    style={{margin: "1rem"}}
+                    onClick={() => setUser(null)}
+                  >
+                    Logout
+                  </LogoutButton>
+                </PiggyBankAnimationContainer>
               </>
             )
           )}
@@ -683,7 +707,7 @@ const StyledInput = styled.input`
 const StyledAnimationContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   margin-left: 1rem;
 `;
 
@@ -701,4 +725,11 @@ const ListElementsContainer = styled.div`
   width: 100%;
   align-items: center;
   gap: 5rem;
+`;
+
+const PiggyBankAnimationContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
