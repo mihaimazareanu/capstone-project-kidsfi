@@ -26,6 +26,7 @@
     "react-dom": "18.2.0",
     "react-lottie": "^1.2.3",
     "react-password-checklist": "^1.4.3",
+    "react-select": "^5.7.0",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {

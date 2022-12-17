@@ -19,7 +19,7 @@ export const LogoutButton = styled.button`
 
 export const StartPageButton = styled.button`
   border: none;
-  background-color: #e9f2ef;
+  /* background-color: #e9f2ef; */
 
   :hover {
     transform: scale(1.2);

@@ -10,7 +10,8 @@ import {LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
 import {StartPageButton} from "../components/StyledComponents";
 import Lottie from "react-lottie";
-import animationData from "../public/Welcome.json";
+import animationDataWelcome from "../public/Welcome.json";
+import animationDataFinance from "../public/Finance.json";
 
 export default function Home({
   accessMode,
@@ -30,11 +31,20 @@ export default function Home({
   const [accountType, setAccountType] = useState("");
   const [account, setAccount] = useState({});
 
-  // default Options for Lottie animation
-  const defaultOptions = {
+  // default Options for Lottie animations
+  const defaultOptionsWelcome = {
     loop: true,
     autoplay: true,
-    animationData: animationData,
+    animationData: animationDataWelcome,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  const defaultOptionsFinance = {
+    loop: true,
+    autoplay: true,
+    animationData: animationDataFinance,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -139,6 +149,11 @@ export default function Home({
               onShowPassword={onShowPassword}
             />
           )}
+          <Lottie
+            options={defaultOptionsFinance}
+            width={"100%"}
+            height={"100%"}
+          ></Lottie>
         </>
       ) : (
         <>
@@ -259,7 +274,9 @@ export default function Home({
                                 setAccountType(event.target.value);
                               }}
                             >
-                              <option value="">Select an option...</option>
+                              <option default value="">
+                                Select an option...
+                              </option>
                               <option value="Piggy bank">Piggy bank</option>
                               <option value="Savings account">
                                 Savings account
@@ -530,7 +547,7 @@ export default function Home({
                     Welcome {user.firstName}
                   </h1>
                   <Lottie
-                    options={defaultOptions}
+                    options={defaultOptionsWelcome}
                     width={"36%"}
                     height={"28%"}
                   ></Lottie>
@@ -635,9 +652,6 @@ const StyledSelect = styled.select`
   border-radius: 5px;
   margin: 0 1rem 1rem 1rem;
   color: #401d1a;
-  position: relative;
-  top: 0;
-  left: 0;
 `;
 
 const StyledForm = styled.form`
