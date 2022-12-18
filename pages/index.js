@@ -586,22 +586,25 @@ export default function Home({
               user && (
                 <>
                   <StyledAnimationContainer>
-                    <div>
+                    <div style={{width: "40%"}}>
                       <h1 style={{textAlign: "center"}}>
                         Welcome {user.firstName}
                       </h1>
                       <p>Want to see your accounts?</p>
                       <Lottie
+                        style={{marginTop: "-2rem"}}
                         options={defaultOptionsArrows}
                         width={"20%"}
                         height={"50%"}
                       />
                     </div>
-                    <Lottie
-                      options={defaultOptionsWelcome}
-                      width={"50%"}
-                      height={"50%"}
-                    ></Lottie>
+                    <div style={{height: "100%", width: "60%"}}>
+                      <Lottie
+                        options={defaultOptionsWelcome}
+                        width={"100%"}
+                        height={"100%"}
+                      ></Lottie>
+                    </div>
                   </StyledAnimationContainer>
                   <PiggyBankAnimationContainer>
                     <Link
@@ -611,7 +614,8 @@ export default function Home({
                     >
                       <Lottie
                         style={{
-                          marginLeft: "2rem",
+                          marginLeft: "1rem",
+                          // marginTop: "-2rem",
                         }}
                         options={defaultOptionsPiggyBank}
                         width={"80%"}
@@ -619,7 +623,7 @@ export default function Home({
                       />
                     </Link>
                     <LogoutButton
-                      style={{margin: "4rem 1rem 0 auto"}}
+                      style={{margin: "1rem 1rem 0 auto"}}
                       onClick={() => {
                         setUser(null);
                         handleClickLink("home");
