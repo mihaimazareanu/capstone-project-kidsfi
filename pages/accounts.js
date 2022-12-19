@@ -23,7 +23,7 @@ export default function Accounts() {
         <title>kidsFi - Finance for kids</title>
       </Head>
       <Layout />
-      {user && user.isChild ? (
+      {user?.isChild ? (
         <p style={{padding: "5rem"}}>
           Hold your horses, I&apos;m working on it
         </p>

@@ -183,7 +183,7 @@ export default function Home({
       ) : (
         <>
           <Layout />
-          {user && user.isParent ? (
+          {user?.isParent ? (
             <>
               <h1 style={{textAlign: "center"}}>
                 {user.firstName}&apos;s Dashboard
@@ -193,12 +193,12 @@ export default function Home({
               </p>
               <FlexSection>
                 <ChildrenContainer>
-                  {user.children && user.children.length === 0 ? (
+                  {user?.children?.length === 0 ? (
                     <NoChildLogins>
                       You didn&apos;t create any child logins yet
                     </NoChildLogins>
                   ) : (
-                    user.children.map(child => {
+                    user?.children?.map(child => {
                       return (
                         <>
                           <section>
@@ -236,7 +236,7 @@ export default function Home({
                   </LogoutButton>
                 </ButtonContainer>
               </FlexSection>
-              {user.children.map(child => {
+              {user?.children?.map(child => {
                 return (
                   selectedChild === child._id && (
                     <>
