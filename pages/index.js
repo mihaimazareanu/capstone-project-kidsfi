@@ -5,7 +5,7 @@ import RegisterFormChild from "../components/RegisterFormChild";
 import SigninForm from "../components/SigninForm";
 import SigninButton from "../components/SigninButton";
 import {UserContext} from "../components/UserContext";
-// import {PageContext} from "../components/PageContext";
+import {PageContext} from "../components/PageContext";
 import {useContext, useState} from "react";
 import {LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
@@ -14,7 +14,9 @@ import Lottie from "react-lottie";
 import animationDataWelcome from "../public/lotties/Welcome.json";
 import animationDataFinance from "../public/lotties/Finance.json";
 import animationDataPiggyBank from "../public/lotties/piggy-bank.json";
-// import Link from "next/link";
+import animationDataArrows from "../public/lotties/arrows.json";
+import Link from "next/link";
+import Layout from "../components/Layout";
 
 export default function Home({
   accessMode,
@@ -29,7 +31,7 @@ export default function Home({
   onShowConfirmedPassword,
 }) {
   const {user, setUser} = useContext(UserContext);
-  // const {handleClickLink} = useContext(PageContext);
+  const {handleClickLink} = useContext(PageContext);
   const [selectedChild, setSelectedChild] = useState(null);
   const [showAddAccount, setShowAddAccount] = useState(false);
   const [accountType, setAccountType] = useState("");
@@ -58,6 +60,15 @@ export default function Home({
     loop: true,
     autoplay: true,
     animationData: animationDataPiggyBank,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  const defaultOptionsArrows = {
+    loop: true,
+    autoplay: true,
+    animationData: animationDataArrows,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -125,6 +136,7 @@ export default function Home({
     <>
       {user === null ? (
         <>
+          <Layout />
           <Heading>kidsFi - Finance for kids</Heading>
           <StyledParagraph>
             The app every child needs to have a visual overview of their money.
@@ -170,7 +182,8 @@ export default function Home({
         </>
       ) : (
         <>
-          {user && user.isParent ? (
+          <Layout />
+          {user?.isParent ? (
             <>
               <h1 style={{textAlign: "center"}}>
                 {user.firstName}&apos;s Dashboard
@@ -180,12 +193,12 @@ export default function Home({
               </p>
               <FlexSection>
                 <ChildrenContainer>
-                  {user.children && user.children.length === 0 ? (
+                  {user?.children?.length === 0 ? (
                     <NoChildLogins>
                       You didn&apos;t create any child logins yet
                     </NoChildLogins>
                   ) : (
-                    user.children.map(child => {
+                    user?.children?.map(child => {
                       return (
                         <>
                           <section>
@@ -216,13 +229,14 @@ export default function Home({
                       setSelectedChild(null);
                       setShowAddAccount(false);
                       setAccount("");
+                      handleClickLink("home");
                     }}
                   >
                     Logout
                   </LogoutButton>
                 </ButtonContainer>
               </FlexSection>
-              {user.children.map(child => {
+              {user?.children?.map(child => {
                 return (
                   selectedChild === child._id && (
                     <>
@@ -239,7 +253,10 @@ export default function Home({
                             {child.firstName}&apos;s accounts:
                           </h2>
                           <StartPageButton
-                            style={{alignSelf: "flex-end", background: "none"}}
+                            style={{
+                              alignSelf: "flex-end",
+                              background: "none",
+                            }}
                             onClick={() => setShowAddAccount(!showAddAccount)}
                           >
                             <svg
@@ -263,7 +280,9 @@ export default function Home({
                               <>
                                 <ListElementsContainer>
                                   <li>{account.name}</li>
-                                  <li>{account.startAmount} €</li>
+                                  <li style={{margin: "0 3rem 0 auto"}}>
+                                    {account.startAmount} €
+                                  </li>
                                 </ListElementsContainer>
                               </>
                             ))
@@ -555,29 +574,47 @@ export default function Home({
             user && (
               <>
                 <StyledAnimationContainer>
-                  <div>
+                  <div style={{width: "40%"}}>
                     <h1 style={{textAlign: "center"}}>
                       Welcome {user.firstName}
                     </h1>
                     <p>Want to see your accounts?</p>
+                    <Lottie
+                      style={{marginTop: "-2rem"}}
+                      options={defaultOptionsArrows}
+                      width={"20%"}
+                      height={"50%"}
+                    />
                   </div>
-                  <Lottie
-                    options={defaultOptionsWelcome}
-                    width={"50%"}
-                    height={"50%"}
-                  ></Lottie>
+                  <div style={{height: "100%", width: "60%"}}>
+                    <Lottie
+                      options={defaultOptionsWelcome}
+                      width={"100%"}
+                      height={"100%"}
+                    ></Lottie>
+                  </div>
                 </StyledAnimationContainer>
                 <PiggyBankAnimationContainer>
-                  {/* <Link href="/accounts" onClick={handleClickLink("accounts")}> */}
-                  <Lottie
-                    options={defaultOptionsPiggyBank}
-                    width={"50%"}
-                    height={"50%"}
-                  />
-                  {/* </Link> */}
+                  <Link
+                    style={{width: "50%"}}
+                    href="/accounts"
+                    onClick={() => handleClickLink("accounts")}
+                  >
+                    <Lottie
+                      style={{
+                        marginLeft: "1rem",
+                      }}
+                      options={defaultOptionsPiggyBank}
+                      width={"80%"}
+                      height={"80%"}
+                    />
+                  </Link>
                   <LogoutButton
-                    style={{margin: "1rem"}}
-                    onClick={() => setUser(null)}
+                    style={{margin: "1rem 1rem 0 auto"}}
+                    onClick={() => {
+                      setUser(null);
+                      handleClickLink("home");
+                    }}
                   >
                     Logout
                   </LogoutButton>
@@ -730,6 +767,5 @@ const ListElementsContainer = styled.div`
 const PiggyBankAnimationContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
 `;

@@ -1,8 +1,7 @@
 import GlobalStyles from "../styles/GlobalStyles";
-import Layout from "../components/Layout";
 import {useState} from "react";
 import {UserContextProvider} from "../components/UserContext";
-// import {PageContextProvider} from "../components/PageContext";
+import {PageContextProvider} from "../components/PageContext";
 
 function MyApp({Component, pageProps}) {
   const [accessMode, setAccessMode] = useState("");
@@ -38,8 +37,7 @@ function MyApp({Component, pageProps}) {
     <>
       <GlobalStyles />
       <main>
-        <Layout>
-          {/* <PageContextProvider> */}
+        <PageContextProvider>
           <UserContextProvider>
             <Component
               {...pageProps}
@@ -55,8 +53,7 @@ function MyApp({Component, pageProps}) {
               onShowConfirmedPassword={handleShowConfirmedPassword}
             />
           </UserContextProvider>
-          {/* </PageContextProvider> */}
-        </Layout>
+        </PageContextProvider>
       </main>
     </>
   );

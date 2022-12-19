@@ -1,13 +1,13 @@
 import {render, screen} from "@testing-library/react";
-import Navbar from "../components/Layout";
+import SigninButton from "../components/SigninButton";
 import "@testing-library/jest-dom";
 
-describe("Home", () => {
-  it("checks background color of the nav element", () => {
-    render(<Navbar />);
+describe("Button", () => {
+  it("checks if there is a button", () => {
+    render(<SigninButton />);
 
-    const navbar = screen.getByRole("navigation");
+    const button = screen.getByRole("button");
 
-    expect(navbar).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
   });
 });

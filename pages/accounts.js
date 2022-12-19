@@ -3,6 +3,7 @@ import {useContext} from "react";
 import Lottie from "react-lottie";
 import {UserContext} from "../components/UserContext";
 import animationData from "../public/lotties/under-construction.json";
+import Layout from "../components/Layout";
 
 export default function Accounts() {
   const {user} = useContext(UserContext);
@@ -21,8 +22,11 @@ export default function Accounts() {
       <Head>
         <title>kidsFi - Finance for kids</title>
       </Head>
-      {user ? (
-        <p>Will follow</p>
+      <Layout />
+      {user?.isChild ? (
+        <p style={{padding: "5rem"}}>
+          Hold your horses, I&apos;m working on it
+        </p>
       ) : (
         <Lottie
           options={defaultOptions}
