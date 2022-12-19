@@ -1,5 +1,4 @@
 import GlobalStyles from "../styles/GlobalStyles";
-// import Layout from "../components/Layout";
 import {useState} from "react";
 import {UserContextProvider} from "../components/UserContext";
 import {PageContextProvider} from "../components/PageContext";
@@ -38,7 +37,6 @@ function MyApp({Component, pageProps}) {
     <>
       <GlobalStyles />
       <main>
-        {/* <Layout> */}
         <PageContextProvider>
           <UserContextProvider>
             <Component
@@ -56,7 +54,6 @@ function MyApp({Component, pageProps}) {
             />
           </UserContextProvider>
         </PageContextProvider>
-        {/* </Layout> */}
       </main>
     </>
   );

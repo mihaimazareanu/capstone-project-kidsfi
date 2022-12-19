@@ -25,7 +25,6 @@ export default function Profile() {
         height={"28%"}
         style={{paddingTop: "15rem"}}
       />
-      {/* </Layout> */}
     </>
   );
 }

@@ -603,7 +603,6 @@ export default function Home({
                     <Lottie
                       style={{
                         marginLeft: "1rem",
-                        // marginTop: "-2rem",
                       }}
                       options={defaultOptionsPiggyBank}
                       width={"80%"}
@@ -623,7 +622,6 @@ export default function Home({
               </>
             )
           )}
-          {/* </Layout> */}
         </>
       )}
     </>
@@ -762,7 +760,6 @@ const AccountsList = styled.ul`
 const ListElementsContainer = styled.div`
   display: flex;
   width: 100%;
-  justify-content: flex-start;
   align-items: center;
   gap: 5rem;
 `;
@@ -770,6 +767,5 @@ const ListElementsContainer = styled.div`
 const PiggyBankAnimationContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
 `;

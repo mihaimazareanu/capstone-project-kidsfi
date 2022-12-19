@@ -35,7 +35,6 @@ export default function Accounts() {
           style={{paddingTop: "15rem"}}
         ></Lottie>
       )}
-      {/* </Layout> */}
     </>
   );
 }
