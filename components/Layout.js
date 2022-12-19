@@ -4,12 +4,7 @@ import {PageContext} from "./PageContext";
 import "../public/logo.png";
 import {/*useState,*/ useContext} from "react";
 
-const Layout = ({children}) => {
-  // const [page, setPage] = useState("home");
-
-  // const handleClickLink = state => {
-  //   setPage(state);
-  // };
+export default function Layout() {
   const {page, handleClickLink} = useContext(PageContext);
   return (
     <>
@@ -144,14 +139,11 @@ const Layout = ({children}) => {
           </li>
         </StyledList>
       </Navbar>
-      {children}
     </>
   );
-};
+}
 
-export default Layout;
-
-export const Navbar = styled.nav`
+const Navbar = styled.nav`
   position: fixed;
   top: 0;
   left: 0;

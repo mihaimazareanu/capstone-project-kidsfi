@@ -22,20 +22,20 @@ export default function Accounts() {
       <Head>
         <title>kidsFi - Finance for kids</title>
       </Head>
-      <Layout>
-        {user && user.isChild ? (
-          <p style={{padding: "5rem"}}>
-            Hold your horses, I&apos;m working on it
-          </p>
-        ) : (
-          <Lottie
-            options={defaultOptions}
-            width={"36%"}
-            height={"28%"}
-            style={{paddingTop: "15rem"}}
-          ></Lottie>
-        )}
-      </Layout>
+      <Layout />
+      {user && user.isChild ? (
+        <p style={{padding: "5rem"}}>
+          Hold your horses, I&apos;m working on it
+        </p>
+      ) : (
+        <Lottie
+          options={defaultOptions}
+          width={"36%"}
+          height={"28%"}
+          style={{paddingTop: "15rem"}}
+        ></Lottie>
+      )}
+      {/* </Layout> */}
     </>
   );
 }
