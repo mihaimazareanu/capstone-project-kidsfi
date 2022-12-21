@@ -30,6 +30,29 @@ export default function Accounts() {
       return false;
     }
   });
+  const savingsAccount = user?.accounts?.find(account => {
+    if (account.name === "Savings account") {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  const stocksAccount = user?.accounts?.find(account => {
+    if (account.name === "Stocks account") {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  const loanAccount = user?.accounts?.find(account => {
+    if (account.name === "Loan account") {
+      return true;
+    } else {
+      return false;
+    }
+  });
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
@@ -169,7 +192,17 @@ export default function Accounts() {
                   </>
                 )}
                 {accountType === "savings account" && (
-                  <p>Savings account details</p>
+                  <>
+                    <p>Start date: {savingsAccount.startDate}</p>
+                    <p>Start amount: {savingsAccount.startAmount} €</p>
+                    <p>Current amount: {savingsAccount.startAmount} €</p>
+                    <Lottie
+                      options={defaultOptionsGraph}
+                      width={"20rem"}
+                      height={"20rem"}
+                    />
+                    <button>Show details</button>
+                  </>
                 )}
                 {accountType === "stocks account" && (
                   <p>Stocks account details</p>
