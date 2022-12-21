@@ -2,7 +2,6 @@ import Head from "next/head";
 import {useContext, useState} from "react";
 import Lottie from "react-lottie";
 import {UserContext} from "../components/contexts/UserContext";
-// import {AccountContext} from "../components/contexts/AccountContext";
 import animationDataUnderConstruction from "../public/lotties/under-construction.json";
 import animationDataPiggyAccount from "../public/lotties/piggy-account.json";
 import animationDataMouse from "../public/lotties/mouse.json";
@@ -14,7 +13,6 @@ import styled from "styled-components";
 
 export default function Accounts() {
   const {user} = useContext(UserContext);
-  // const {account, handleAccount} = useContext(AccountContext);
   const [showDetails, setShowDetails] = useState(false);
   const [accountType, setAccountType] = useState("");
 
@@ -32,8 +30,6 @@ export default function Accounts() {
       return false;
     }
   });
-
-  // console.log(piggyBank.startAmount);
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
@@ -214,7 +210,6 @@ const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
   margin-top: 1rem;
   padding-left: 1rem;
 `;
