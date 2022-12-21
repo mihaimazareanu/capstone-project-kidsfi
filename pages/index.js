@@ -229,7 +229,7 @@ export default function Home({
                       onClickParent();
                       setSelectedChild(null);
                       setShowAddAccount(false);
-                      handleAccount("");
+                      handleAccount(null);
                       handleClickLink("home");
                     }}
                   >
