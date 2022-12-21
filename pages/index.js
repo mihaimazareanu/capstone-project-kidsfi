@@ -4,8 +4,9 @@ import RegisterFormParent from "../components/RegisterFormParent";
 import RegisterFormChild from "../components/RegisterFormChild";
 import SigninForm from "../components/SigninForm";
 import SigninButton from "../components/SigninButton";
-import {UserContext} from "../components/UserContext";
-import {PageContext} from "../components/PageContext";
+import {UserContext} from "../components/contexts/UserContext";
+import {PageContext} from "../components/contexts/PageContext";
+import {AccountContext} from "../components/contexts/AccountContext";
 import {useContext, useState} from "react";
 import {LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
@@ -32,10 +33,10 @@ export default function Home({
 }) {
   const {user, setUser} = useContext(UserContext);
   const {handleClickLink} = useContext(PageContext);
+  const {account, handleAccount} = useContext(AccountContext);
   const [selectedChild, setSelectedChild] = useState(null);
   const [showAddAccount, setShowAddAccount] = useState(false);
   const [accountType, setAccountType] = useState("");
-  const [account, setAccount] = useState({});
 
   // default Options for Lottie animations
   const defaultOptionsWelcome = {
@@ -228,7 +229,7 @@ export default function Home({
                       onClickParent();
                       setSelectedChild(null);
                       setShowAddAccount(false);
-                      setAccount("");
+                      handleAccount("");
                       handleClickLink("home");
                     }}
                   >
@@ -332,7 +333,7 @@ export default function Home({
                                   {`Current amount €   `}
                                   <StyledInput
                                     onChange={event =>
-                                      setAccount({
+                                      handleAccount({
                                         ...account,
                                         name: "Piggy bank",
                                         startAmount: event.target.value,
@@ -361,7 +362,7 @@ export default function Home({
                                     {`Start date    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           name: "Savings account",
                                           startDate: event.target.value,
@@ -375,7 +376,7 @@ export default function Home({
                                     {`Start amount €    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           startAmount: event.target.value,
                                         })
@@ -391,7 +392,7 @@ export default function Home({
                                     {`Interest rate    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           interestRate: event.target.value,
                                         })
@@ -417,7 +418,7 @@ export default function Home({
                                     {`Stock name    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           name: "Stocks account",
                                           stockName: event.target.value,
@@ -431,7 +432,7 @@ export default function Home({
                                     {`WKN    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           WKN: event.target.value,
                                         })
@@ -447,7 +448,7 @@ export default function Home({
                                     {`Buy date   `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           startDate: event.target.value,
                                         })
@@ -460,7 +461,7 @@ export default function Home({
                                     {`Buy amount €    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           startAmount: event.target.value,
                                         })
@@ -476,7 +477,7 @@ export default function Home({
                                     {`No of stocks    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           pcs: event.target.value,
                                         })
@@ -501,7 +502,7 @@ export default function Home({
                                     {`Start date    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           name: "Loan account",
                                           startDate: event.target.value,
@@ -515,7 +516,7 @@ export default function Home({
                                     {`Start amount €    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           startAmount: event.target.value,
                                         })
@@ -531,7 +532,7 @@ export default function Home({
                                     {`Interest rate    `}
                                     <StyledInput
                                       onChange={event =>
-                                        setAccount({
+                                        handleAccount({
                                           ...account,
                                           interestRate: event.target.value,
                                         })

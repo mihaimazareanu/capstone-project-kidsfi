@@ -1,7 +1,8 @@
 import GlobalStyles from "../styles/GlobalStyles";
 import {useState} from "react";
-import {UserContextProvider} from "../components/UserContext";
-import {PageContextProvider} from "../components/PageContext";
+import {UserContextProvider} from "../components/contexts/UserContext";
+import {PageContextProvider} from "../components/contexts/PageContext";
+import {AccountContextProvider} from "../components/contexts/AccountContext";
 
 function MyApp({Component, pageProps}) {
   const [accessMode, setAccessMode] = useState("");
@@ -39,19 +40,21 @@ function MyApp({Component, pageProps}) {
       <main>
         <PageContextProvider>
           <UserContextProvider>
-            <Component
-              {...pageProps}
-              accessMode={accessMode}
-              loginMode={loginMode}
-              showPassword={showPassword}
-              showConfirmedPassword={showConfirmedPassword}
-              onClickRegister={handleClickRegister}
-              onClickSignIn={handleClickSignIn}
-              onClickParent={handleClickParent}
-              onClickChild={handleClickChild}
-              onShowPassword={handleShowPassword}
-              onShowConfirmedPassword={handleShowConfirmedPassword}
-            />
+            <AccountContextProvider>
+              <Component
+                {...pageProps}
+                accessMode={accessMode}
+                loginMode={loginMode}
+                showPassword={showPassword}
+                showConfirmedPassword={showConfirmedPassword}
+                onClickRegister={handleClickRegister}
+                onClickSignIn={handleClickSignIn}
+                onClickParent={handleClickParent}
+                onClickChild={handleClickChild}
+                onShowPassword={handleShowPassword}
+                onShowConfirmedPassword={handleShowConfirmedPassword}
+              />
+            </AccountContextProvider>
           </UserContextProvider>
         </PageContextProvider>
       </main>

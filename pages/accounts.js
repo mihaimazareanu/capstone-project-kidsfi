@@ -1,7 +1,8 @@
 import Head from "next/head";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import Lottie from "react-lottie";
-import {UserContext} from "../components/UserContext";
+import {UserContext} from "../components/contexts/UserContext";
+// import {AccountContext} from "../components/contexts/AccountContext";
 import animationDataUnderConstruction from "../public/lotties/under-construction.json";
 import aninamtionDataPiggyAccount from "../public/lotties/piggy-account.json";
 import aninamtionDataMouse from "../public/lotties/mouse.json";
@@ -12,10 +13,18 @@ import styled from "styled-components";
 
 export default function Accounts() {
   const {user} = useContext(UserContext);
+  // const {account} = useContext(AccountContext);
+  const [showDetails, setShowDetails] = useState(false);
+  const [accountType, setAccountType] = useState("");
 
   const accountName = user?.accounts?.map(account => account.name);
 
-  // default Options for Lottie animation
+  const toggleShowDetails = type => {
+    setAccountType(type);
+    setShowDetails(type !== accountType ? true : !showDetails);
+  };
+
+  // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
     loop: true,
     autoplay: true,
@@ -61,6 +70,9 @@ export default function Accounts() {
     },
   };
 
+  console.log(showDetails);
+  console.log(accountType);
+
   return (
     <>
       <Head>
@@ -69,39 +81,62 @@ export default function Accounts() {
       <Layout />
       {user?.isChild ? (
         user.accounts?.length !== 0 ? (
-          <StyledAnimationContainer>
-            {accountName?.includes("Piggy bank") && (
-              <Lottie
-                options={defaultOptionsPiggyAccount}
-                width={"5rem"}
-                height={"5rem"}
-              />
+          <>
+            <StyledAnimationContainer>
+              {accountName?.includes("Piggy bank") && (
+                <StyledButton onClick={() => toggleShowDetails("piggy bank")}>
+                  <Lottie
+                    options={defaultOptionsPiggyAccount}
+                    width={"5rem"}
+                    height={"5rem"}
+                  />
+                </StyledButton>
+              )}
+              {accountName?.includes("Savings account") && (
+                <StyledButton
+                  onClick={() => toggleShowDetails("savings account")}
+                >
+                  <Lottie
+                    options={defaultOptionsMouse}
+                    width={"5rem"}
+                    height={"5rem"}
+                  />
+                </StyledButton>
+              )}
+              {accountName?.includes("Stocks account") && (
+                <StyledButton
+                  onClick={() => toggleShowDetails("stocks account")}
+                >
+                  <Lottie
+                    options={defaultOptionsStocks}
+                    width={"5rem"}
+                    height={"5rem"}
+                  />
+                </StyledButton>
+              )}
+              {accountName?.includes("Loan account") && (
+                <StyledButton onClick={() => toggleShowDetails("loan account")}>
+                  <Lottie
+                    options={defaultOptionsLoan}
+                    width={"5rem"}
+                    height={"5rem"}
+                  />
+                </StyledButton>
+              )}
+            </StyledAnimationContainer>
+            {showDetails && (
+              <StyledSection>
+                {accountType === "piggy bank" && <p>Piggy Bank details</p>}
+                {accountType === "savings account" && (
+                  <p>Savings account details</p>
+                )}
+                {accountType === "stocks account" && (
+                  <p>Stocks account details</p>
+                )}
+                {accountType === "loan account" && <p>Loan account details</p>}
+              </StyledSection>
             )}
-
-            {accountName?.includes("Savings account") && (
-              <Lottie
-                options={defaultOptionsMouse}
-                width={"5rem"}
-                height={"5rem"}
-              />
-            )}
-
-            {accountName?.includes("Stocks account") && (
-              <Lottie
-                options={defaultOptionsStocks}
-                width={"5rem"}
-                height={"5rem"}
-              />
-            )}
-
-            {accountName?.includes("Loan account") && (
-              <Lottie
-                options={defaultOptionsLoan}
-                width={"5rem"}
-                height={"5rem"}
-              />
-            )}
-          </StyledAnimationContainer>
+          </>
         ) : (
           <p>
             You don&apos;t have any accounts yet. Please ask your parents to
@@ -125,4 +160,21 @@ const StyledAnimationContainer = styled.div`
   display: flex;
   gap: 5%;
   align-items: flex-end;
+`;
+
+const StyledSection = styled.section`
+  width: 100%;
+  border: 3px solid #5e8c49;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  margin-top: 1rem;
+  padding-left: 1rem;
+`;
+
+const StyledButton = styled.button`
+  border: none;
+  background: none;
 `;
