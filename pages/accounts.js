@@ -38,21 +38,21 @@ export default function Accounts() {
     }
   });
 
-  const stocksAccount = user?.accounts?.find(account => {
-    if (account.name === "Stocks account") {
-      return true;
-    } else {
-      return false;
-    }
-  });
+  // const stocksAccount = user?.accounts?.find(account => {
+  //   if (account.name === "Stocks account") {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // });
 
-  const loanAccount = user?.accounts?.find(account => {
-    if (account.name === "Loan account") {
-      return true;
-    } else {
-      return false;
-    }
-  });
+  // const loanAccount = user?.accounts?.find(account => {
+  //   if (account.name === "Loan account") {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // });
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
