@@ -4,10 +4,11 @@ import Lottie from "react-lottie";
 import {UserContext} from "../components/contexts/UserContext";
 // import {AccountContext} from "../components/contexts/AccountContext";
 import animationDataUnderConstruction from "../public/lotties/under-construction.json";
-import aninamtionDataPiggyAccount from "../public/lotties/piggy-account.json";
-import aninamtionDataMouse from "../public/lotties/mouse.json";
-import aninamtionDataStocks from "../public/lotties/stocks.json";
-import aninamtionDataLoan from "../public/lotties/loan.json";
+import animationDataPiggyAccount from "../public/lotties/piggy-account.json";
+import animationDataMouse from "../public/lotties/mouse.json";
+import animationDataStocks from "../public/lotties/stocks.json";
+import animationDataLoan from "../public/lotties/loan.json";
+import animationDataGraph from "../public/lotties/graph.json";
 import Layout from "../components/Layout";
 import styled from "styled-components";
 
@@ -24,6 +25,17 @@ export default function Accounts() {
     setShowDetails(type !== accountType ? true : !showDetails);
   };
 
+  const piggyBank = user?.accounts?.find(account => {
+    if (account.name === "Piggy bank") {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  console.log(piggyBank.startAmount);
+  console.log(user?.accounts?.map(account => account));
+
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
     loop: true,
@@ -37,7 +49,7 @@ export default function Accounts() {
   const defaultOptionsPiggyAccount = {
     loop: true,
     autoplay: true,
-    animationData: aninamtionDataPiggyAccount,
+    animationData: animationDataPiggyAccount,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -46,7 +58,7 @@ export default function Accounts() {
   const defaultOptionsMouse = {
     loop: true,
     autoplay: true,
-    animationData: aninamtionDataMouse,
+    animationData: animationDataMouse,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -55,7 +67,7 @@ export default function Accounts() {
   const defaultOptionsStocks = {
     loop: true,
     autoplay: true,
-    animationData: aninamtionDataStocks,
+    animationData: animationDataStocks,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -64,14 +76,20 @@ export default function Accounts() {
   const defaultOptionsLoan = {
     loop: true,
     autoplay: true,
-    animationData: aninamtionDataLoan,
+    animationData: animationDataLoan,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
 
-  console.log(showDetails);
-  console.log(accountType);
+  const defaultOptionsGraph = {
+    loop: true,
+    autoplay: true,
+    animationData: animationDataGraph,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   return (
     <>
@@ -126,7 +144,31 @@ export default function Accounts() {
             </StyledAnimationContainer>
             {showDetails && (
               <StyledSection>
-                {accountType === "piggy bank" && <p>Piggy Bank details</p>}
+                {accountType === "piggy bank" && (
+                  <>
+                    <p>Current amount: {piggyBank.startAmount} €</p>
+                    <button>Show details</button>
+                    <Lottie
+                      options={defaultOptionsGraph}
+                      width={"20rem"}
+                      height={"20rem"}
+                    />
+                    <form>
+                      <label>
+                        Would you like to add something to your piggy bank?
+                        <input type="text" /> €
+                        <button type="submit">Add amount</button>
+                      </label>
+                    </form>
+                    <form>
+                      <label>
+                        Did you take money from your piggy bank?
+                        <input type="text" /> €
+                        <button type="submit">Subtract amount</button>
+                      </label>
+                    </form>
+                  </>
+                )}
                 {accountType === "savings account" && (
                   <p>Savings account details</p>
                 )}
