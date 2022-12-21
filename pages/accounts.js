@@ -34,7 +34,6 @@ export default function Accounts() {
   });
 
   console.log(piggyBank.startAmount);
-  console.log(user?.accounts?.map(account => account));
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
@@ -146,27 +145,31 @@ export default function Accounts() {
               <StyledSection>
                 {accountType === "piggy bank" && (
                   <>
-                    <p>Current amount: {piggyBank.startAmount} €</p>
-                    <button>Show details</button>
-                    <Lottie
-                      options={defaultOptionsGraph}
-                      width={"20rem"}
-                      height={"20rem"}
-                    />
-                    <form>
-                      <label>
-                        Would you like to add something to your piggy bank?
-                        <input type="text" /> €
-                        <button type="submit">Add amount</button>
-                      </label>
-                    </form>
-                    <form>
-                      <label>
-                        Did you take money from your piggy bank?
-                        <input type="text" /> €
-                        <button type="submit">Subtract amount</button>
-                      </label>
-                    </form>
+                    {piggyBank.startAmount && (
+                      <>
+                        <p>Current amount: {piggyBank?.startAmount} €</p>
+                        <button>Show details</button>
+                        <Lottie
+                          options={defaultOptionsGraph}
+                          width={"20rem"}
+                          height={"20rem"}
+                        />
+                        <form>
+                          <label>
+                            Would you like to add something to your piggy bank?
+                            <input type="text" /> €
+                            <button type="submit">Add amount</button>
+                          </label>
+                        </form>
+                        <form>
+                          <label>
+                            Did you take money from your piggy bank?
+                            <input type="text" /> €
+                            <button type="submit">Subtract amount</button>
+                          </label>
+                        </form>
+                      </>
+                    )}
                   </>
                 )}
                 {accountType === "savings account" && (
