@@ -14,7 +14,7 @@ import styled from "styled-components";
 
 export default function Accounts() {
   const {user} = useContext(UserContext);
-  // const {account} = useContext(AccountContext);
+  // const {account, handleAccount} = useContext(AccountContext);
   const [showDetails, setShowDetails] = useState(false);
   const [accountType, setAccountType] = useState("");
 
@@ -33,7 +33,7 @@ export default function Accounts() {
     }
   });
 
-  console.log(piggyBank.startAmount);
+  // console.log(piggyBank.startAmount);
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
