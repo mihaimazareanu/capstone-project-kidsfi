@@ -1,5 +1,5 @@
 import Head from "next/head";
-import {useContext, useState} from "react";
+import {useContext, useState, useEffect} from "react";
 import Lottie from "react-lottie";
 import {UserContext} from "../components/contexts/UserContext";
 import animationDataUnderConstruction from "../public/lotties/under-construction.json";
@@ -23,36 +23,54 @@ export default function Accounts() {
     setShowDetails(type !== accountType ? true : !showDetails);
   };
 
-  const piggyBank = user?.accounts?.find(account => {
-    if (account.name === "Piggy bank") {
-      return true;
-    } else {
-      return false;
-    }
-  });
-  const savingsAccount = user?.accounts?.find(account => {
-    if (account.name === "Savings account") {
-      return true;
-    } else {
-      return false;
-    }
-  });
+  const piggyBank = user?.accounts
+    ? user?.accounts?.find(account => {
+        if (account.name === "Piggy bank") {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    : null;
+  const savingsAccount = user?.accounts
+    ? user.accounts.find(account => {
+        if (account.name === "Savings account") {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    : null;
 
-  // const stocksAccount = user?.accounts?.find(account => {
+  const [date, setDate] = useState(null);
+
+  useEffect(() => {
+    if (savingsAccount?.startDate) {
+      const date = new Date(savingsAccount.startDate);
+      const formattedDate = date.toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      });
+      setDate(formattedDate);
+    }
+  }, []);
+
+  // const stocksAccount = user?.accounts ? user?.accounts?.find(account => {
   //   if (account.name === "Stocks account") {
   //     return true;
   //   } else {
   //     return false;
   //   }
-  // });
+  // }) : null;
 
-  // const loanAccount = user?.accounts?.find(account => {
+  // const loanAccount = user?.accounts ? user?.accounts?.find(account => {
   //   if (account.name === "Loan account") {
   //     return true;
   //   } else {
   //     return false;
   //   }
-  // });
+  // }) : null;
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
@@ -193,7 +211,7 @@ export default function Accounts() {
                 )}
                 {accountType === "savings account" && (
                   <>
-                    <p>Start date: {savingsAccount.startDate}</p>
+                    <p>Start date: {date}</p>
                     <p>Start amount: {savingsAccount.startAmount} €</p>
                     <p>Current amount: {savingsAccount.startAmount} €</p>
                     <Lottie
