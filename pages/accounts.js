@@ -14,6 +14,7 @@ import styled from "styled-components";
 export default function Accounts() {
   const {user} = useContext(UserContext);
   const [showDetails, setShowDetails] = useState(false);
+  const [showMoreDetails, setShowMoreDetails] = useState(false);
   const [accountType, setAccountType] = useState("");
 
   const accountName = user?.accounts?.map(account => account.name);
@@ -21,6 +22,7 @@ export default function Accounts() {
   const toggleShowDetails = type => {
     setAccountType(type);
     setShowDetails(type !== accountType ? true : !showDetails);
+    setShowMoreDetails(false);
   };
 
   const piggyBank = user?.accounts
@@ -185,12 +187,54 @@ export default function Accounts() {
                     {piggyBank.startAmount && (
                       <>
                         <p>Current amount: {piggyBank?.startAmount} €</p>
-                        <button>Show details</button>
-                        <Lottie
-                          options={defaultOptionsGraph}
-                          width={"20rem"}
-                          height={"20rem"}
-                        />
+                        <button
+                          onClick={() => setShowMoreDetails(!showMoreDetails)}
+                        >
+                          {showMoreDetails ? "Hide details" : "Show details"}
+                        </button>
+                        {showMoreDetails && (
+                          <>
+                            <ul>
+                              <li>List of all deposits</li>
+                              <li>Deposit 1</li>
+                              <li>Deposit 2</li>
+                              <li>Deposit 3</li>
+                            </ul>
+                            <ul>
+                              <li>List of all withdrawals</li>
+                              <li>Withdrawal 1</li>
+                              <li>Withdrawal 2</li>
+                              <li>Withdrawal 3</li>
+                            </ul>
+                            <select>
+                              <option value="">Select one...</option>
+                              <option value="Since the beginning">
+                                Since the beginning
+                              </option>
+                              <option value="Since yesterday">
+                                Since yesterday
+                              </option>
+                              <option value="Since 7 days ago">
+                                Since 7 days ago
+                              </option>
+                              <option value="Since one month ago">
+                                Since one month ago
+                              </option>
+                              <option value="Since one year ago">
+                                Since one year ago
+                              </option>
+                              <option value="Since beginnin of the year">
+                                Since beginnin of the year
+                              </option>
+                            </select>
+                            <Lottie
+                              options={defaultOptionsGraph}
+                              width={"20rem"}
+                              height={"20rem"}
+                            />
+                          </>
+                        )}
+
                         <form>
                           <label>
                             Would you like to add something to your piggy bank?
@@ -211,15 +255,45 @@ export default function Accounts() {
                 )}
                 {accountType === "savings account" && (
                   <>
-                    <p>Start date: {date}</p>
                     <p>Start amount: {savingsAccount.startAmount} €</p>
                     <p>Current amount: {savingsAccount.startAmount} €</p>
-                    <Lottie
-                      options={defaultOptionsGraph}
-                      width={"20rem"}
-                      height={"20rem"}
-                    />
-                    <button>Show details</button>
+
+                    <button
+                      onClick={() => setShowMoreDetails(!showMoreDetails)}
+                    >
+                      {showMoreDetails ? "Hide details" : "Show details"}
+                    </button>
+                    {showMoreDetails && (
+                      <>
+                        <p>Start date: {date}</p>
+                        <select>
+                          <option value="">Select one...</option>
+                          <option value="Since the beginning">
+                            Since the beginning
+                          </option>
+                          <option value="Since yesterday">
+                            Since yesterday
+                          </option>
+                          <option value="Since 7 days ago">
+                            Since 7 days ago
+                          </option>
+                          <option value="Since one month ago">
+                            Since one month ago
+                          </option>
+                          <option value="Since one year ago">
+                            Since one year ago
+                          </option>
+                          <option value="Since beginnin of the year">
+                            Since beginnin of the year
+                          </option>
+                        </select>
+                        <Lottie
+                          options={defaultOptionsGraph}
+                          width={"20rem"}
+                          height={"20rem"}
+                        />
+                      </>
+                    )}
                   </>
                 )}
                 {accountType === "stocks account" && (
