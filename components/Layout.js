@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Link from "next/link";
-import {PageContext} from "./PageContext";
+import {PageContext} from "./contexts/PageContext";
 import "../public/logo.png";
 import {useContext} from "react";
 

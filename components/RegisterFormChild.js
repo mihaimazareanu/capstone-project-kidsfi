@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import {useState, useContext} from "react";
 import dynamic from "next/dynamic";
-import {UserContext} from "./UserContext";
+import {UserContext} from "./contexts/UserContext";
 
 const ReactPasswordChecklist = dynamic(
   () => import("react-password-checklist"),
