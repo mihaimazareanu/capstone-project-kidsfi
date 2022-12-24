@@ -58,15 +58,15 @@ export default function Accounts() {
     }
   }, []);
 
-  const stocksAccount = user?.accounts
-    ? user?.accounts?.find(account => {
-        if (account.name === "Stocks account") {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    : null;
+  // const stocksAccount = user?.accounts
+  //   ? user?.accounts?.find(account => {
+  //       if (account.name === "Stocks account") {
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     })
+  //   : null;
 
   const loanAccount = user?.accounts
     ? user?.accounts?.find(account => {
@@ -305,8 +305,8 @@ export default function Accounts() {
                 )}
                 {accountType === "loan account" && (
                   <>
-                    <p>Start amount: {savingsAccount.startAmount} €</p>
-                    <p>Current amount: {savingsAccount.startAmount} €</p>
+                    <p>Start amount: {loanAccount.startAmount} €</p>
+                    <p>Current amount: {loanAccount.startAmount} €</p>
 
                     <button
                       onClick={() => setShowMoreDetails(!showMoreDetails)}
