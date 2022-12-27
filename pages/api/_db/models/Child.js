@@ -57,6 +57,21 @@ const ChildSchema = new mongoose.Schema({
       pcs: {
         type: Number,
       },
+
+      transactions: [
+        {
+          id: {type: mongoose.Types.ObjectId},
+          date: {
+            type: Date,
+          },
+          typeOfTransaction: {
+            type: String,
+          },
+          amount: {
+            type: Number,
+          },
+        },
+      ],
     },
   ],
 });

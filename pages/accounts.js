@@ -12,10 +12,11 @@ import Layout from "../components/Layout";
 import styled from "styled-components";
 
 export default function Accounts() {
-  const {user} = useContext(UserContext);
+  const {user, setUser} = useContext(UserContext);
   const [showDetails, setShowDetails] = useState(false);
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const [accountType, setAccountType] = useState("");
+  const [fetchReload, setFetchReload] = useState(false);
 
   const accountName = user?.accounts?.map(account => account.name);
 
@@ -34,6 +35,9 @@ export default function Accounts() {
         }
       })
     : null;
+
+  const [currentAmount, setCurrentAmount] = useState(piggyBank?.startAmount);
+
   const savingsAccount = user?.accounts
     ? user.accounts.find(account => {
         if (account.name === "Savings account") {
@@ -77,6 +81,98 @@ export default function Accounts() {
         }
       })
     : null;
+
+  // function to update the piggy bank account
+
+  const updateAccount = async (event, type) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    const amount = data.amount;
+    const transaction = {
+      amount: amount,
+      date: Date.now(),
+      typeOfTransaction: type,
+    };
+    const accountId = user?.accounts?.find(
+      account => account.name === accountType
+    )?._id;
+    try {
+      await fetch(
+        `/api/children/${user._id}/accounts/${accountId}/transactions`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accountId: accountId,
+            transaction: transaction,
+          }),
+        }
+      );
+      setUser(prevUser => {
+        const updatedUser = {
+          ...prevUser,
+          accounts: prevUser.accounts.map(account => {
+            if (account._id === accountId) {
+              return {
+                ...account,
+                transactions: [...account.transactions, transaction],
+              };
+            }
+            return account;
+          }),
+        };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        return updatedUser;
+      });
+      setFetchReload(!fetchReload);
+    } catch (error) {
+      alert(error.message);
+    }
+    event.target.reset();
+  };
+
+  useEffect(() => {
+    if (user) {
+      const getUser = async () => {
+        try {
+          const urlChildren = `/api/children/?firstName=${user.firstName}`;
+          const childrenResponse = await fetch(urlChildren);
+          if (childrenResponse.ok) {
+            const childrenData = await childrenResponse.json();
+            setUser(childrenData);
+          }
+        } catch {
+          throw new Error(`Fetch failed`);
+        }
+      };
+      getUser();
+    }
+
+    const calculateCurrentAmount = () => {
+      let addAmount = Number(piggyBank?.startAmount);
+      piggyBank?.transactions?.forEach(transaction => {
+        console.table(transaction);
+        if (transaction.typeOfTransaction === "deposit") {
+          addAmount = addAmount + Number(transaction.amount);
+          return;
+        } else if (transaction.typeOfTransaction === "withdrawal") {
+          addAmount = addAmount - Number(transaction.amount);
+          return;
+        } else {
+          console.log("Type of transaction is missing");
+          return;
+        }
+      });
+
+      console.log(typeof addAmount);
+      setCurrentAmount(addAmount);
+    };
+    currentAmount && calculateCurrentAmount();
+  }, [fetchReload]);
+
+  console.log(currentAmount);
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
@@ -144,7 +240,7 @@ export default function Accounts() {
           <>
             <StyledAnimationContainer>
               {accountName?.includes("Piggy bank") && (
-                <StyledButton onClick={() => toggleShowDetails("piggy bank")}>
+                <StyledButton onClick={() => toggleShowDetails("Piggy bank")}>
                   <Lottie
                     options={defaultOptionsPiggyAccount}
                     width={"5rem"}
@@ -154,7 +250,7 @@ export default function Accounts() {
               )}
               {accountName?.includes("Savings account") && (
                 <StyledButton
-                  onClick={() => toggleShowDetails("savings account")}
+                  onClick={() => toggleShowDetails("Savings account")}
                 >
                   <Lottie
                     options={defaultOptionsMouse}
@@ -165,7 +261,7 @@ export default function Accounts() {
               )}
               {accountName?.includes("Stocks account") && (
                 <StyledButton
-                  onClick={() => toggleShowDetails("stocks account")}
+                  onClick={() => toggleShowDetails("Stocks account")}
                 >
                   <Lottie
                     options={defaultOptionsStocks}
@@ -175,7 +271,7 @@ export default function Accounts() {
                 </StyledButton>
               )}
               {accountName?.includes("Loan account") && (
-                <StyledButton onClick={() => toggleShowDetails("loan account")}>
+                <StyledButton onClick={() => toggleShowDetails("Loan account")}>
                   <Lottie
                     options={defaultOptionsLoan}
                     width={"5rem"}
@@ -186,11 +282,11 @@ export default function Accounts() {
             </StyledAnimationContainer>
             {showDetails && (
               <StyledSection>
-                {accountType === "piggy bank" && (
+                {accountType === "Piggy bank" && (
                   <>
                     {piggyBank.startAmount && (
                       <>
-                        <p>Current amount: {piggyBank?.startAmount} €</p>
+                        <p>Current amount: {currentAmount} €</p>
                         <button
                           onClick={() => setShowMoreDetails(!showMoreDetails)}
                         >
@@ -239,17 +335,21 @@ export default function Accounts() {
                           </>
                         )}
 
-                        <form>
+                        <form
+                          onSubmit={event => updateAccount(event, "deposit")}
+                        >
                           <label>
                             Would you like to add something to your piggy bank?
-                            <input type="text" /> €
+                            <input name="amount" type="number" /> €
                             <button type="submit">Add amount</button>
                           </label>
                         </form>
-                        <form>
+                        <form
+                          onSubmit={event => updateAccount(event, "withdrawal")}
+                        >
                           <label>
                             Did you take money from your piggy bank?
-                            <input type="text" /> €
+                            <input name="amount" type="number" /> €
                             <button type="submit">Subtract amount</button>
                           </label>
                         </form>
@@ -257,7 +357,7 @@ export default function Accounts() {
                     )}
                   </>
                 )}
-                {accountType === "savings account" && (
+                {accountType === "Savings account" && (
                   <>
                     <p>Start amount: {savingsAccount.startAmount} €</p>
                     <p>Current amount: {savingsAccount.startAmount} €</p>
@@ -300,7 +400,7 @@ export default function Accounts() {
                     )}
                   </>
                 )}
-                {accountType === "stocks account" && (
+                {accountType === "Stocks account" && (
                   <>
                     <p>Start amount: {stocksAccount.startAmount} €</p>
                     <p>Current amount: {stocksAccount.startAmount} €</p>
@@ -344,7 +444,7 @@ export default function Accounts() {
                     )}
                   </>
                 )}
-                {accountType === "loan account" && (
+                {accountType === "Loan account" && (
                   <>
                     <p>Start amount: {loanAccount.startAmount} €</p>
                     <p>Current amount: {loanAccount.startAmount} €</p>
