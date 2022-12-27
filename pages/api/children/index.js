@@ -9,8 +9,12 @@ async function handler(req, res) {
         if (req.query.firstName) {
           filter.firstName = req.query.firstName;
         }
-        const children = await Child.find(filter);
-        res.status(200).json(children);
+        const children = await Child.findOne(filter);
+        if (children.length === 0) {
+          throw new Error("User not found");
+        } else {
+          res.status(200).json(children);
+        }
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});

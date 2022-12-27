@@ -12,10 +12,6 @@ export default function SigninForm({showPassword, onShowPassword}) {
     password: "",
   });
 
-  const handleLoginFailed = () => {
-    setLoginFailed(true);
-  };
-
   const handleSubmitSigninForm = event => {
     event.preventDefault();
     const getUser = async () => {
@@ -29,29 +25,25 @@ export default function SigninForm({showPassword, onShowPassword}) {
         const parentsResponse = await fetch(urlParents);
         console.log(parentsResponse);
         if (parentsResponse.ok) {
-          try {
-            const parentsData = await parentsResponse.json();
-            // if (parentsData.firstName === loginFilter.firstName) {
-            setUser(parentsData);
-            // }
-          } catch {
-            try {
-              const childrenResponse = await fetch(urlChildren);
-              if (childrenResponse.ok) {
-                const childrenData = await childrenResponse.json();
-                setUser(childrenData[0]);
-              }
-            } catch {
-              handleLoginFailed();
-              setUser(null);
-            }
+          const parentsData = await parentsResponse.json();
+          console.log(parentsData);
+          // if (parentsData.firstName === loginFilter.firstName) {
+          setUser(parentsData);
+          // }
+        } else {
+          const childrenResponse = await fetch(urlChildren);
+          if (childrenResponse.ok) {
+            const childrenData = await childrenResponse.json();
+            console.log(childrenData);
+            setUser(childrenData);
+          } else {
+            setLoginFailed(true);
+            setUser(null);
           }
           console.log("Login failed?", loginFailed);
-        } else {
-          throw new Error(`Fetch failed`);
         }
       } catch (error) {
-        console.log(error);
+        throw new Error(`Fetch failed`);
       }
     };
     !loginFailed && getUser();
@@ -139,6 +131,8 @@ export default function SigninForm({showPassword, onShowPassword}) {
           </label>
           {loginFailed && <ErrorText>User not found</ErrorText>}
           <FormButton
+            type="submit"
+            onClick={() => setLoginFailed(false)}
             style={{
               alignSelf: "center",
               fontSize: "1rem",
