@@ -2,22 +2,23 @@ import connectDB from "../../_db/connect-db";
 import {Child} from "../../_db/models/Child";
 
 async function handler(req, res) {
+  console.log(req.query);
   switch (req.method) {
-    case "POST":
+    case "GET":
       try {
         const child = await Child.findById(req.query.childId);
 
-        if (child.accounts) {
-          child.accounts.push(req.body);
+        console.log(child);
+        if (child) {
+          return res.status(200).json(child);
         } else {
-          child.accounts = [req.body];
+          return res.status(500).json({error: "user not found"});
         }
-        await child.save();
-        res.status(200).json(child);
-      } catch (error) {
-        res.status(500).json({error: error.message});
+      } catch {
+        console.log("error");
       }
       break;
+
     default:
       res.status(405).json({error: "method not allowed"});
   }

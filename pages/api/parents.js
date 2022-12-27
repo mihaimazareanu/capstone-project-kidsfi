@@ -31,7 +31,12 @@ async function handler(req, res) {
             },
           },
         ]).exec();
-        res.status(200).json(parent[0]);
+
+        if (parent.length === 0) {
+          throw new Error("User not found");
+        } else {
+          res.status(200).json(parent[0]);
+        }
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
         res.status(500).json({error: "something went wrong"});

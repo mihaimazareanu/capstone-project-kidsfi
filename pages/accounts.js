@@ -58,21 +58,25 @@ export default function Accounts() {
     }
   }, []);
 
-  // const stocksAccount = user?.accounts ? user?.accounts?.find(account => {
-  //   if (account.name === "Stocks account") {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }) : null;
+  const stocksAccount = user?.accounts
+    ? user?.accounts?.find(account => {
+        if (account.name === "Stocks account") {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    : null;
 
-  // const loanAccount = user?.accounts ? user?.accounts?.find(account => {
-  //   if (account.name === "Loan account") {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }) : null;
+  const loanAccount = user?.accounts
+    ? user?.accounts?.find(account => {
+        if (account.name === "Loan account") {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    : null;
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
@@ -297,9 +301,92 @@ export default function Accounts() {
                   </>
                 )}
                 {accountType === "stocks account" && (
-                  <p>Stocks account details</p>
+                  <>
+                    <p>Start amount: {stocksAccount.startAmount} €</p>
+                    <p>Current amount: {stocksAccount.startAmount} €</p>
+
+                    <button
+                      onClick={() => setShowMoreDetails(!showMoreDetails)}
+                    >
+                      {showMoreDetails ? "Hide details" : "Show details"}
+                    </button>
+                    {showMoreDetails && (
+                      <>
+                        <p>Name: {stocksAccount.stockName}</p>
+                        <p>Start date: {date}</p>
+                        <select>
+                          <option value="">Select one...</option>
+                          <option value="Since the beginning">
+                            Since the beginning
+                          </option>
+                          <option value="Since yesterday">
+                            Since yesterday
+                          </option>
+                          <option value="Since 7 days ago">
+                            Since 7 days ago
+                          </option>
+                          <option value="Since one month ago">
+                            Since one month ago
+                          </option>
+                          <option value="Since one year ago">
+                            Since one year ago
+                          </option>
+                          <option value="Since beginnin of the year">
+                            Since beginnin of the year
+                          </option>
+                        </select>
+                        <Lottie
+                          options={defaultOptionsGraph}
+                          width={"20rem"}
+                          height={"20rem"}
+                        />
+                      </>
+                    )}
+                  </>
                 )}
-                {accountType === "loan account" && <p>Loan account details</p>}
+                {accountType === "loan account" && (
+                  <>
+                    <p>Start amount: {loanAccount.startAmount} €</p>
+                    <p>Current amount: {loanAccount.startAmount} €</p>
+
+                    <button
+                      onClick={() => setShowMoreDetails(!showMoreDetails)}
+                    >
+                      {showMoreDetails ? "Hide details" : "Show details"}
+                    </button>
+                    {showMoreDetails && (
+                      <>
+                        <p>Start date: {date}</p>
+                        <select>
+                          <option value="">Select one...</option>
+                          <option value="Since the beginning">
+                            Since the beginning
+                          </option>
+                          <option value="Since yesterday">
+                            Since yesterday
+                          </option>
+                          <option value="Since 7 days ago">
+                            Since 7 days ago
+                          </option>
+                          <option value="Since one month ago">
+                            Since one month ago
+                          </option>
+                          <option value="Since one year ago">
+                            Since one year ago
+                          </option>
+                          <option value="Since beginnin of the year">
+                            Since beginnin of the year
+                          </option>
+                        </select>
+                        <Lottie
+                          options={defaultOptionsGraph}
+                          width={"20rem"}
+                          height={"20rem"}
+                        />
+                      </>
+                    )}
+                  </>
+                )}
               </StyledSection>
             )}
           </>
