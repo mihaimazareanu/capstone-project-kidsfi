@@ -6,7 +6,6 @@ async function handler(req, res) {
     // case "GET":
     //   try {
     //     const child = await Child.findById(req.query.childId);
-    //     console.log(req.query.childId);
     //     if (child) {
     //       return res.status(200).json(child.accounts);
     //     } else {
@@ -19,7 +18,6 @@ async function handler(req, res) {
     case "POST":
       try {
         const child = await Child.findById(req.query.childId);
-        // console.log(child);
         console.log(req.body);
         if (child.accounts) {
           child.accounts
@@ -31,7 +29,6 @@ async function handler(req, res) {
             .transactions.push(req.body.transaction);
         } else {
           console.log("error");
-          //   child.accounts = [req.body];
         }
         await child.save();
         res.status(200).json(child);

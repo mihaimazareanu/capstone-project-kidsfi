@@ -149,7 +149,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
 }
 const SignForm = styled.form`
   margin: 1rem auto;
-  border: 2px solid #688b51;
+  border: 2px solid #5e8c49;
   width: 90%;
   display: flex;
   flex-direction: column;

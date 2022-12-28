@@ -20,10 +20,11 @@ const GlobalStyles = createGlobalStyle`
         width: 100%;
         min-height: 100vh;
         color: #401d1a;
-        background: #e9f2ef;
-        box-shadow: inset -50px 50px 100px #d2dad7,
-                    inset 50px -50px 100px #ffffff;
-    }
+background: #e9f2ef;
+box-shadow: inset 50px -50px 100px #c8d0ce,
+            inset -50px 50px 100px #ffffff;
+        }
+        
     * {
         box-sizing: border-box;
     }

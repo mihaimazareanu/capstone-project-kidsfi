@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {useState} from "react";
 import dynamic from "next/dynamic";
 import {FormButton} from "./StyledComponents";
+import {StyledIcon} from "./StyledComponents";
 
 const ReactPasswordChecklist = dynamic(
   () => import("react-password-checklist"),
@@ -202,7 +203,7 @@ export default function RegisterFormParent({
                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 />
 
-                <i onClick={onShowPassword}>
+                <StyledIcon onClick={onShowPassword}>
                   {showPassword ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -230,32 +231,32 @@ export default function RegisterFormParent({
                       />
                     </svg>
                   )}
-                </i>
+                </StyledIcon>
               </ChoosePasswordDiv>
-              <PasswordErrorSpan>
-                <ReactPasswordChecklist
-                  rules={[
-                    "minLength",
-                    "specialChar",
-                    "number",
-                    "capital",
-                    "lowercase",
-                  ]}
-                  minLength={8}
-                  value={regInput.password}
-                  valueAgain={regInput.confirmPassword}
-                  messages={{
-                    minLength: "Password has more than 8 characters",
-                    specialChar: "Password has special characters",
-                    number: "Password has at least a number",
-                    capital: "Password has at least a capital letter",
-                    lowercase: "Password has at least one lower case letter",
-                  }}
-                  iconSize={12}
-                />
-              </PasswordErrorSpan>
-              {error.password && <ErrorSpan>{error.password}</ErrorSpan>}
             </label>
+            <PasswordErrorSpan>
+              <ReactPasswordChecklist
+                rules={[
+                  "minLength",
+                  "specialChar",
+                  "number",
+                  "capital",
+                  "lowercase",
+                ]}
+                minLength={8}
+                value={regInput.password}
+                valueAgain={regInput.confirmPassword}
+                messages={{
+                  minLength: "Password has more than 8 characters",
+                  specialChar: "Password has special characters",
+                  number: "Password has at least a number",
+                  capital: "Password has at least a capital letter",
+                  lowercase: "Password has at least one lower case letter",
+                }}
+                iconSize={12}
+              />
+            </PasswordErrorSpan>
+            {error.password && <ErrorSpan>{error.password}</ErrorSpan>}
 
             <label>
               Confirm password
@@ -270,7 +271,7 @@ export default function RegisterFormParent({
                   onBlur={validateInput}
                 />
 
-                <i onClick={onShowConfirmedPassword}>
+                <StyledIcon onClick={onShowConfirmedPassword}>
                   {showConfirmedPassword ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -298,12 +299,12 @@ export default function RegisterFormParent({
                       />
                     </svg>
                   )}
-                </i>
+                </StyledIcon>
               </ChoosePasswordDiv>
-              {error.confirmPassword && (
-                <ErrorSpan>{error.confirmPassword}</ErrorSpan>
-              )}
             </label>
+            {error.confirmPassword && (
+              <ErrorSpan>{error.confirmPassword}</ErrorSpan>
+            )}
           </PasswordFieldset>
           <FormButton
             style={{
@@ -357,7 +358,7 @@ export default function RegisterFormParent({
 
 const RegForm = styled.form`
   margin: 1rem auto;
-  border: 2px solid #688b51;
+  border: 2px solid #5e8c49;
   width: 95%;
   display: flex;
   flex-direction: column;
@@ -414,13 +415,15 @@ const PasswordFieldset = styled.fieldset`
 
 const ChoosePasswordDiv = styled.div`
   display: flex;
+  position: relative;
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
 `;
 
 const InputChoosePassword = styled.input`
-  width: 90%;
+  width: 100%;
+  z-index: 1;
   border: none;
   align-self: baseline;
 `;

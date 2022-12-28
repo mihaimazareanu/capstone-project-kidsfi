@@ -2,6 +2,8 @@ import styled from "styled-components";
 import {useState, useContext} from "react";
 import dynamic from "next/dynamic";
 import {UserContext} from "./contexts/UserContext";
+import {FormButton} from "./StyledComponents";
+import {StyledIcon} from "./StyledComponents";
 
 const ReactPasswordChecklist = dynamic(
   () => import("react-password-checklist"),
@@ -184,7 +186,7 @@ export default function RegisterFormChild({
                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
               />
 
-              <i onClick={onShowPassword}>
+              <StyledIcon onClick={onShowPassword}>
                 {showPassword ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -212,32 +214,32 @@ export default function RegisterFormChild({
                     />
                   </svg>
                 )}
-              </i>
+              </StyledIcon>
             </ChoosePasswordDiv>
-            <PasswordErrorSpan>
-              <ReactPasswordChecklist
-                rules={[
-                  "minLength",
-                  "specialChar",
-                  "number",
-                  "capital",
-                  "lowercase",
-                ]}
-                minLength={8}
-                value={regInput.password}
-                valueAgain={regInput.confirmPassword}
-                messages={{
-                  minLength: "Password has more than 8 characters",
-                  specialChar: "Password has special characters",
-                  number: "Password has at least a number",
-                  capital: "Password has at least a capital letter",
-                  lowercase: "Password has at least one lower case letter",
-                }}
-                iconSize={12}
-              />
-            </PasswordErrorSpan>
-            {error.password && <ErrorSpan>{error.password}</ErrorSpan>}
           </label>
+          <PasswordErrorSpan>
+            <ReactPasswordChecklist
+              rules={[
+                "minLength",
+                "specialChar",
+                "number",
+                "capital",
+                "lowercase",
+              ]}
+              minLength={8}
+              value={regInput.password}
+              valueAgain={regInput.confirmPassword}
+              messages={{
+                minLength: "Password has more than 8 characters",
+                specialChar: "Password has special characters",
+                number: "Password has at least a number",
+                capital: "Password has at least a capital letter",
+                lowercase: "Password has at least one lower case letter",
+              }}
+              iconSize={12}
+            />
+          </PasswordErrorSpan>
+          {error.password && <ErrorSpan>{error.password}</ErrorSpan>}
 
           <label>
             Confirm password
@@ -252,7 +254,7 @@ export default function RegisterFormChild({
                 onBlur={validateInput}
               />
 
-              <i onClick={onShowConfirmedPassword}>
+              <StyledIcon onClick={onShowConfirmedPassword}>
                 {showConfirmedPassword ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -280,14 +282,24 @@ export default function RegisterFormChild({
                     />
                   </svg>
                 )}
-              </i>
+              </StyledIcon>
             </ChoosePasswordDiv>
-            {error.confirmPassword && (
-              <ErrorSpan>{error.confirmPassword}</ErrorSpan>
-            )}
           </label>
+          {error.confirmPassword && (
+            <ErrorSpan>{error.confirmPassword}</ErrorSpan>
+          )}
         </PasswordFieldset>
-        <CreateLoginButton type="submit">Create child login</CreateLoginButton>
+        <FormButton
+          style={{
+            marginBottom: "0.5rem",
+            fontSize: "1rem",
+            width: "10rem",
+            padding: "0.5rem 0",
+          }}
+          type="submit"
+        >
+          Create child login
+        </FormButton>
       </>
     </RegForm>
   );
@@ -295,7 +307,7 @@ export default function RegisterFormChild({
 
 const RegForm = styled.form`
   margin: 1rem auto;
-  border: 2px solid #688b51;
+  border: 2px solid #5e8c49;
   width: 95%;
   display: flex;
   flex-direction: column;
@@ -335,13 +347,15 @@ const PasswordFieldset = styled.fieldset`
 
 const ChoosePasswordDiv = styled.div`
   display: flex;
+  position: relative;
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
 `;
 
 const InputChoosePassword = styled.input`
-  width: 90%;
+  width: 100%;
+  z-index: 1;
   border: none;
   align-self: baseline;
 `;
@@ -349,25 +363,6 @@ const InputChoosePassword = styled.input`
 const InputConfirmPassword = styled.input`
   width: 100%;
   border: none;
-`;
-
-const CreateLoginButton = styled.button`
-  border: none;
-  border-radius: 8px;
-  color: #e9f2ef;
-  background-color: #688b51;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  width: 10rem;
-  padding: 0.5rem 0;
-  box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
-
-  :hover {
-    background-color: #224024;
-    box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
-    transform: scale(1.1);
-    transition: ease-in 0.2s;
-  }
 `;
 
 const ErrorSpan = styled.span`

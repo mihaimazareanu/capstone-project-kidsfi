@@ -147,7 +147,7 @@ const Navbar = styled.nav`
   left: 0;
   width: 100%;
   height: 5rem;
-  background: #688b51;
+  background: #5e8c49;
   box-shadow: inset -50px -50px 100px #5e7d49, inset 50px 50px 100px #729959;
   display: flex;
   justify-content: flex-start;

@@ -10,6 +10,13 @@ import animationDataLoan from "../public/lotties/loan.json";
 import animationDataGraph from "../public/lotties/graph.json";
 import Layout from "../components/Layout";
 import styled from "styled-components";
+import {
+  FormButton,
+  PasswordDiv,
+  StyledForm,
+  StyledInput,
+  StyledList,
+} from "../components/StyledComponents";
 
 export default function Accounts() {
   const {user, setUser} = useContext(UserContext);
@@ -26,15 +33,60 @@ export default function Accounts() {
     setShowMoreDetails(false);
   };
 
-  const piggyBank = user?.accounts
-    ? user?.accounts?.find(account => {
+  const [piggyBank, setPiggyBank] = useState(null);
+
+  function calculate() {
+    let addAmount = Number(
+      user?.accounts?.find(account => {
         if (account.name === "Piggy bank") {
           return true;
         } else {
           return false;
         }
-      })
-    : null;
+      }).startAmount
+    );
+    piggyBank?.transactions?.forEach(transaction => {
+      if (transaction.typeOfTransaction === "deposit") {
+        addAmount = addAmount + Number(transaction.amount);
+        return;
+      } else if (transaction.typeOfTransaction === "withdrawal") {
+        addAmount = addAmount - Number(transaction.amount);
+        return;
+      } else {
+        alert("Type of transaction is missing");
+        return;
+      }
+    });
+    return addAmount;
+  }
+
+  const amount = calculate();
+
+  useEffect(() => {
+    if (user) {
+      setPiggyBank(
+        user?.accounts?.find(account => {
+          if (account.name === "Piggy bank") {
+            return true;
+          } else {
+            return false;
+          }
+        })
+      );
+      if (!currentAmount && currentAmount !== 0) {
+        setCurrentAmount(
+          user?.accounts?.find(account => {
+            if (account.name === "Piggy bank") {
+              return true;
+            } else {
+              return false;
+            }
+          }).startAmount
+        );
+        setFetchReload(!fetchReload);
+      }
+    }
+  }, [user]);
 
   const [currentAmount, setCurrentAmount] = useState(piggyBank?.startAmount);
 
@@ -110,22 +162,22 @@ export default function Accounts() {
           }),
         }
       );
-      setUser(prevUser => {
-        const updatedUser = {
-          ...prevUser,
-          accounts: prevUser.accounts.map(account => {
-            if (account._id === accountId) {
-              return {
-                ...account,
-                transactions: [...account.transactions, transaction],
-              };
-            }
-            return account;
-          }),
-        };
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        return updatedUser;
-      });
+      // setUser(prevUser => {
+      //   const updatedUser = {
+      //     ...prevUser,
+      //     accounts: prevUser.accounts.map(account => {
+      //       if (account._id === accountId) {
+      //         return {
+      //           ...account,
+      //           transactions: [...account.transactions, transaction],
+      //         };
+      //       }
+      //       return account;
+      //     }),
+      //   };
+      //   localStorage.setItem("user", JSON.stringify(updatedUser));
+      //   return updatedUser;
+      // });
       setFetchReload(!fetchReload);
     } catch (error) {
       alert(error.message);
@@ -134,6 +186,23 @@ export default function Accounts() {
   };
 
   useEffect(() => {
+    const calculateCurrentAmount = () => {
+      let addAmount = Number(piggyBank?.startAmount);
+      piggyBank?.transactions?.forEach(transaction => {
+        if (transaction.typeOfTransaction === "deposit") {
+          addAmount = addAmount + Number(transaction.amount);
+          return;
+        } else if (transaction.typeOfTransaction === "withdrawal") {
+          addAmount = addAmount - Number(transaction.amount);
+          return;
+        } else {
+          alert("Type of transaction is missing");
+          return;
+        }
+      });
+      setCurrentAmount(addAmount);
+    };
+
     if (user) {
       const getUser = async () => {
         try {
@@ -148,31 +217,13 @@ export default function Accounts() {
         }
       };
       getUser();
+      calculateCurrentAmount();
     }
 
-    const calculateCurrentAmount = () => {
-      let addAmount = Number(piggyBank?.startAmount);
-      piggyBank?.transactions?.forEach(transaction => {
-        console.table(transaction);
-        if (transaction.typeOfTransaction === "deposit") {
-          addAmount = addAmount + Number(transaction.amount);
-          return;
-        } else if (transaction.typeOfTransaction === "withdrawal") {
-          addAmount = addAmount - Number(transaction.amount);
-          return;
-        } else {
-          console.log("Type of transaction is missing");
-          return;
-        }
-      });
-
-      console.log(typeof addAmount);
-      setCurrentAmount(addAmount);
-    };
-    currentAmount && calculateCurrentAmount();
+    (currentAmount || currentAmount === 0) && calculateCurrentAmount();
   }, [fetchReload]);
 
-  console.log(currentAmount);
+  // console.log(currentAmount);
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
@@ -284,28 +335,61 @@ export default function Accounts() {
               <StyledSection>
                 {accountType === "Piggy bank" && (
                   <>
-                    {piggyBank.startAmount && (
+                    {piggyBank?.startAmount && (
                       <>
-                        <p>Current amount: {currentAmount} €</p>
-                        <button
-                          onClick={() => setShowMoreDetails(!showMoreDetails)}
-                        >
-                          {showMoreDetails ? "Hide details" : "Show details"}
-                        </button>
+                        <PasswordDiv>
+                          <p>Current amount: {amount} €</p>
+                          <FormButton
+                            style={{marginLeft: "auto"}}
+                            onClick={() => setShowMoreDetails(!showMoreDetails)}
+                          >
+                            {showMoreDetails ? "Hide details" : "Show details"}
+                          </FormButton>
+                        </PasswordDiv>
                         {showMoreDetails && (
                           <>
-                            <ul>
+                            <StyledList>
                               <li>List of all deposits</li>
-                              <li>Deposit 1</li>
-                              <li>Deposit 2</li>
-                              <li>Deposit 3</li>
-                            </ul>
-                            <ul>
+                              {user?.accounts
+                                ?.find(account => account.name === "Piggy bank")
+                                ?.transactions?.filter(
+                                  transaction =>
+                                    transaction.typeOfTransaction === "deposit"
+                                )
+                                .map((deposit, index) => (
+                                  <>
+                                    <li key={index}>
+                                      Amount : {deposit.amount}
+                                    </li>
+                                    <li>Date: {deposit.date}</li>
+                                  </>
+                                ))}
+                            </StyledList>
+                            <StyledList>
                               <li>List of all withdrawals</li>
-                              <li>Withdrawal 1</li>
-                              <li>Withdrawal 2</li>
-                              <li>Withdrawal 3</li>
-                            </ul>
+                              {user?.accounts
+                                ?.find(account => account.name === "Piggy bank")
+                                ?.transactions?.filter(
+                                  transaction =>
+                                    transaction.typeOfTransaction ===
+                                    "withdrawal"
+                                ).length !== 0 ? (
+                                user?.accounts
+                                  ?.find(
+                                    account => account.name === "Piggy bank"
+                                  )
+                                  ?.transactions?.filter(
+                                    transaction =>
+                                      transaction.typeOfTransaction ===
+                                      "withdrawal"
+                                  )
+                                  .map((withdrawal, index) => (
+                                    <li key={index}>{withdrawal.amount}</li>
+                                  ))
+                              ) : (
+                                <li>No withdrawals</li>
+                              )}
+                            </StyledList>
                             <select>
                               <option value="">Select one...</option>
                               <option value="Since the beginning">
@@ -335,24 +419,39 @@ export default function Accounts() {
                           </>
                         )}
 
-                        <form
+                        <StyledForm
                           onSubmit={event => updateAccount(event, "deposit")}
                         >
                           <label>
                             Would you like to add something to your piggy bank?
-                            <input name="amount" type="number" /> €
-                            <button type="submit">Add amount</button>
+                            <StyledInput
+                              style={{width: "3rem", margin: "0 0.5rem"}}
+                              name="amount"
+                              type="number"
+                            />
+                            {`€   `}
                           </label>
-                        </form>
-                        <form
+                          <FormButton
+                            // style={{alignSelf: "flex-end"}}
+                            type="submit"
+                          >
+                            Add amount
+                          </FormButton>
+                        </StyledForm>
+                        <StyledForm
                           onSubmit={event => updateAccount(event, "withdrawal")}
                         >
                           <label>
                             Did you take money from your piggy bank?
-                            <input name="amount" type="number" /> €
-                            <button type="submit">Subtract amount</button>
+                            <StyledInput
+                              style={{width: "3rem", margin: "0 0.5rem"}}
+                              name="amount"
+                              type="number"
+                            />
+                            {`€   `}
                           </label>
-                        </form>
+                          <FormButton type="submit">Subtract amount</FormButton>
+                        </StyledForm>
                       </>
                     )}
                   </>
@@ -362,11 +461,12 @@ export default function Accounts() {
                     <p>Start amount: {savingsAccount.startAmount} €</p>
                     <p>Current amount: {savingsAccount.startAmount} €</p>
 
-                    <button
+                    <FormButton
+                      style={{alignSelf: "center"}}
                       onClick={() => setShowMoreDetails(!showMoreDetails)}
                     >
                       {showMoreDetails ? "Hide details" : "Show details"}
-                    </button>
+                    </FormButton>
                     {showMoreDetails && (
                       <>
                         <p>Start date: {date}</p>
@@ -522,8 +622,9 @@ const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 1rem;
-  padding-left: 1rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  gap: 1rem;
 `;
 
 const StyledButton = styled.button`
