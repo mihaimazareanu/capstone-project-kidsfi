@@ -13,6 +13,11 @@ const ParentSchema = new mongoose.Schema({
     required: true,
   },
 
+  username: {
+    type: String,
+    required: true,
+  },
+
   password: {
     type: String,
     required: true,

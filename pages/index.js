@@ -94,8 +94,6 @@ export default function Home({
         startDate: account.startDate,
         pcs: account.pcs,
       };
-      console.log("Body default before posting", body);
-      console.log("Selected Child ID: ", selectedChild);
       const endpoint = `/api/children/${selectedChild}/accounts`;
       const options = {
         method: "POST",

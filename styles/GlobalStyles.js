@@ -9,14 +9,18 @@ const GlobalStyles = createGlobalStyle`
     font-family: "Mulish-light";
     src: local("Mulish-light"), url('/fonts/Mulish-Light.ttf') format("truetype");
 }
-    html,
+    html {
+        padding: 0;
+        margin: 0;
+    }
     body {
         padding: 0 0.3rem;
-        margin: 2.5rem auto 0 auto;
+        margin: 5rem auto 0 auto;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         font-family: "Mulish";
         font-size: 1rem;
         width: 100%;
+        /* min-width: 100vw; */
         min-height: 100vh;
         color: #401d1a;
         background: #e9f2ef;

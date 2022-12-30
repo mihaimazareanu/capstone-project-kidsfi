@@ -8,7 +8,7 @@ async function handler(req, res) {
         const parent = await Parent.aggregate([
           {
             $match: {
-              firstName: req.query.firstName,
+              username: req.query.username,
             },
           },
           {
@@ -22,13 +22,14 @@ async function handler(req, res) {
         ]).exec();
 
         if (parent.length === 0) {
-          throw new Error("User not found");
+          alert("Parent not found");
+          res.json({error: "User not found"});
         } else {
           res.status(200).json(parent[0]);
         }
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
-        res.status(500).json({error: "something went wrong"});
+        res.status(500).json({error: "Access denied"});
       }
       break;
     case "POST":
@@ -37,6 +38,7 @@ async function handler(req, res) {
         const newParent = new Parent({
           firstName: body.firstName,
           lastName: body.lastName,
+          username: body.username,
           password: body.password,
           isParent: body.isParent,
         });

@@ -8,8 +8,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
   const {setUser} = useContext(UserContext);
   const [loginFailed, setLoginFailed] = useState(false);
   const [loginFilter, setLoginFilter] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     password: "",
   });
 
@@ -17,34 +16,31 @@ export default function SigninForm({showPassword, onShowPassword}) {
     event.preventDefault();
     const getUser = async () => {
       try {
-        const urlParents = /*loginFilter.firstName.length === 0
-            ? `/api/parents`
-            :*/ `/api/parents?firstName=${loginFilter.firstName}`;
-        const urlChildren = /*loginFilter.firstName.length === 0
-            ? `/api/children`
-            :*/ `/api/children/?firstName=${loginFilter.firstName}`;
+        const urlParents = `/api/parents?username=${loginFilter.username}&password=${loginFilter.password}`;
+        const urlChildren = `/api/children?username=${loginFilter.username}&password=${loginFilter.password}`;
         const parentsResponse = await fetch(urlParents);
-        console.log(parentsResponse);
         if (parentsResponse.ok) {
           const parentsData = await parentsResponse.json();
-          console.log(parentsData);
-          // if (parentsData.firstName === loginFilter.firstName) {
-          setUser(parentsData);
-          // }
-        } else {
-          const childrenResponse = await fetch(urlChildren);
-          if (childrenResponse.ok) {
-            const childrenData = await childrenResponse.json();
-            console.log(childrenData);
-            setUser(childrenData);
+          if (parentsData.password === loginFilter.password) {
+            setUser(parentsData);
           } else {
             setLoginFailed(true);
             setUser(null);
           }
-          console.log("Login failed?", loginFailed);
+        } else {
+          const childrenResponse = await fetch(urlChildren);
+          if (childrenResponse.ok) {
+            const childrenData = await childrenResponse.json();
+            if (childrenData.password === loginFilter.password) {
+              setUser(childrenData);
+            } else {
+              setLoginFailed(true);
+              setUser(null);
+            }
+          }
         }
-      } catch (error) {
-        throw new Error(`Fetch failed`);
+      } catch {
+        setLoginFailed(true);
       }
     };
     !loginFailed && getUser();
@@ -56,30 +52,16 @@ export default function SigninForm({showPassword, onShowPassword}) {
         <DetailsFieldset>
           <StyledDiv>
             <label>
-              First Name
-              <InputFirstName
+              Username
+              <InputUsername
                 type="text"
                 required
-                placeholder="Type your first name..."
-                value={loginFilter.firstName}
+                name="username"
+                placeholder="Type your username..."
+                value={loginFilter.username}
                 onChange={event => {
-                  const firstNameInput = event.target.value;
-                  setLoginFilter({...loginFilter, firstName: firstNameInput});
-                }}
-              />
-            </label>
-          </StyledDiv>
-          <StyledDiv>
-            <label>
-              Last Name
-              <InputLastName
-                type="text"
-                required
-                placeholder="Type your last name..."
-                value={loginFilter.lastName}
-                onChange={event => {
-                  const lastNameInput = event.target.value;
-                  setLoginFilter({...loginFilter, lastName: lastNameInput});
+                  const usernameInput = event.target.value;
+                  setLoginFilter({...loginFilter, username: usernameInput});
                 }}
               />
             </label>
@@ -92,6 +74,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
               <InputPassword
                 type={showPassword ? "text" : "password"}
                 required
+                name="password"
                 placeholder="Type your password..."
                 value={loginFilter.password}
                 onChange={event => {
@@ -164,18 +147,10 @@ const DetailsFieldset = styled.fieldset`
   display: flex;
   width: 100%;
   align-items: center;
-  justify-content: flex-start;
-  gap: 1rem;
   border: none;
 `;
 
-const InputFirstName = styled.input`
-  width: 100%;
-  border: none;
-`;
-
-const InputLastName = styled.input`
-  margin-left: auto;
+const InputUsername = styled.input`
   width: 100%;
   border: none;
 `;
@@ -205,7 +180,7 @@ const InputPassword = styled.input`
 `;
 
 const StyledDiv = styled.div`
-  width: 50%;
+  width: 100%;
 `;
 
 const ErrorText = styled.p`

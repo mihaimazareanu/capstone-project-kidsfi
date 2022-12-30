@@ -26,6 +26,7 @@ export default function Accounts() {
   const [accountType, setAccountType] = useState("");
   const [fetchReload, setFetchReload] = useState(false);
   const [piggyBank, setPiggyBank] = useState(null);
+  const [filterValue, setFilterValue] = useState(null);
   const [filteredArray, setFilteredArray] = useState(
     piggyBank?.transactions ?? []
   );
@@ -43,28 +44,30 @@ export default function Accounts() {
   // Functions for the piggy bank account START
 
   function calculatePiggyBank() {
-    let addAmount = Number(
-      user?.accounts?.find(account => {
-        if (account.name === "Piggy bank") {
-          return true;
+    if (user?.accounts?.length !== 0) {
+      let addAmount = Number(
+        user?.accounts?.find(account => {
+          if (account.name === "Piggy bank") {
+            return true;
+          } else {
+            return false;
+          }
+        }).startAmount
+      );
+      piggyBank?.transactions?.forEach(transaction => {
+        if (transaction.typeOfTransaction === "deposit") {
+          addAmount = addAmount + Number(transaction.amount);
+          return;
+        } else if (transaction.typeOfTransaction === "withdrawal") {
+          addAmount = addAmount - Number(transaction.amount);
+          return;
         } else {
-          return false;
+          alert("Type of transaction is missing");
+          return;
         }
-      }).startAmount
-    );
-    piggyBank?.transactions?.forEach(transaction => {
-      if (transaction.typeOfTransaction === "deposit") {
-        addAmount = addAmount + Number(transaction.amount);
-        return;
-      } else if (transaction.typeOfTransaction === "withdrawal") {
-        addAmount = addAmount - Number(transaction.amount);
-        return;
-      } else {
-        alert("Type of transaction is missing");
-        return;
-      }
-    });
-    return addAmount;
+      });
+      return addAmount;
+    }
   }
 
   const piggyBankAmount = calculatePiggyBank();
@@ -81,15 +84,16 @@ export default function Accounts() {
         })
       );
       if (!currentAmount && currentAmount !== 0) {
-        setCurrentAmount(
-          user?.accounts?.find(account => {
-            if (account.name === "Piggy bank") {
-              return true;
-            } else {
-              return false;
-            }
-          }).startAmount
-        );
+        user?.accounts?.length !== 0 &&
+          setCurrentAmount(
+            user?.accounts?.find(account => {
+              if (account.name === "Piggy bank") {
+                return true;
+              } else {
+                return false;
+              }
+            }).startAmount
+          );
         setFetchReload(!fetchReload);
       }
     }
@@ -129,6 +133,7 @@ export default function Accounts() {
     } catch (error) {
       alert(error.message);
     }
+
     event.target.reset();
   };
 
@@ -153,7 +158,7 @@ export default function Accounts() {
     if (user) {
       const getUser = async () => {
         try {
-          const urlChildren = `/api/children/?firstName=${user.firstName}`;
+          const urlChildren = `/api/children?username=${user.username}&password=${user.password}`;
           const childrenResponse = await fetch(urlChildren);
           if (childrenResponse.ok) {
             const childrenData = await childrenResponse.json();
@@ -167,6 +172,8 @@ export default function Accounts() {
       calculateCurrentAmount();
     }
 
+    filterHandler(filterValue);
+
     (currentAmount || currentAmount === 0) && calculateCurrentAmount();
   }, [fetchReload]);
 
@@ -178,7 +185,7 @@ export default function Accounts() {
     if (piggyBank) {
       let prevAmount = piggyBank?.startAmount;
       let highestAmount = prevAmount;
-      const resultOfMapping = filteredArray?.map(transaction => {
+      const resultOfMapping = piggyBank?.transactions?.map(transaction => {
         if (transaction.typeOfTransaction === "deposit") {
           prevAmount = prevAmount + transaction.amount;
           if (prevAmount > highestAmount) {
@@ -189,7 +196,8 @@ export default function Accounts() {
             key: transaction._id,
             amount: transaction.amount,
             type: transaction.typeOfTransaction,
-            height: prevAmount,
+            prevAmount: prevAmount,
+            date: transaction.date,
           };
         } else if (transaction.typeOfTransaction === "withdrawal") {
           prevAmount = prevAmount - transaction.amount;
@@ -201,14 +209,16 @@ export default function Accounts() {
             key: transaction._id,
             amount: transaction.amount,
             type: transaction.typeOfTransaction,
-            height: prevAmount,
+            prevAmount: prevAmount,
+            date: transaction.date,
           };
         }
       });
       const newArray = resultOfMapping?.map(item => {
         return {
           ...item,
-          height: highestAmount !== 0 ? (item.height / highestAmount) * 100 : 0,
+          height:
+            highestAmount !== 0 ? (item.prevAmount / highestAmount) * 100 : 0,
         };
       });
 
@@ -227,13 +237,10 @@ export default function Accounts() {
 
   // Filter function for the graph animation
 
-  // const x = piggyBank?.transactions?.map(transaction => transaction.date);
-  // console.log(x);
-
   const filterHandler = value => {
     const now = new Date();
     const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const timeSinceMidnight = now - midnight;
+    const yesterday = midnight.setDate(midnight.getDate() - 1);
     const sevenDays = midnight.setDate(midnight.getDate() - 7);
     const oneMonth = midnight.setMonth(midnight.getMonth() - 1);
     const oneYear = midnight.setFullYear(midnight.getFullYear() - 1);
@@ -241,19 +248,19 @@ export default function Accounts() {
 
     switch (value) {
       case "beginning":
-        setFilteredArray(piggyBank?.transactions);
+        setFilteredArray(graphBars);
         break;
       case "yesterday":
         setFilteredArray(
-          piggyBank?.transactions?.filter(
+          graphBars?.filter(
             transaction =>
-              now - Date.parse(transaction?.date) <= timeSinceMidnight
+              now - Date.parse(transaction?.date) <= now - yesterday
           )
         );
         break;
       case "sevenDays":
         setFilteredArray(
-          piggyBank?.transactions?.filter(
+          graphBars?.filter(
             transaction =>
               now - Date.parse(transaction?.date) <= now - sevenDays
           )
@@ -261,32 +268,34 @@ export default function Accounts() {
         break;
       case "month":
         setFilteredArray(
-          piggyBank?.transactions?.filter(
+          graphBars?.filter(
             transaction => now - Date.parse(transaction?.date) <= now - oneMonth
           )
         );
         break;
       case "oneYear":
         setFilteredArray(
-          piggyBank?.transactions?.filter(
+          graphBars?.filter(
             transaction => now - Date.parse(transaction?.date) <= now - oneYear
           )
         );
         break;
       case "beginYear":
         setFilteredArray(
-          piggyBank?.transactions?.filter(
+          graphBars?.filter(
             transaction =>
               now - Date.parse(transaction?.date) <= now - beginningOfYear
           )
         );
         break;
       default:
-        setFilteredArray(piggyBank?.transactions);
+        setFilteredArray(graphBars);
     }
   };
 
-  console.log(filteredArray);
+  useEffect(() => {
+    filterHandler(filterValue);
+  }, [filterValue]);
 
   //END graph animation
 
@@ -409,8 +418,8 @@ export default function Accounts() {
                 <StyledButton onClick={() => toggleShowDetails("Piggy bank")}>
                   <Lottie
                     options={defaultOptionsPiggyAccount}
-                    width={"5rem"}
-                    height={"5rem"}
+                    width={"100%"}
+                    height={"100%"}
                   />
                 </StyledButton>
               )}
@@ -420,8 +429,8 @@ export default function Accounts() {
                 >
                   <Lottie
                     options={defaultOptionsMouse}
-                    width={"7rem"}
-                    height={"5rem"}
+                    width={"100%"}
+                    height={"100%"}
                   />
                 </StyledButton>
               )}
@@ -431,8 +440,8 @@ export default function Accounts() {
                 >
                   <Lottie
                     options={defaultOptionsStocks}
-                    width={"5rem"}
-                    height={"5rem"}
+                    width={"100%"}
+                    height={"100%"}
                   />
                 </StyledButton>
               )}
@@ -440,8 +449,8 @@ export default function Accounts() {
                 <StyledButton onClick={() => toggleShowDetails("Loan account")}>
                   <Lottie
                     options={defaultOptionsLoan}
-                    width={"5rem"}
-                    height={"5rem"}
+                    width={"100%"}
+                    height={"100%"}
                   />
                 </StyledButton>
               )}
@@ -545,9 +554,9 @@ export default function Accounts() {
                               )}
                             </StyledList>
                             <select
-                              onChange={event =>
-                                filterHandler(event.target.value)
-                              }
+                              onChange={event => {
+                                setFilterValue(event.target.value);
+                              }}
                             >
                               <option value="">Select one...</option>
                               <option value="beginning">
@@ -566,23 +575,31 @@ export default function Accounts() {
                               </option>
                             </select>
                             <GraphContainer>
-                              <GraphBar
-                                startHeight={"50"}
-                                amount={piggyBank?.startAmount}
-                                tick={tick}
-                              >
+                              <StyledDiv count={filteredArray?.length}>
+                                <GraphBar
+                                  startHeight={"50"}
+                                  amount={piggyBank?.startAmount}
+                                  tick={tick}
+                                />
                                 <p>{piggyBank?.startAmount + " € "}</p>
-                              </GraphBar>
+                              </StyledDiv>
                               {piggyBank?.transactions?.length !== 0 &&
-                                graphBars?.map(bar => (
-                                  <GraphBar
-                                    type={bar.type}
-                                    key={bar.key}
-                                    height={bar.height >= 10 ? bar.height : 10}
-                                    tick={tick}
+                                filteredArray?.map(bar => (
+                                  <StyledDiv
+                                    key={bar._id}
+                                    count={filteredArray.length}
                                   >
+                                    <GraphBar
+                                      type={bar.type}
+                                      key={bar.key}
+                                      height={
+                                        bar.height >= 10 ? bar.height : 10
+                                      }
+                                      tick={tick}
+                                    />
                                     <p>{bar.amount + ` € `}</p>
-                                  </GraphBar>
+                                    <p>{bar.prevAmount + ` € `}</p>
+                                  </StyledDiv>
                                 ))}
                             </GraphContainer>
                           </>
@@ -755,10 +772,10 @@ export default function Accounts() {
             )}
           </>
         ) : (
-          <p>
+          <StyledParagraph>
             You don&apos;t have any accounts yet. Please ask your parents to
             create some for you.
-          </p>
+          </StyledParagraph>
         )
       ) : (
         <Lottie
@@ -771,13 +788,6 @@ export default function Accounts() {
     </>
   );
 }
-
-// const StyledAnimationContainer = styled.div`
-//   width: 100%;
-//   display: flex;
-//   gap: 5%;
-//   align-items: flex-end;
-// `;
 
 const StyledSection = styled.section`
   width: 100%;
@@ -795,24 +805,25 @@ const StyledSection = styled.section`
 const StyledButton = styled.button`
   border: none;
   background: none;
+  width: 20%;
 `;
 
 const GraphContainer = styled.div`
   width: 100%;
   height: 20rem;
-  border: 3px solid green;
   display: flex;
   align-items: flex-end;
   justify-content: space-around;
+  gap: 2%;
+  /* overflow: hidden; */
 `;
 
 const GraphBar = styled.div`
   display: flex;
   justify-content: center;
-  /* width: 100%; */
-  max-width: 15%;
-  margin: 0 1%;
+  width: 100%;
   height: 0%;
+  max-height: 100%;
   border: none;
   border-radius: 10px;
   transition: ease-in-out 3s;
@@ -823,7 +834,19 @@ const GraphBar = styled.div`
       : "background:#5e8c49;"}
   ${props => props.height && `height: ${props.height}%;`};
   ${props => props.startHeight && `height: ${props.startHeight}%;`};
-  ${props => props.tick && `height: 10%;`};
+  ${props => props.tick && `height: 0%;`};
+`;
+
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  align-items: center;
+  max-width: 15%;
+  white-space: nowrap;
+  /* margin: 0 1%; */
+  font-size: 0.5rem;
+  ${props => props.count && `width: calc(100%/${props.count})`}
 `;
 
 const ListElementsContainer = styled.div`
@@ -831,4 +854,9 @@ const ListElementsContainer = styled.div`
   width: 100%;
   justify-content: space-between;
   padding-right: 10%;
+`;
+
+const StyledParagraph = styled.p`
+  margin: 1rem;
+  padding-top: 1rem;
 `;

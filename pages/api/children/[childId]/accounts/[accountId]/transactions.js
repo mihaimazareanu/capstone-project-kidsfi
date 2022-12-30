@@ -18,7 +18,6 @@ async function handler(req, res) {
     case "POST":
       try {
         const child = await Child.findById(req.query.childId);
-        console.log(req.body);
         if (child.accounts) {
           child.accounts
             .find(

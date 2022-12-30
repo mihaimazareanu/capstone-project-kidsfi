@@ -24,6 +24,7 @@ export default function RegisterFormChild({
   const [regInput, setRegInput] = useState({
     firstName: "",
     lastName: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -31,6 +32,7 @@ export default function RegisterFormChild({
   const [error, setError] = useState({
     firstName: "",
     lastName: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -58,6 +60,12 @@ export default function RegisterFormChild({
         case "lastName":
           if (!value) {
             stateObj[name] = "Please enter your last name";
+          }
+          break;
+
+        case "username":
+          if (!value) {
+            stateObj[name] = "Please enter your username";
           }
           break;
 
@@ -100,6 +108,7 @@ export default function RegisterFormChild({
       const body = {
         firstName: data.firstName,
         lastName: data.lastName,
+        username: data.username,
         password: data.password,
         isChild: true,
         parentID: user._id,
@@ -126,6 +135,7 @@ export default function RegisterFormChild({
           setRegInput({
             firstName: "",
             lastName: "",
+            username: "",
             password: "",
             confirmPassword: "",
           });
@@ -170,6 +180,19 @@ export default function RegisterFormChild({
             />
           </label>
           {error.lastName && <ErrorSpan>{error.lastName}</ErrorSpan>}
+          <label>
+            Username
+            <InputLastName
+              type="text"
+              placeholder="Choose a username..."
+              name="username"
+              value={regInput.username}
+              required
+              onChange={onInputChange}
+              onBlur={validateInput}
+            />
+          </label>
+          {error.username && <ErrorSpan>{error.username}</ErrorSpan>}
         </DetailsFieldset>
         <PasswordFieldset>
           <label>
