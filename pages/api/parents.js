@@ -5,17 +5,6 @@ async function handler(req, res) {
   switch (req.method) {
     case "GET":
       try {
-        // const filter = {};
-        // if (req.query.firstName) {
-        //   filter.firstName = req.query.firstName;
-        //   filter.lastName = req.query.lastName;
-        //   filter.password = req.query.password;
-        // }
-
-        // const parents = await Parent.find(filter);
-        // console.log(parents);
-        // res.status(200).json(parents[0]);
-
         const parent = await Parent.aggregate([
           {
             $match: {

@@ -187,7 +187,7 @@ export default function Home({
           <Layout />
           {user?.isParent ? (
             <>
-              <h1 style={{textAlign: "center"}}>
+              <h1 style={{textAlign: "center", paddingTop: "1rem"}}>
                 {user.firstName}&apos;s Dashboard
               </h1>
               <p style={{textAlign: "center"}}>
@@ -652,7 +652,7 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: flex-end; */
   width: 50%;
   font-size: 1.2rem;
 `;

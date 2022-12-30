@@ -8,12 +8,17 @@ export const StyledIcon = styled.i`
   right: 0;
   z-index: 2;
   margin-right: 0.5rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
 `;
 
 //Buttons
 
 export const StartPageButton = styled.button`
   border: none;
+  background: none;
+  margin-top: auto;
 
   :hover {
     transform: scale(1.2);
@@ -55,72 +60,6 @@ export const FormButton = styled.button`
   }
 `;
 
-//   ${({styles}) => {
-//     if (!styles) {
-//       return css`
-//         background-color: #5e8c49;
-//         border: none;
-//         box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
-//         border-radius: 10px;
-//         color: #e9f2ef;
-//         height: 2rem;
-
-//         :hover {
-//           background: #224024;
-//           box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
-//           transform: scale(1.1);
-//           transition: ease-in 0.2s;
-//         }
-//       `;
-//     }
-
-//     const styleStrings = Object.keys(styles).map(
-//       style => `${style}: ${styles[style]};`
-//     );
-
-//     return css`
-//       ${styleStrings};
-//       background-color: #5e8c49;
-//       border: none;
-//       box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
-//       border-radius: 10px;
-//       color: #e9f2ef;
-//       height: 2rem;
-
-//       :hover {
-//         background: #224024;
-//         box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
-//         transform: scale(1.1);
-//         transition: ease-in 0.2s;
-//       }
-//     `;
-//   }}
-// `;
-
-// const CreateLoginButton = styled.button`
-//   background-color: #5e8c49;
-//   border: none;
-//   box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
-//   border-radius: 5px;
-//   color: #e9f2ef;
-//   margin-bottom: 0.5rem;
-//   font-size: 1rem;
-//   width: 10rem;
-//   padding: 0.5rem 0;
-
-//   :hover {
-//     background-color: #224024;
-//     box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
-//     transform: scale(1.1);
-//     transition: ease-in 0.2s;
-//   }
-// `;
-
-// const StyledButton = styled.button`
-//   border: none;
-//   background: none;
-// `;
-
 export const AddChildButton = styled.button`
   background-color: #401d1a;
   border: none;
@@ -136,7 +75,7 @@ export const AddChildButton = styled.button`
   }
 `;
 
-// //Forms
+// Forms
 
 // const SignForm = styled.form`
 //   margin: 1rem auto;
@@ -369,12 +308,12 @@ export const PasswordDiv = styled.div`
 //   gap: 1rem;
 // `;
 
-// const StyledAnimationContainer = styled.div`
-//   width: 100%;
-//   display: flex;
-//   gap: 5%;
-//   align-items: flex-end;
-// `;
+export const StyledAnimationContainer = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 5%;
+  align-items: flex-end;
+`;
 
 // const FlexContainer = styled.div`
 //   width: 100%;

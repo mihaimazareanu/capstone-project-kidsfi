@@ -16,6 +16,7 @@ import {
   StyledForm,
   StyledInput,
   StyledList,
+  StyledAnimationContainer,
 } from "../components/StyledComponents";
 
 export default function Accounts() {
@@ -25,7 +26,9 @@ export default function Accounts() {
   const [accountType, setAccountType] = useState("");
   const [fetchReload, setFetchReload] = useState(false);
 
-  const accountName = user?.accounts?.map(account => account.name);
+  const accountName = user?.accounts
+    ? user?.accounts?.map(account => account.name)
+    : null;
 
   const toggleShowDetails = type => {
     setAccountType(type);
@@ -33,9 +36,11 @@ export default function Accounts() {
     setShowMoreDetails(false);
   };
 
+  // Functions for the piggy bank account START
+
   const [piggyBank, setPiggyBank] = useState(null);
 
-  function calculate() {
+  function calculatePiggyBank() {
     let addAmount = Number(
       user?.accounts?.find(account => {
         if (account.name === "Piggy bank") {
@@ -60,7 +65,7 @@ export default function Accounts() {
     return addAmount;
   }
 
-  const amount = calculate();
+  const piggyBankAmount = calculatePiggyBank();
 
   useEffect(() => {
     if (user) {
@@ -90,50 +95,6 @@ export default function Accounts() {
 
   const [currentAmount, setCurrentAmount] = useState(piggyBank?.startAmount);
 
-  const savingsAccount = user?.accounts
-    ? user.accounts.find(account => {
-        if (account.name === "Savings account") {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    : null;
-
-  const [date, setDate] = useState(null);
-
-  useEffect(() => {
-    if (savingsAccount?.startDate) {
-      const date = new Date(savingsAccount.startDate);
-      const formattedDate = date.toLocaleDateString("de-DE", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-      });
-      setDate(formattedDate);
-    }
-  }, []);
-
-  const stocksAccount = user?.accounts
-    ? user?.accounts?.find(account => {
-        if (account.name === "Stocks account") {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    : null;
-
-  const loanAccount = user?.accounts
-    ? user?.accounts?.find(account => {
-        if (account.name === "Loan account") {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    : null;
-
   // function to update the piggy bank account
 
   const updateAccount = async (event, type) => {
@@ -162,22 +123,6 @@ export default function Accounts() {
           }),
         }
       );
-      // setUser(prevUser => {
-      //   const updatedUser = {
-      //     ...prevUser,
-      //     accounts: prevUser.accounts.map(account => {
-      //       if (account._id === accountId) {
-      //         return {
-      //           ...account,
-      //           transactions: [...account.transactions, transaction],
-      //         };
-      //       }
-      //       return account;
-      //     }),
-      //   };
-      //   localStorage.setItem("user", JSON.stringify(updatedUser));
-      //   return updatedUser;
-      // });
       setFetchReload(!fetchReload);
     } catch (error) {
       alert(error.message);
@@ -223,7 +168,110 @@ export default function Accounts() {
     (currentAmount || currentAmount === 0) && calculateCurrentAmount();
   }, [fetchReload]);
 
-  // console.log(currentAmount);
+  //START graph animation
+
+  // const [maxHeight, setMaxHeight] = useState(null);
+
+  function calculateGraphBars() {
+    if (piggyBank) {
+      let prevAmount = piggyBank?.startAmount;
+      // let highestAmount = prevAmount;
+      const resultOfMapping = piggyBank?.transactions?.map(transaction => {
+        if (transaction.typeOfTransaction === "deposit") {
+          prevAmount = prevAmount + transaction.amount;
+          // if (prevAmount > highestAmount) {
+          //   highestAmount = prevAmount;
+          // setMaxHeight(highestAmount);
+          // }
+
+          return {
+            key: transaction._id,
+            amount: prevAmount,
+            type: transaction.typeOfTransaction,
+          };
+        } else if (transaction.typeOfTransaction === "withdrawal") {
+          prevAmount = prevAmount - transaction.amount;
+          // if (prevAmount > highestAmount) {
+          //   highestAmount = prevAmount;
+          // setMaxHeight(highestAmount);
+          // }
+
+          return {
+            key: transaction._id,
+            amount: prevAmount,
+            type: transaction.typeOfTransaction,
+          };
+        }
+      });
+
+      return resultOfMapping;
+      // return [
+      //   ...resultOfMapping,
+      //   {type: "highestAmount", amount: highestAmount},
+      // ];
+    } else {
+      return null;
+    }
+  }
+  const graphBars = calculateGraphBars();
+
+  const [tick, setTick] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setTick(!tick), 3000);
+  }, [tick]);
+
+  //END graph animation
+
+  // Functions for the piggy bank account END
+
+  // Functions for the savings account START
+
+  const savingsAccount = user?.accounts
+    ? user.accounts.find(account => {
+        if (account.name === "Savings account") {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    : null;
+
+  const [date, setDate] = useState(null);
+
+  useEffect(() => {
+    if (savingsAccount?.startDate) {
+      const date = new Date(savingsAccount.startDate);
+      const formattedDate = date.toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      });
+      setDate(formattedDate);
+    }
+  }, []);
+
+  // Functions for the savings account END
+
+  const stocksAccount = user?.accounts
+    ? user?.accounts?.find(account => {
+        if (account.name === "Stocks account") {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    : null;
+
+  const loanAccount = user?.accounts
+    ? user?.accounts?.find(account => {
+        if (account.name === "Loan account") {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    : null;
 
   // default Options for Lottie animations
   const defaultOptionsUnderConstruction = {
@@ -305,7 +353,7 @@ export default function Accounts() {
                 >
                   <Lottie
                     options={defaultOptionsMouse}
-                    width={"5rem"}
+                    width={"7rem"}
                     height={"5rem"}
                   />
                 </StyledButton>
@@ -338,7 +386,7 @@ export default function Accounts() {
                     {piggyBank?.startAmount && (
                       <>
                         <PasswordDiv>
-                          <p>Current amount: {amount} €</p>
+                          <h3>Current amount: {piggyBankAmount} €</h3>
                           <FormButton
                             style={{marginLeft: "auto"}}
                             onClick={() => setShowMoreDetails(!showMoreDetails)}
@@ -349,24 +397,47 @@ export default function Accounts() {
                         {showMoreDetails && (
                           <>
                             <StyledList>
-                              <li>List of all deposits</li>
+                              <h3>List of all deposits</h3>
                               {user?.accounts
                                 ?.find(account => account.name === "Piggy bank")
                                 ?.transactions?.filter(
                                   transaction =>
                                     transaction.typeOfTransaction === "deposit"
-                                )
-                                .map((deposit, index) => (
-                                  <>
-                                    <li key={index}>
-                                      Amount : {deposit.amount}
-                                    </li>
-                                    <li>Date: {deposit.date}</li>
-                                  </>
-                                ))}
+                                ).length !== 0 ? (
+                                user?.accounts
+                                  ?.find(
+                                    account => account.name === "Piggy bank"
+                                  )
+                                  ?.transactions?.filter(
+                                    transaction =>
+                                      transaction.typeOfTransaction ===
+                                      "deposit"
+                                  )
+                                  .map((deposit, index) => {
+                                    const dateOptions = {
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      year: "2-digit",
+                                    };
+                                    const formattedDate = new Date(
+                                      deposit?.date
+                                    ).toLocaleDateString("de-DE", dateOptions);
+
+                                    return (
+                                      <ListElementsContainer key={index}>
+                                        <li>Date: {formattedDate}</li>
+                                        <li>
+                                          Amount: {deposit.amount} {` €`}
+                                        </li>
+                                      </ListElementsContainer>
+                                    );
+                                  })
+                              ) : (
+                                <li>No deposits</li>
+                              )}
                             </StyledList>
                             <StyledList>
-                              <li>List of all withdrawals</li>
+                              <h3>List of all withdrawals</h3>
                               {user?.accounts
                                 ?.find(account => account.name === "Piggy bank")
                                 ?.transactions?.filter(
@@ -383,11 +454,27 @@ export default function Accounts() {
                                       transaction.typeOfTransaction ===
                                       "withdrawal"
                                   )
-                                  .map((withdrawal, index) => (
-                                    <li key={index}>{withdrawal.amount}</li>
-                                  ))
+                                  .map((withdrawal, index) => {
+                                    const dateOptions = {
+                                      day: "2-digit",
+                                      month: "2-digit",
+                                      year: "2-digit",
+                                    };
+                                    const formattedDate = new Date(
+                                      withdrawal?.date
+                                    ).toLocaleDateString("de-DE", dateOptions);
+
+                                    return (
+                                      <ListElementsContainer key={index}>
+                                        <li>Date: {formattedDate}</li>
+                                        <li>
+                                          Amount: {withdrawal.amount} {` €`}
+                                        </li>
+                                      </ListElementsContainer>
+                                    );
+                                  })
                               ) : (
-                                <li>No withdrawals</li>
+                                <li>No deposits</li>
                               )}
                             </StyledList>
                             <select>
@@ -407,15 +494,28 @@ export default function Accounts() {
                               <option value="Since one year ago">
                                 Since one year ago
                               </option>
-                              <option value="Since beginnin of the year">
-                                Since beginnin of the year
+                              <option value="Since beginning of the year">
+                                Since beginning of the year
                               </option>
                             </select>
-                            <Lottie
-                              options={defaultOptionsGraph}
-                              width={"20rem"}
-                              height={"20rem"}
-                            />
+                            <GraphContainer>
+                              <GraphBar
+                                // maxHeight={maxHeight}
+                                height={"50%"}
+                                amount={piggyBank?.startAmount}
+                                tick={tick}
+                              />
+                              {piggyBank?.transactions?.length !== 0 &&
+                                graphBars?.map(bar => (
+                                  <GraphBar
+                                    // maxHeight={maxHeight}
+                                    type={bar.type}
+                                    key={bar.key}
+                                    amount={bar.amount}
+                                    tick={tick}
+                                  />
+                                ))}
+                            </GraphContainer>
                           </>
                         )}
 
@@ -431,12 +531,7 @@ export default function Accounts() {
                             />
                             {`€   `}
                           </label>
-                          <FormButton
-                            // style={{alignSelf: "flex-end"}}
-                            type="submit"
-                          >
-                            Add amount
-                          </FormButton>
+                          <FormButton type="submit">Add amount</FormButton>
                         </StyledForm>
                         <StyledForm
                           onSubmit={event => updateAccount(event, "withdrawal")}
@@ -487,8 +582,8 @@ export default function Accounts() {
                           <option value="Since one year ago">
                             Since one year ago
                           </option>
-                          <option value="Since beginnin of the year">
-                            Since beginnin of the year
+                          <option value="Since beginning of the year">
+                            Since beginning of the year
                           </option>
                         </select>
                         <Lottie
@@ -531,8 +626,8 @@ export default function Accounts() {
                           <option value="Since one year ago">
                             Since one year ago
                           </option>
-                          <option value="Since beginnin of the year">
-                            Since beginnin of the year
+                          <option value="Since beginning of the year">
+                            Since beginning of the year
                           </option>
                         </select>
                         <Lottie
@@ -574,8 +669,8 @@ export default function Accounts() {
                           <option value="Since one year ago">
                             Since one year ago
                           </option>
-                          <option value="Since beginnin of the year">
-                            Since beginnin of the year
+                          <option value="Since beginning of the year">
+                            Since beginning of the year
                           </option>
                         </select>
                         <Lottie
@@ -608,12 +703,12 @@ export default function Accounts() {
   );
 }
 
-const StyledAnimationContainer = styled.div`
-  width: 100%;
-  display: flex;
-  gap: 5%;
-  align-items: flex-end;
-`;
+// const StyledAnimationContainer = styled.div`
+//   width: 100%;
+//   display: flex;
+//   gap: 5%;
+//   align-items: flex-end;
+// `;
 
 const StyledSection = styled.section`
   width: 100%;
@@ -630,4 +725,38 @@ const StyledSection = styled.section`
 const StyledButton = styled.button`
   border: none;
   background: none;
+`;
+
+const GraphContainer = styled.div`
+  width: 100%;
+  height: 20rem;
+  /* border: 3px solid green; */
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+`;
+
+const GraphBar = styled.div`
+  width: 100%;
+  max-width: 15%;
+  margin: 0 1%;
+  height: 0%;
+  max-height: 100%;
+  border: none;
+  border-radius: 10px;
+  transition: ease-in-out 3s;
+  ${props =>
+    props.type && props.type === "withdrawal"
+      ? "background:#401d1a;"
+      : "background:#5e8c49;"}
+  ${props => props.amount && `height: ${props.amount}%;`};
+  ${props => props.height && `height: ${props.height}%;`};
+  ${props => props.tick && `height: 0%;`};
+`;
+
+const ListElementsContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-right: 10%;
 `;

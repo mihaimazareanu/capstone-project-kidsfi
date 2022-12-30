@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {useState, useContext} from "react";
 import {UserContext} from "./contexts/UserContext";
 import {FormButton} from "./StyledComponents";
+import {StyledIcon} from "./StyledComponents";
 
 export default function SigninForm({showPassword, onShowPassword}) {
   const {setUser} = useContext(UserContext);
@@ -98,7 +99,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
                   setLoginFilter({...loginFilter, password: passwordInput});
                 }}
               />
-              <i onClick={onShowPassword}>
+              <StyledIcon onClick={onShowPassword}>
                 {showPassword ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -115,8 +116,8 @@ export default function SigninForm({showPassword, onShowPassword}) {
                 ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
+                    width="1rem"
+                    height="100%"
                     preserveAspectRatio="xMidYMid meet"
                     viewBox="0 0 24 24"
                   >
@@ -126,7 +127,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
                     />
                   </svg>
                 )}
-              </i>
+              </StyledIcon>
             </PasswordDiv>
           </label>
           {loginFailed && <ErrorText>User not found</ErrorText>}
@@ -190,13 +191,15 @@ const PasswordFieldset = styled.fieldset`
 
 const PasswordDiv = styled.div`
   display: flex;
+  position: relative;
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
 `;
 
 const InputPassword = styled.input`
-  width: 90%;
+  width: 100%;
+  z-index: 1;
   border: none;
   align-self: baseline;
 `;
@@ -204,26 +207,6 @@ const InputPassword = styled.input`
 const StyledDiv = styled.div`
   width: 50%;
 `;
-
-// const SigninButton = styled.button`
-//   border: none;
-//   align-self: center;
-//   font-size: 1rem;
-//   width: 10rem;
-//   padding: 0.5rem 0;
-//   background: #5e8c49;
-//   box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
-//   border-radius: 5px;
-//   color: #e9f2ef;
-//   border: none;
-
-//   :hover {
-//     background: #224024;
-//     box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
-//     transform: scale(1.1);
-//     transition: ease-in 0.2s;
-//   }
-// `;
 
 const ErrorText = styled.p`
   margin: -0.5rem 0;
