@@ -268,6 +268,7 @@ export const StyledInput = styled.input`
 
 export const PasswordDiv = styled.div`
   display: flex;
+  width: 90%;
   align-items: center;
   gap: 1rem;
 `;

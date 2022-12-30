@@ -11,18 +11,16 @@ const GlobalStyles = createGlobalStyle`
 }
     html,
     body {
-        
         padding: 0 0.3rem;
-        margin: 0;
+        margin: 2.5rem auto 0 auto;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         font-family: "Mulish";
-        margin-top: 2.5rem;
         font-size: 1rem;
         width: 100%;
         min-height: 100vh;
         color: #401d1a;
-background: #e9f2ef;
-box-shadow: inset 50px -50px 100px #c8d0ce,
+        background: #e9f2ef;
+        box-shadow: inset 50px -50px 100px #c8d0ce,
             inset -50px 50px 100px #ffffff;
         }
         

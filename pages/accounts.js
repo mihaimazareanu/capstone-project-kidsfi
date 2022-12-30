@@ -25,6 +25,10 @@ export default function Accounts() {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const [accountType, setAccountType] = useState("");
   const [fetchReload, setFetchReload] = useState(false);
+  const [piggyBank, setPiggyBank] = useState(null);
+  const [filteredArray, setFilteredArray] = useState(
+    piggyBank?.transactions ?? []
+  );
 
   const accountName = user?.accounts
     ? user?.accounts?.map(account => account.name)
@@ -37,8 +41,6 @@ export default function Accounts() {
   };
 
   // Functions for the piggy bank account START
-
-  const [piggyBank, setPiggyBank] = useState(null);
 
   function calculatePiggyBank() {
     let addAmount = Number(
@@ -175,40 +177,42 @@ export default function Accounts() {
   function calculateGraphBars() {
     if (piggyBank) {
       let prevAmount = piggyBank?.startAmount;
-      // let highestAmount = prevAmount;
-      const resultOfMapping = piggyBank?.transactions?.map(transaction => {
+      let highestAmount = prevAmount;
+      const resultOfMapping = filteredArray?.map(transaction => {
         if (transaction.typeOfTransaction === "deposit") {
           prevAmount = prevAmount + transaction.amount;
-          // if (prevAmount > highestAmount) {
-          //   highestAmount = prevAmount;
-          // setMaxHeight(highestAmount);
-          // }
+          if (prevAmount > highestAmount) {
+            highestAmount = prevAmount;
+          }
 
           return {
             key: transaction._id,
-            amount: prevAmount,
+            amount: transaction.amount,
             type: transaction.typeOfTransaction,
+            height: prevAmount,
           };
         } else if (transaction.typeOfTransaction === "withdrawal") {
           prevAmount = prevAmount - transaction.amount;
-          // if (prevAmount > highestAmount) {
-          //   highestAmount = prevAmount;
-          // setMaxHeight(highestAmount);
-          // }
+          if (prevAmount > highestAmount) {
+            highestAmount = prevAmount;
+          }
 
           return {
             key: transaction._id,
-            amount: prevAmount,
+            amount: transaction.amount,
             type: transaction.typeOfTransaction,
+            height: prevAmount,
           };
         }
       });
+      const newArray = resultOfMapping?.map(item => {
+        return {
+          ...item,
+          height: highestAmount !== 0 ? (item.height / highestAmount) * 100 : 0,
+        };
+      });
 
-      return resultOfMapping;
-      // return [
-      //   ...resultOfMapping,
-      //   {type: "highestAmount", amount: highestAmount},
-      // ];
+      return newArray;
     } else {
       return null;
     }
@@ -220,6 +224,69 @@ export default function Accounts() {
   useEffect(() => {
     setTimeout(() => setTick(!tick), 3000);
   }, [tick]);
+
+  // Filter function for the graph animation
+
+  // const x = piggyBank?.transactions?.map(transaction => transaction.date);
+  // console.log(x);
+
+  const filterHandler = value => {
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const timeSinceMidnight = now - midnight;
+    const sevenDays = midnight.setDate(midnight.getDate() - 7);
+    const oneMonth = midnight.setMonth(midnight.getMonth() - 1);
+    const oneYear = midnight.setFullYear(midnight.getFullYear() - 1);
+    const beginningOfYear = new Date(now.getFullYear(), 0, 1);
+
+    switch (value) {
+      case "beginning":
+        setFilteredArray(piggyBank?.transactions);
+        break;
+      case "yesterday":
+        setFilteredArray(
+          piggyBank?.transactions?.filter(
+            transaction =>
+              now - Date.parse(transaction?.date) <= timeSinceMidnight
+          )
+        );
+        break;
+      case "sevenDays":
+        setFilteredArray(
+          piggyBank?.transactions?.filter(
+            transaction =>
+              now - Date.parse(transaction?.date) <= now - sevenDays
+          )
+        );
+        break;
+      case "month":
+        setFilteredArray(
+          piggyBank?.transactions?.filter(
+            transaction => now - Date.parse(transaction?.date) <= now - oneMonth
+          )
+        );
+        break;
+      case "oneYear":
+        setFilteredArray(
+          piggyBank?.transactions?.filter(
+            transaction => now - Date.parse(transaction?.date) <= now - oneYear
+          )
+        );
+        break;
+      case "beginYear":
+        setFilteredArray(
+          piggyBank?.transactions?.filter(
+            transaction =>
+              now - Date.parse(transaction?.date) <= now - beginningOfYear
+          )
+        );
+        break;
+      default:
+        setFilteredArray(piggyBank?.transactions);
+    }
+  };
+
+  console.log(filteredArray);
 
   //END graph animation
 
@@ -477,43 +544,45 @@ export default function Accounts() {
                                 <li>No deposits</li>
                               )}
                             </StyledList>
-                            <select>
+                            <select
+                              onChange={event =>
+                                filterHandler(event.target.value)
+                              }
+                            >
                               <option value="">Select one...</option>
-                              <option value="Since the beginning">
+                              <option value="beginning">
                                 Since the beginning
                               </option>
-                              <option value="Since yesterday">
-                                Since yesterday
-                              </option>
-                              <option value="Since 7 days ago">
+                              <option value="yesterday">Since yesterday</option>
+                              <option value="sevenDays">
                                 Since 7 days ago
                               </option>
-                              <option value="Since one month ago">
-                                Since one month ago
-                              </option>
-                              <option value="Since one year ago">
+                              <option value="month">Since one month ago</option>
+                              <option value="oneYear">
                                 Since one year ago
                               </option>
-                              <option value="Since beginning of the year">
+                              <option value="beginYear">
                                 Since beginning of the year
                               </option>
                             </select>
                             <GraphContainer>
                               <GraphBar
-                                // maxHeight={maxHeight}
-                                height={"50%"}
+                                startHeight={"50"}
                                 amount={piggyBank?.startAmount}
                                 tick={tick}
-                              />
+                              >
+                                <p>{piggyBank?.startAmount + " € "}</p>
+                              </GraphBar>
                               {piggyBank?.transactions?.length !== 0 &&
                                 graphBars?.map(bar => (
                                   <GraphBar
-                                    // maxHeight={maxHeight}
                                     type={bar.type}
                                     key={bar.key}
-                                    amount={bar.amount}
+                                    height={bar.height >= 10 ? bar.height : 10}
                                     tick={tick}
-                                  />
+                                  >
+                                    <p>{bar.amount + ` € `}</p>
+                                  </GraphBar>
                                 ))}
                             </GraphContainer>
                           </>
@@ -717,6 +786,7 @@ const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   margin: 1rem 0;
   padding: 0.5rem;
   gap: 1rem;
@@ -730,28 +800,30 @@ const StyledButton = styled.button`
 const GraphContainer = styled.div`
   width: 100%;
   height: 20rem;
-  /* border: 3px solid green; */
+  border: 3px solid green;
   display: flex;
   align-items: flex-end;
   justify-content: space-around;
 `;
 
 const GraphBar = styled.div`
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* width: 100%; */
   max-width: 15%;
   margin: 0 1%;
   height: 0%;
-  max-height: 100%;
   border: none;
   border-radius: 10px;
   transition: ease-in-out 3s;
+  font-size: 1rem;
   ${props =>
     props.type && props.type === "withdrawal"
       ? "background:#401d1a;"
       : "background:#5e8c49;"}
-  ${props => props.amount && `height: ${props.amount}%;`};
   ${props => props.height && `height: ${props.height}%;`};
-  ${props => props.tick && `height: 0%;`};
+  ${props => props.startHeight && `height: ${props.startHeight}%;`};
+  ${props => props.tick && `height: 10%;`};
 `;
 
 const ListElementsContainer = styled.div`
