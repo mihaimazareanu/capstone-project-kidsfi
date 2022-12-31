@@ -43,35 +43,6 @@ export default function Accounts() {
 
   // Functions for the piggy bank account START
 
-  function calculatePiggyBank() {
-    if (user?.accounts?.length !== 0) {
-      let addAmount = Number(
-        user?.accounts?.find(account => {
-          if (account.name === "Piggy bank") {
-            return true;
-          } else {
-            return false;
-          }
-        }).startAmount
-      );
-      piggyBank?.transactions?.forEach(transaction => {
-        if (transaction.typeOfTransaction === "deposit") {
-          addAmount = addAmount + Number(transaction.amount);
-          return;
-        } else if (transaction.typeOfTransaction === "withdrawal") {
-          addAmount = addAmount - Number(transaction.amount);
-          return;
-        } else {
-          alert("Type of transaction is missing");
-          return;
-        }
-      });
-      return addAmount;
-    }
-  }
-
-  const piggyBankAmount = calculatePiggyBank();
-
   useEffect(() => {
     if (user) {
       setPiggyBank(
@@ -83,23 +54,9 @@ export default function Accounts() {
           }
         })
       );
-      if (!currentAmount && currentAmount !== 0) {
-        user?.accounts?.length !== 0 &&
-          setCurrentAmount(
-            user?.accounts?.find(account => {
-              if (account.name === "Piggy bank") {
-                return true;
-              } else {
-                return false;
-              }
-            }).startAmount
-          );
-        setFetchReload(!fetchReload);
-      }
+      setFetchReload(!fetchReload);
     }
   }, [user]);
-
-  const [currentAmount, setCurrentAmount] = useState(piggyBank?.startAmount);
 
   // function to update the piggy bank account
 
@@ -138,23 +95,6 @@ export default function Accounts() {
   };
 
   useEffect(() => {
-    const calculateCurrentAmount = () => {
-      let addAmount = Number(piggyBank?.startAmount);
-      piggyBank?.transactions?.forEach(transaction => {
-        if (transaction.typeOfTransaction === "deposit") {
-          addAmount = addAmount + Number(transaction.amount);
-          return;
-        } else if (transaction.typeOfTransaction === "withdrawal") {
-          addAmount = addAmount - Number(transaction.amount);
-          return;
-        } else {
-          alert("Type of transaction is missing");
-          return;
-        }
-      });
-      setCurrentAmount(addAmount);
-    };
-
     if (user) {
       const getUser = async () => {
         try {
@@ -169,17 +109,12 @@ export default function Accounts() {
         }
       };
       getUser();
-      calculateCurrentAmount();
     }
 
     filterHandler(filterValue);
-
-    (currentAmount || currentAmount === 0) && calculateCurrentAmount();
   }, [fetchReload]);
 
   //START graph animation
-
-  // const [maxHeight, setMaxHeight] = useState(null);
 
   function calculateGraphBars() {
     if (piggyBank) {
@@ -224,10 +159,12 @@ export default function Accounts() {
 
       return newArray;
     } else {
-      return null;
+      return [];
     }
   }
   const graphBars = calculateGraphBars();
+
+  const piggyBankAmount = graphBars[graphBars?.length - 1]?.prevAmount;
 
   const [tick, setTick] = useState(false);
 
@@ -815,7 +752,6 @@ const GraphContainer = styled.div`
   align-items: flex-end;
   justify-content: space-around;
   gap: 2%;
-  /* overflow: hidden; */
 `;
 
 const GraphBar = styled.div`
@@ -844,7 +780,6 @@ const StyledDiv = styled.div`
   align-items: center;
   max-width: 15%;
   white-space: nowrap;
-  /* margin: 0 1%; */
   font-size: 0.5rem;
   ${props => props.count && `width: calc(100%/${props.count})`}
 `;

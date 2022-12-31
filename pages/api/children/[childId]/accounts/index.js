@@ -6,7 +6,6 @@ async function handler(req, res) {
     case "GET":
       try {
         const child = await Child.findById(req.query.childId);
-        console.log(req.query.childId);
         if (child) {
           return res.status(200).json(child.accounts);
         } else {

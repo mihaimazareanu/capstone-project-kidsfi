@@ -104,8 +104,6 @@ export default function Home({
       };
       const response = await fetch(endpoint, options);
       if (response.ok) {
-        console.log(account);
-        console.log(user);
         setUser(prevUser => {
           const updatedUser = {
             ...prevUser,

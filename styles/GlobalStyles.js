@@ -22,10 +22,10 @@ const GlobalStyles = createGlobalStyle`
         width: 100%;
         /* min-width: 100vw; */
         min-height: 100vh;
-        color: #401d1a;
+        color: #401d1a; 
         background: #e9f2ef;
-        box-shadow: inset 50px -50px 100px #c8d0ce,
-            inset -50px 50px 100px #ffffff;
+        box-shadow: inset -49px -49px 98px #c1c9c6,
+            inset 49px 49px 98px #ffffff;
         }
         
     * {
