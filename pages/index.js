@@ -648,7 +648,6 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: flex-end; */
   width: 50%;
   font-size: 1.2rem;
 `;

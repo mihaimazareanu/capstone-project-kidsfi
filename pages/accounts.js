@@ -17,6 +17,9 @@ import {
   StyledInput,
   StyledList,
   StyledAnimationContainer,
+  StyledSelect,
+  ErrorSpan,
+  ButtonContainer,
 } from "../components/StyledComponents";
 
 export default function Accounts() {
@@ -30,6 +33,7 @@ export default function Accounts() {
   const [filteredArray, setFilteredArray] = useState(
     piggyBank?.transactions ?? []
   );
+  const [withdrawalError, setWithdrawalError] = useState(false);
 
   const accountName = user?.accounts
     ? user?.accounts?.map(account => account.name)
@@ -73,20 +77,28 @@ export default function Accounts() {
       account => account.name === accountType
     )?._id;
     try {
-      await fetch(
-        `/api/children/${user._id}/accounts/${accountId}/transactions`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            accountId: accountId,
-            transaction: transaction,
-          }),
-        }
-      );
-      setFetchReload(!fetchReload);
+      if (
+        transaction.typeOfTransaction === "withdrawal" &&
+        piggyBankAmount - amount < 0
+      ) {
+        setWithdrawalError(true);
+      } else {
+        setWithdrawalError(false);
+        await fetch(
+          `/api/children/${user._id}/accounts/${accountId}/transactions`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              accountId: accountId,
+              transaction: transaction,
+            }),
+          }
+        );
+        setFetchReload(!fetchReload);
+      }
     } catch (error) {
       alert(error.message);
     }
@@ -133,6 +145,7 @@ export default function Accounts() {
             type: transaction.typeOfTransaction,
             prevAmount: prevAmount,
             date: transaction.date,
+            highestAmount: highestAmount,
           };
         } else if (transaction.typeOfTransaction === "withdrawal") {
           prevAmount = prevAmount - transaction.amount;
@@ -146,6 +159,7 @@ export default function Accounts() {
             type: transaction.typeOfTransaction,
             prevAmount: prevAmount,
             date: transaction.date,
+            highestAmount: highestAmount,
           };
         }
       });
@@ -163,6 +177,8 @@ export default function Accounts() {
     }
   }
   const graphBars = calculateGraphBars();
+
+  // console.log(graphBars);
 
   const piggyBankAmount = graphBars[graphBars?.length - 1]?.prevAmount;
 
@@ -399,7 +415,15 @@ export default function Accounts() {
                     {piggyBank?.startAmount && (
                       <>
                         <PasswordDiv>
-                          <h3>Current amount: {piggyBankAmount} €</h3>
+                          <ButtonContainer>
+                            <h3>Current amount</h3>
+                            <h2 style={{margin: "-5% 0 0 3rem"}}>
+                              {graphBars?.length === 0
+                                ? piggyBank?.startAmount
+                                : piggyBankAmount}{" "}
+                              €
+                            </h2>
+                          </ButtonContainer>
                           <FormButton
                             style={{marginLeft: "auto"}}
                             onClick={() => setShowMoreDetails(!showMoreDetails)}
@@ -490,13 +514,17 @@ export default function Accounts() {
                                 <li>No deposits</li>
                               )}
                             </StyledList>
-                            <select
+                            <label htmlFor="piggyBankFilter">
+                              Would you like to filter your transactions?
+                            </label>
+                            <StyledSelect
+                              id="piggyBankFilter"
                               onChange={event => {
                                 setFilterValue(event.target.value);
                               }}
                             >
-                              <option value="">Select one...</option>
-                              <option value="beginning">
+                              {/* <option value="">Select one...</option> */}
+                              <option default value="beginning">
                                 Since the beginning
                               </option>
                               <option value="yesterday">Since yesterday</option>
@@ -510,11 +538,24 @@ export default function Accounts() {
                               <option value="beginYear">
                                 Since beginning of the year
                               </option>
-                            </select>
+                            </StyledSelect>
                             <GraphContainer>
-                              <StyledDiv count={filteredArray?.length}>
+                              <StyledDiv
+                                count={
+                                  filteredArray?.length === 0
+                                    ? "5"
+                                    : filteredArray?.length
+                                }
+                              >
                                 <GraphBar
-                                  startHeight={"50"}
+                                  startHeight={
+                                    graphBars?.length === 0
+                                      ? "100"
+                                      : (piggyBank?.startAmount /
+                                          graphBars[graphBars.length - 1]
+                                            ?.highestAmount) *
+                                        100
+                                  }
                                   amount={piggyBank?.startAmount}
                                   tick={tick}
                                 />
@@ -534,7 +575,7 @@ export default function Accounts() {
                                       }
                                       tick={tick}
                                     />
-                                    <p>{bar.amount + ` € `}</p>
+                                    {/* <p>{bar.amount + ` € `}</p> */}
                                     <p>{bar.prevAmount + ` € `}</p>
                                   </StyledDiv>
                                 ))}
@@ -570,6 +611,12 @@ export default function Accounts() {
                           </label>
                           <FormButton type="submit">Subtract amount</FormButton>
                         </StyledForm>
+                        {withdrawalError && (
+                          <ErrorSpan>
+                            You can&apos;t withdraw more than you have in the
+                            piggy bank
+                          </ErrorSpan>
+                        )}
                       </>
                     )}
                   </>
@@ -766,8 +813,10 @@ const GraphBar = styled.div`
   font-size: 1rem;
   ${props =>
     props.type && props.type === "withdrawal"
-      ? "background:#401d1a;"
-      : "background:#5e8c49;"}
+      ? "background: #401d1a;"
+      : props.type && props.type === "deposit"
+      ? "background: #5e8c49;"
+      : "background: #224024"}
   ${props => props.height && `height: ${props.height}%;`};
   ${props => props.startHeight && `height: ${props.startHeight}%;`};
   ${props => props.tick && `height: 0%;`};
