@@ -5,27 +5,29 @@ async function handler(req, res) {
   switch (req.method) {
     case "GET":
       try {
-        const parent = await Parent.aggregate([
-          {
-            $match: {
-              username: req.query.username,
+        if (req.query.username && req.query.password) {
+          const parent = await Parent.aggregate([
+            {
+              $match: {
+                username: req.query.username,
+              },
             },
-          },
-          {
-            $lookup: {
-              from: "children",
-              localField: "_id",
-              foreignField: "parentID",
-              as: "children",
+            {
+              $lookup: {
+                from: "children",
+                localField: "_id",
+                foreignField: "parentID",
+                as: "children",
+              },
             },
-          },
-        ]).exec();
+          ]).exec();
 
-        if (parent.length === 0) {
-          alert("Parent not found");
-          res.json({error: "User not found"});
-        } else {
-          res.status(200).json(parent[0]);
+          if (parent.length === 0) {
+            alert("Parent not found");
+            res.json({error: "User not found"});
+          } else {
+            res.status(200).json(parent[0]);
+          }
         }
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
