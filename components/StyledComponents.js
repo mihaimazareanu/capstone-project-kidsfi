@@ -269,9 +269,10 @@ export const StyledInput = styled.input`
 
 export const PasswordDiv = styled.div`
   display: flex;
-  width: 90%;
+  width: 100%;
   align-items: center;
   gap: 1rem;
+  padding: 0 0.5rem;
 `;
 
 // const DivParentRadioButton = styled.div`

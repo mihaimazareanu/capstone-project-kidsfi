@@ -592,6 +592,7 @@ export default function Accounts() {
                               style={{width: "3rem", margin: "0 0.5rem"}}
                               name="amount"
                               type="number"
+                              step="any"
                             />
                             {`€   `}
                           </label>
@@ -606,6 +607,7 @@ export default function Accounts() {
                               style={{width: "3rem", margin: "0 0.5rem"}}
                               name="amount"
                               type="number"
+                              step="any"
                             />
                             {`€   `}
                           </label>
