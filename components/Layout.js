@@ -8,9 +8,7 @@ export default function Layout() {
   const {page, handleClickLink} = useContext(PageContext);
   return (
     <Navbar role="navigation">
-      <div>
-        <Logo src="/logo.png" alt="kidsFi logo" layout="fill" />
-      </div>
+      <Logo src="/kidsFi-9.png" alt="kidsFi logo" layout="fill" />
       <StyledList>
         <li>
           <Link href="/" onClick={() => handleClickLink("home")}>
@@ -147,8 +145,8 @@ const Navbar = styled.nav`
   left: 0;
   width: 100%;
   height: 5rem;
-  background: #688b51;
-  box-shadow: inset -50px -50px 100px #5e7d49, inset 50px 50px 100px #729959;
+  background: #5e8c49;
+  box-shadow: inset -49px -49px 98px #4b703a, inset 49px 49px 98px #71a858;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -157,8 +155,9 @@ const Navbar = styled.nav`
 `;
 
 const Logo = styled.img`
-  width: 4rem;
-  height: 4rem;
+  width: 5rem;
+  height: 100%;
+  margin-bottom: 1%;
 `;
 
 const StyledList = styled.ul`

@@ -13,6 +13,11 @@ const ChildSchema = new mongoose.Schema({
     required: true,
   },
 
+  username: {
+    type: String,
+    required: true,
+  },
+
   password: {
     type: String,
     required: true,
@@ -57,6 +62,21 @@ const ChildSchema = new mongoose.Schema({
       pcs: {
         type: Number,
       },
+
+      transactions: [
+        {
+          id: {type: mongoose.Types.ObjectId},
+          date: {
+            type: Date,
+          },
+          typeOfTransaction: {
+            type: String,
+          },
+          amount: {
+            type: Number,
+          },
+        },
+      ],
     },
   ],
 });

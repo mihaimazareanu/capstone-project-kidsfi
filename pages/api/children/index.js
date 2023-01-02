@@ -1,19 +1,33 @@
 import connectDB from "../_db/connect-db";
 import {Child} from "../_db/models/Child";
+import bcrypt from "bcrypt";
 
 async function handler(req, res) {
   switch (req.method) {
     case "GET":
       try {
         const filter = {};
-        if (req.query.firstName) {
-          filter.firstName = req.query.firstName;
-        }
-        const children = await Child.findOne(filter);
-        if (children.length === 0) {
-          throw new Error("User not found");
+        if (req.query.username) {
+          filter.username = req.query.username;
         } else {
-          res.status(200).json(children);
+          res.json({error: "Access denied"});
+        }
+        const child = await Child.findOne(filter);
+        if (!child) {
+          res.status(401).json({error: "Username or password is wrong"});
+        } else {
+          bcrypt.compare(req.query.password, child.password, (err, isMatch) => {
+            if (err) {
+              return res
+                .status(500)
+                .send("An error occurred while comparing passwords.");
+            }
+            if (!isMatch) {
+              // Passwords do not match, return a response indicating login failure
+              return res.status(401).send("Username or password is incorrect.");
+            }
+          });
+          res.status(200).json(child);
         }
       } catch (error) {
         // You can inspect the error and return more meaningful error messages...
@@ -26,6 +40,7 @@ async function handler(req, res) {
         const newChild = new Child({
           firstName: body.firstName,
           lastName: body.lastName,
+          username: body.username,
           password: body.password,
           isChild: body.isChild,
           parentID: body.parentID,

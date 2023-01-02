@@ -2,13 +2,13 @@ import styled from "styled-components";
 import {useState, useContext} from "react";
 import {UserContext} from "./contexts/UserContext";
 import {FormButton} from "./StyledComponents";
+import {StyledIcon} from "./StyledComponents";
 
 export default function SigninForm({showPassword, onShowPassword}) {
   const {setUser} = useContext(UserContext);
   const [loginFailed, setLoginFailed] = useState(false);
   const [loginFilter, setLoginFilter] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     password: "",
   });
 
@@ -16,34 +16,31 @@ export default function SigninForm({showPassword, onShowPassword}) {
     event.preventDefault();
     const getUser = async () => {
       try {
-        const urlParents = /*loginFilter.firstName.length === 0
-            ? `/api/parents`
-            :*/ `/api/parents?firstName=${loginFilter.firstName}`;
-        const urlChildren = /*loginFilter.firstName.length === 0
-            ? `/api/children`
-            :*/ `/api/children/?firstName=${loginFilter.firstName}`;
+        const urlParents = `/api/parents?username=${loginFilter.username}&password=${loginFilter.password}`;
+        const urlChildren = `/api/children?username=${loginFilter.username}&password=${loginFilter.password}`;
         const parentsResponse = await fetch(urlParents);
-        console.log(parentsResponse);
         if (parentsResponse.ok) {
           const parentsData = await parentsResponse.json();
-          console.log(parentsData);
-          // if (parentsData.firstName === loginFilter.firstName) {
-          setUser(parentsData);
-          // }
-        } else {
-          const childrenResponse = await fetch(urlChildren);
-          if (childrenResponse.ok) {
-            const childrenData = await childrenResponse.json();
-            console.log(childrenData);
-            setUser(childrenData);
+          if (parentsData.password === loginFilter.password) {
+            setUser(parentsData);
           } else {
             setLoginFailed(true);
             setUser(null);
           }
-          console.log("Login failed?", loginFailed);
+        } else {
+          const childrenResponse = await fetch(urlChildren);
+          if (childrenResponse.ok) {
+            const childrenData = await childrenResponse.json();
+            if (childrenData.password === loginFilter.password) {
+              setUser(childrenData);
+            } else {
+              setLoginFailed(true);
+              setUser(null);
+            }
+          }
         }
-      } catch (error) {
-        throw new Error(`Fetch failed`);
+      } catch {
+        setLoginFailed(true);
       }
     };
     !loginFailed && getUser();
@@ -55,30 +52,16 @@ export default function SigninForm({showPassword, onShowPassword}) {
         <DetailsFieldset>
           <StyledDiv>
             <label>
-              First Name
-              <InputFirstName
+              Username
+              <InputUsername
                 type="text"
                 required
-                placeholder="Type your first name..."
-                value={loginFilter.firstName}
+                name="username"
+                placeholder="Type your username..."
+                value={loginFilter.username}
                 onChange={event => {
-                  const firstNameInput = event.target.value;
-                  setLoginFilter({...loginFilter, firstName: firstNameInput});
-                }}
-              />
-            </label>
-          </StyledDiv>
-          <StyledDiv>
-            <label>
-              Last Name
-              <InputLastName
-                type="text"
-                required
-                placeholder="Type your last name..."
-                value={loginFilter.lastName}
-                onChange={event => {
-                  const lastNameInput = event.target.value;
-                  setLoginFilter({...loginFilter, lastName: lastNameInput});
+                  const usernameInput = event.target.value;
+                  setLoginFilter({...loginFilter, username: usernameInput});
                 }}
               />
             </label>
@@ -91,6 +74,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
               <InputPassword
                 type={showPassword ? "text" : "password"}
                 required
+                name="password"
                 placeholder="Type your password..."
                 value={loginFilter.password}
                 onChange={event => {
@@ -98,7 +82,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
                   setLoginFilter({...loginFilter, password: passwordInput});
                 }}
               />
-              <i onClick={onShowPassword}>
+              <StyledIcon onClick={onShowPassword}>
                 {showPassword ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -115,8 +99,8 @@ export default function SigninForm({showPassword, onShowPassword}) {
                 ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
+                    width="1rem"
+                    height="100%"
                     preserveAspectRatio="xMidYMid meet"
                     viewBox="0 0 24 24"
                   >
@@ -126,7 +110,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
                     />
                   </svg>
                 )}
-              </i>
+              </StyledIcon>
             </PasswordDiv>
           </label>
           {loginFailed && <ErrorText>User not found</ErrorText>}
@@ -149,7 +133,7 @@ export default function SigninForm({showPassword, onShowPassword}) {
 }
 const SignForm = styled.form`
   margin: 1rem auto;
-  border: 2px solid #688b51;
+  border: 2px solid #5e8c49;
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -163,18 +147,10 @@ const DetailsFieldset = styled.fieldset`
   display: flex;
   width: 100%;
   align-items: center;
-  justify-content: flex-start;
-  gap: 1rem;
   border: none;
 `;
 
-const InputFirstName = styled.input`
-  width: 100%;
-  border: none;
-`;
-
-const InputLastName = styled.input`
-  margin-left: auto;
+const InputUsername = styled.input`
   width: 100%;
   border: none;
 `;
@@ -190,40 +166,22 @@ const PasswordFieldset = styled.fieldset`
 
 const PasswordDiv = styled.div`
   display: flex;
+  position: relative;
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
 `;
 
 const InputPassword = styled.input`
-  width: 90%;
+  width: 100%;
+  z-index: 1;
   border: none;
   align-self: baseline;
 `;
 
 const StyledDiv = styled.div`
-  width: 50%;
+  width: 100%;
 `;
-
-// const SigninButton = styled.button`
-//   border: none;
-//   align-self: center;
-//   font-size: 1rem;
-//   width: 10rem;
-//   padding: 0.5rem 0;
-//   background: #5e8c49;
-//   box-shadow: 4px 4px 8px 1px rgba(104, 139, 81, 0.65);
-//   border-radius: 5px;
-//   color: #e9f2ef;
-//   border: none;
-
-//   :hover {
-//     background: #224024;
-//     box-shadow: 4px 4px 8px 1px rgba(34, 64, 36, 0.65);
-//     transform: scale(1.1);
-//     transition: ease-in 0.2s;
-//   }
-// `;
 
 const ErrorText = styled.p`
   margin: -0.5rem 0;

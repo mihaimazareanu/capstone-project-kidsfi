@@ -3,18 +3,22 @@ import {StartPageButton} from "./StyledComponents";
 export default function SigninButton({onClickSignin}) {
   return (
     <StartPageButton
-      style={{display: "flex", alignItems: "center", justifyContent: "center"}}
+      style={{
+        paddingBottom: "0.15rem",
+        // display: "flex",
+        // alignItems: "center",
+        // justifyContent: "center",
+      }}
       onClick={onClickSignin}
     >
       <svg
         aria-labelledby="signin-icon"
         role="svg"
-        width="50"
-        height="50"
+        width="3.5rem"
+        height="3.5rem"
         viewBox="0 0 50 50"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        onClick={onClickSignin}
       >
         <title id="signin-icon">
           An icon of an arrow pointing through a door

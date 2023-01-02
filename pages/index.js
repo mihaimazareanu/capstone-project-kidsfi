@@ -11,6 +11,7 @@ import {useContext, useState} from "react";
 import {LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
 import {StartPageButton} from "../components/StyledComponents";
+import {AddChildButton} from "../components/StyledComponents";
 import Lottie from "react-lottie";
 import animationDataWelcome from "../public/lotties/Welcome.json";
 import animationDataFinance from "../public/lotties/Finance.json";
@@ -93,8 +94,6 @@ export default function Home({
         startDate: account.startDate,
         pcs: account.pcs,
       };
-      console.log("Body default before posting", body);
-      console.log("Selected Child ID: ", selectedChild);
       const endpoint = `/api/children/${selectedChild}/accounts`;
       const options = {
         method: "POST",
@@ -105,8 +104,6 @@ export default function Home({
       };
       const response = await fetch(endpoint, options);
       if (response.ok) {
-        console.log(account);
-        console.log(user);
         setUser(prevUser => {
           const updatedUser = {
             ...prevUser,
@@ -186,7 +183,7 @@ export default function Home({
           <Layout />
           {user?.isParent ? (
             <>
-              <h1 style={{textAlign: "center"}}>
+              <h1 style={{textAlign: "center", paddingTop: "1rem"}}>
                 {user.firstName}&apos;s Dashboard
               </h1>
               <p style={{textAlign: "center"}}>
@@ -651,7 +648,7 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: flex-end; */
   width: 50%;
   font-size: 1.2rem;
 `;
@@ -676,21 +673,6 @@ const ButtonContainer = styled.div`
   width: 50%;
   padding-right: 2rem;
   gap: 1rem;
-`;
-
-const AddChildButton = styled.button`
-  background: #401d1a;
-  color: #e9f2ef;
-  width: 7rem;
-  box-shadow: 4px 4px 8px 1px rgba(64, 29, 26, 0.65);
-  border-radius: 5px;
-  border: none;
-  height: 2rem;
-
-  :hover {
-    transform: scale(1.1);
-    transition: ease-in 0.2s;
-  }
 `;
 
 const NoChildLogins = styled.p`
