@@ -29,8 +29,11 @@ export default function Accounts() {
   const [accountType, setAccountType] = useState("");
   const [fetchReload, setFetchReload] = useState(false);
   const [piggyBank, setPiggyBank] = useState(null);
-  // const [savingsAccount, setSavingsAccount] = useState(null);
-  const [filterValue, setFilterValue] = useState(null);
+  const [savingsAccount, setSavingsAccount] = useState(null);
+  const [stocksAccount, setStocksAccount] = useState(null);
+  const [loanAccount, setLoanAccount] = useState(null);
+  const [graphBars, setGraphBars] = useState([]);
+  const [filterValue, setFilterValue] = useState("beginning");
   const [filteredArray, setFilteredArray] = useState(
     piggyBank?.transactions ?? []
   );
@@ -61,9 +64,44 @@ export default function Accounts() {
           }
         })
       );
-      setFetchReload(!fetchReload);
+      setSavingsAccount(
+        user?.accounts?.find(account => {
+          if (account.name === "Savings account") {
+            return true;
+          } else {
+            return false;
+          }
+        })
+      );
+      setStocksAccount(
+        user?.accounts?.find(account => {
+          if (account.name === "Stocks account") {
+            return true;
+          } else {
+            return false;
+          }
+        })
+      );
+      setLoanAccount(
+        user?.accounts?.find(account => {
+          if (account.name === "Loan account") {
+            return true;
+          } else {
+            return false;
+          }
+        })
+      );
+      // setFetchReload(!fetchReload);
     }
   }, [user]);
+
+  useEffect(() => {
+    setGraphBars(() => calculateGraphBars());
+  }, [piggyBank]);
+
+  useEffect(() => {
+    filterHandler(filterValue);
+  }, [graphBars]);
 
   // function to POST transactions in the piggy bank account
 
@@ -129,7 +167,6 @@ export default function Accounts() {
       };
       getUser();
     }
-    filterHandler(filterValue);
   }, [fetchReload]);
 
   //START graph animation
@@ -182,13 +219,8 @@ export default function Accounts() {
       return [];
     }
   }
-  // const [graphBars, setGraphBars] = useState([]);
 
-  // useEffect(() => {
-  //   setGraphBars(calculateGraphBars());
-  // }, [user]);
-
-  const graphBars = calculateGraphBars();
+  // const graphBars = calculateGraphBars();
 
   const piggyBankAmount = graphBars[graphBars?.length - 1]?.prevAmount;
 
@@ -282,13 +314,13 @@ export default function Accounts() {
   //     setFetchReload(!fetchReload);
   // }, [user]);
 
-  let savingsAccount = user?.accounts?.find(account => {
-    if (account.name === "Savings account") {
-      return true;
-    } else {
-      return false;
-    }
-  });
+  // const savingsAccount = user?.accounts?.find(account => {
+  //   if (account.name === "Savings account") {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // });
 
   const date = new Date(savingsAccount?.startDate);
   const formattedDate = date.toLocaleDateString("de-DE", {
@@ -317,32 +349,13 @@ export default function Accounts() {
   };
 
   useEffect(() => {
-    setTimeout(calculateCurrentAmount(), 60000);
+    calculateCurrentAmount();
   }, [tick]);
 
   // Functions for the savings account END
 
-  const stocksAccount = user?.accounts
-    ? user?.accounts?.find(account => {
-        if (account.name === "Stocks account") {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    : null;
-
-  const loanAccount = user?.accounts
-    ? user?.accounts?.find(account => {
-        if (account.name === "Loan account") {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    : null;
-
   // default Options for Lottie animations
+
   const defaultOptionsUnderConstruction = {
     loop: true,
     autoplay: true,
@@ -683,27 +696,31 @@ export default function Accounts() {
                         {showMoreDetails && (
                           <>
                             <p>Start date: {formattedDate}</p>
-                            <select>
-                              <option value="">Select one...</option>
-                              <option value="Since the beginning">
+                            <label htmlFor="piggyBankFilter">
+                              Would you like to filter your chart?
+                            </label>
+                            <StyledSelect
+                              id="piggyBankFilter"
+                              onChange={event => {
+                                setFilterValue(event.target.value);
+                              }}
+                            >
+                              {/* <option value="">Select one...</option> */}
+                              <option default value="beginning">
                                 Since the beginning
                               </option>
-                              <option value="Since yesterday">
-                                Since yesterday
-                              </option>
-                              <option value="Since 7 days ago">
+                              <option value="yesterday">Since yesterday</option>
+                              <option value="sevenDays">
                                 Since 7 days ago
                               </option>
-                              <option value="Since one month ago">
-                                Since one month ago
-                              </option>
-                              <option value="Since one year ago">
+                              <option value="month">Since one month ago</option>
+                              <option value="oneYear">
                                 Since one year ago
                               </option>
-                              <option value="Since beginning of the year">
+                              <option value="beginYear">
                                 Since beginning of the year
                               </option>
-                            </select>
+                            </StyledSelect>
                             <Lottie
                               options={defaultOptionsGraph}
                               width={"20rem"}
