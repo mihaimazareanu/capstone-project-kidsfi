@@ -29,6 +29,7 @@ export default function Accounts() {
   const [accountType, setAccountType] = useState("");
   const [fetchReload, setFetchReload] = useState(false);
   const [piggyBank, setPiggyBank] = useState(null);
+  // const [savingsAccount, setSavingsAccount] = useState(null);
   const [filterValue, setFilterValue] = useState(null);
   const [filteredArray, setFilteredArray] = useState(
     piggyBank?.transactions ?? []
@@ -47,6 +48,8 @@ export default function Accounts() {
 
   // Functions for the piggy bank account START
 
+  //Initialize piggyBank
+
   useEffect(() => {
     if (user) {
       setPiggyBank(
@@ -62,7 +65,7 @@ export default function Accounts() {
     }
   }, [user]);
 
-  // function to update the piggy bank account
+  // function to POST transactions in the piggy bank account
 
   const updateAccount = async (event, type) => {
     event.preventDefault();
@@ -84,7 +87,7 @@ export default function Accounts() {
         setWithdrawalError(true);
       } else {
         setWithdrawalError(false);
-        await fetch(
+        const response = await fetch(
           `/api/children/${user._id}/accounts/${accountId}/transactions`,
           {
             method: "POST",
@@ -97,7 +100,9 @@ export default function Accounts() {
             }),
           }
         );
-        setFetchReload(!fetchReload);
+        if (response.ok) {
+          setFetchReload(!fetchReload);
+        }
       }
     } catch (error) {
       alert(error.message);
@@ -105,6 +110,8 @@ export default function Accounts() {
 
     event.target.reset();
   };
+
+  // function to GET the child data after updating the piggy bank account
 
   useEffect(() => {
     if (user) {
@@ -122,7 +129,6 @@ export default function Accounts() {
       };
       getUser();
     }
-
     filterHandler(filterValue);
   }, [fetchReload]);
 
@@ -176,9 +182,13 @@ export default function Accounts() {
       return [];
     }
   }
-  const graphBars = calculateGraphBars();
+  // const [graphBars, setGraphBars] = useState([]);
 
-  // console.log(graphBars);
+  // useEffect(() => {
+  //   setGraphBars(calculateGraphBars());
+  // }, [user]);
+
+  const graphBars = calculateGraphBars();
 
   const piggyBankAmount = graphBars[graphBars?.length - 1]?.prevAmount;
 
@@ -256,29 +266,59 @@ export default function Accounts() {
 
   // Functions for the savings account START
 
-  const savingsAccount = user?.accounts
-    ? user.accounts.find(account => {
-        if (account.name === "Savings account") {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    : null;
+  // Initialize savingsAccount
 
-  const [date, setDate] = useState(null);
+  // useEffect(() => {
+  //   user &&
+  //     setSavingsAccount(
+  //       user?.accounts?.find(account => {
+  //         if (account.name === "Savings account") {
+  //           return true;
+  //         } else {
+  //           return false;
+  //         }
+  //       })
+  //     );
+  //     setFetchReload(!fetchReload);
+  // }, [user]);
+
+  let savingsAccount = user?.accounts?.find(account => {
+    if (account.name === "Savings account") {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  const date = new Date(savingsAccount?.startDate);
+  const formattedDate = date.toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
+
+  // Function to calculate the current amount
+
+  const [currentAmount, setCurrentAmount] = useState(
+    savingsAccount?.startAmount ?? 0
+  );
+
+  const calculateCurrentAmount = () => {
+    if (savingsAccount) {
+      let startDateinMS = new Date(savingsAccount.startDate);
+      let timeDifference = Math.floor(
+        (Date.now() - startDateinMS.getTime()) / 1000
+      );
+      setCurrentAmount(
+        savingsAccount.startAmount +
+          (savingsAccount.interestRate / 365 / 24 / 60 / 60) * timeDifference
+      );
+    }
+  };
 
   useEffect(() => {
-    if (savingsAccount?.startDate) {
-      const date = new Date(savingsAccount.startDate);
-      const formattedDate = date.toLocaleDateString("de-DE", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-      });
-      setDate(formattedDate);
-    }
-  }, []);
+    setTimeout(calculateCurrentAmount(), 60000);
+  }, [tick]);
 
   // Functions for the savings account END
 
@@ -609,7 +649,7 @@ export default function Accounts() {
                               type="number"
                               step="any"
                             />
-                            {`€   `}
+                            {` €   `}
                           </label>
                           <FormButton type="submit">Subtract amount</FormButton>
                         </StyledForm>
@@ -625,44 +665,52 @@ export default function Accounts() {
                 )}
                 {accountType === "Savings account" && (
                   <>
-                    <p>Start amount: {savingsAccount.startAmount} €</p>
-                    <p>Current amount: {savingsAccount.startAmount} €</p>
-
-                    <FormButton
-                      style={{alignSelf: "center"}}
-                      onClick={() => setShowMoreDetails(!showMoreDetails)}
-                    >
-                      {showMoreDetails ? "Hide details" : "Show details"}
-                    </FormButton>
-                    {showMoreDetails && (
+                    {savingsAccount?.startAmount && (
                       <>
-                        <p>Start date: {date}</p>
-                        <select>
-                          <option value="">Select one...</option>
-                          <option value="Since the beginning">
-                            Since the beginning
-                          </option>
-                          <option value="Since yesterday">
-                            Since yesterday
-                          </option>
-                          <option value="Since 7 days ago">
-                            Since 7 days ago
-                          </option>
-                          <option value="Since one month ago">
-                            Since one month ago
-                          </option>
-                          <option value="Since one year ago">
-                            Since one year ago
-                          </option>
-                          <option value="Since beginning of the year">
-                            Since beginning of the year
-                          </option>
-                        </select>
-                        <Lottie
-                          options={defaultOptionsGraph}
-                          width={"20rem"}
-                          height={"20rem"}
-                        />
+                        <PasswordDiv>
+                          <ButtonContainer>
+                            <p>Start amount: {savingsAccount?.startAmount} €</p>
+                            <p>Current amount: {currentAmount.toFixed(7)} €</p>
+                          </ButtonContainer>
+                          <FormButton
+                            style={{alignSelf: "center"}}
+                            onClick={() => setShowMoreDetails(!showMoreDetails)}
+                          >
+                            {showMoreDetails ? "Hide details" : "Show details"}
+                          </FormButton>
+                        </PasswordDiv>
+
+                        {showMoreDetails && (
+                          <>
+                            <p>Start date: {formattedDate}</p>
+                            <select>
+                              <option value="">Select one...</option>
+                              <option value="Since the beginning">
+                                Since the beginning
+                              </option>
+                              <option value="Since yesterday">
+                                Since yesterday
+                              </option>
+                              <option value="Since 7 days ago">
+                                Since 7 days ago
+                              </option>
+                              <option value="Since one month ago">
+                                Since one month ago
+                              </option>
+                              <option value="Since one year ago">
+                                Since one year ago
+                              </option>
+                              <option value="Since beginning of the year">
+                                Since beginning of the year
+                              </option>
+                            </select>
+                            <Lottie
+                              options={defaultOptionsGraph}
+                              width={"20rem"}
+                              height={"20rem"}
+                            />
+                          </>
+                        )}
                       </>
                     )}
                   </>
