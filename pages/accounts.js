@@ -38,6 +38,11 @@ export default function Accounts() {
     piggyBank?.transactions ?? []
   );
   const [withdrawalError, setWithdrawalError] = useState(false);
+  const [currentAmount, setCurrentAmount] = useState(
+    savingsAccount?.startAmount ?? 0
+  );
+  const [startValueSA, setStartValueSA] = useState(0);
+  const [endValueSA, setEndValueSA] = useState(0);
 
   const accountName = user?.accounts
     ? user?.accounts?.map(account => account.name)
@@ -220,8 +225,6 @@ export default function Accounts() {
     }
   }
 
-  // const graphBars = calculateGraphBars();
-
   const piggyBankAmount = graphBars[graphBars?.length - 1]?.prevAmount;
 
   const [tick, setTick] = useState(false);
@@ -232,7 +235,7 @@ export default function Accounts() {
 
   // Filter function for the graph animation
 
-  const filterHandler = value => {
+  const filterHandler = (account, value) => {
     const now = new Date();
     const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const yesterday = midnight.setDate(midnight.getDate() - 1);
@@ -241,9 +244,43 @@ export default function Accounts() {
     const oneYear = midnight.setFullYear(midnight.getFullYear() - 1);
     const beginningOfYear = new Date(now.getFullYear(), 0, 1);
 
+    const midnightToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1,
+      0,
+      0,
+      0,
+      0
+    );
+
+    const interestRatePerSecond =
+      savingsAccount?.interestRate / 365 / 24 / 60 / 60;
+    const startDateinMS = new Date(savingsAccount?.startDate);
+    const yesterdayInMS = new Date(Date.now() - 86400000);
+    const sevenDaysAgoInMS = new Date(Date.now() - 7 * 86400000);
+    const oneMonthAgoInMS = new Date(startDateinMS - 2.63e6);
+    const oneYearAgoInMS = new Date(
+      startDateinMS.getFullYear() - 1,
+      startDateinMS.getMonth(),
+      startDateinMS.getDate()
+    );
+    const secondsUntilMidnight = (midnightToday - startDateinMS) / 1000;
+    const secondsUntilYesterday = (yesterdayInMS - startDateinMS) / 1000;
+    const secondsUntilSevenDaysAgo = (sevenDaysAgoInMS - startDateinMS) / 1000;
+    const secondsUntilOneMonthAgo = (oneMonthAgoInMS - startDateinMS) / 1000;
+    const secondsUntilOneYearAgo = (oneYearAgoInMS - startDateinMS) / 1000;
+    const secondsSinceBeginningOfYear =
+      (beginningOfYear - startDateinMS) / 1000;
+
     switch (value) {
       case "beginning":
         setFilteredArray(graphBars);
+        setStartValueSA(savingsAccount?.startAmount);
+        setEndValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilMidnight * interestRatePerSecond
+        );
         break;
       case "yesterday":
         setFilteredArray(
@@ -251,6 +288,14 @@ export default function Accounts() {
             transaction =>
               now - Date.parse(transaction?.date) <= now - yesterday
           )
+        );
+        setStartValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilYesterday * interestRatePerSecond
+        );
+        setEndValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilMidnight * interestRatePerSecond
         );
         break;
       case "sevenDays":
@@ -260,6 +305,14 @@ export default function Accounts() {
               now - Date.parse(transaction?.date) <= now - sevenDays
           )
         );
+        setStartValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilSevenDaysAgo * interestRatePerSecond
+        );
+        setEndValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilMidnight * interestRatePerSecond
+        );
         break;
       case "month":
         setFilteredArray(
@@ -267,12 +320,28 @@ export default function Accounts() {
             transaction => now - Date.parse(transaction?.date) <= now - oneMonth
           )
         );
+        setStartValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilOneMonthAgo * interestRatePerSecond
+        );
+        setEndValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilMidnight * interestRatePerSecond
+        );
         break;
       case "oneYear":
         setFilteredArray(
           graphBars?.filter(
             transaction => now - Date.parse(transaction?.date) <= now - oneYear
           )
+        );
+        setStartValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilOneYearAgo * interestRatePerSecond
+        );
+        setEndValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilMidnight * interestRatePerSecond
         );
         break;
       case "beginYear":
@@ -282,16 +351,33 @@ export default function Accounts() {
               now - Date.parse(transaction?.date) <= now - beginningOfYear
           )
         );
+        setStartValueSA(
+          savingsAccount?.startAmount +
+            secondsSinceBeginningOfYear * interestRatePerSecond
+        );
+        setEndValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilMidnight * interestRatePerSecond
+        );
         break;
       default:
         setFilteredArray(graphBars);
+        setStartValueSA(savingsAccount?.startAmount);
+        setEndValueSA(
+          savingsAccount?.startAmount +
+            secondsUntilMidnight * interestRatePerSecond
+        );
     }
   };
 
+  console.log(startValueSA);
+  console.log(endValueSA);
+
   useEffect(() => {
-    filterHandler(filterValue);
+    filterHandler(accountType, filterValue);
   }, [filterValue]);
 
+  console.log(accountType);
   //END graph animation
 
   // Functions for the piggy bank account END
@@ -299,28 +385,6 @@ export default function Accounts() {
   // Functions for the savings account START
 
   // Initialize savingsAccount
-
-  // useEffect(() => {
-  //   user &&
-  //     setSavingsAccount(
-  //       user?.accounts?.find(account => {
-  //         if (account.name === "Savings account") {
-  //           return true;
-  //         } else {
-  //           return false;
-  //         }
-  //       })
-  //     );
-  //     setFetchReload(!fetchReload);
-  // }, [user]);
-
-  // const savingsAccount = user?.accounts?.find(account => {
-  //   if (account.name === "Savings account") {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // });
 
   const date = new Date(savingsAccount?.startDate);
   const formattedDate = date.toLocaleDateString("de-DE", {
@@ -331,14 +395,10 @@ export default function Accounts() {
 
   // Function to calculate the current amount
 
-  const [currentAmount, setCurrentAmount] = useState(
-    savingsAccount?.startAmount ?? 0
-  );
-
   const calculateCurrentAmount = () => {
     if (savingsAccount) {
-      let startDateinMS = new Date(savingsAccount.startDate);
-      let timeDifference = Math.floor(
+      const startDateinMS = new Date(savingsAccount?.startDate);
+      const timeDifference = Math.floor(
         (Date.now() - startDateinMS.getTime()) / 1000
       );
       setCurrentAmount(
@@ -351,6 +411,10 @@ export default function Accounts() {
   useEffect(() => {
     calculateCurrentAmount();
   }, [tick]);
+
+  // Savings account animation START
+
+  // Savings account animation END
 
   // Functions for the savings account END
 
@@ -721,11 +785,15 @@ export default function Accounts() {
                                 Since beginning of the year
                               </option>
                             </StyledSelect>
-                            <Lottie
-                              options={defaultOptionsGraph}
-                              width={"20rem"}
-                              height={"20rem"}
-                            />
+                            <GraphContainer>
+                              <p>{startValueSA.toFixed(7)}</p>
+                              <p>{endValueSA.toFixed(7)}</p>
+                              {/* <Lottie
+                                options={defaultOptionsGraph}
+                                width={"20rem"}
+                                height={"20rem"}
+                              /> */}
+                            </GraphContainer>
                           </>
                         )}
                       </>
