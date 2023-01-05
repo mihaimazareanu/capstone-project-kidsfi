@@ -21,22 +21,24 @@ export default function SigninForm({showPassword, onShowPassword}) {
         const parentsResponse = await fetch(urlParents);
         if (parentsResponse.ok) {
           const parentsData = await parentsResponse.json();
-          if (parentsData.password === loginFilter.password) {
-            setUser(parentsData);
-          } else {
+          if (parentsData.password !== loginFilter.password) {
             setLoginFailed(true);
             setUser(null);
+          } else {
+            setUser(parentsData);
           }
         } else {
           const childrenResponse = await fetch(urlChildren);
           if (childrenResponse.ok) {
             const childrenData = await childrenResponse.json();
-            if (childrenData.password === loginFilter.password) {
-              setUser(childrenData);
-            } else {
+            if (childrenData.password !== loginFilter.password) {
               setLoginFailed(true);
               setUser(null);
+            } else {
+              setUser(childrenData);
             }
+          } else {
+            setLoginFailed(true);
           }
         }
       } catch {

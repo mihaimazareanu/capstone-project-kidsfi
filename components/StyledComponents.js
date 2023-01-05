@@ -118,9 +118,10 @@ export const StyledForm = styled.form`
   /* border: 3px solid #5e8c49;
   border-radius: 12px; */
   display: flex;
+  padding: 0 0.5rem;
   /* flex-direction: column; */
-  justify-content: space-around;
-  align-items: flex-start;
+  /* justify-content: space-around;
+  align-items: flex-start; */
   /* margin-top: 1rem;
   padding: 0 1rem; */
 `;
@@ -268,9 +269,10 @@ export const StyledInput = styled.input`
 
 export const PasswordDiv = styled.div`
   display: flex;
-  width: 90%;
+  width: 100%;
   align-items: center;
   gap: 1rem;
+  padding: 0 0.5rem;
 `;
 
 // const DivParentRadioButton = styled.div`
@@ -341,15 +343,15 @@ export const StyledAnimationContainer = styled.div`
 //   justify-content: flex-start;
 // `;
 
-// const ButtonContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: flex-start;
-//   align-items: flex-end;
-//   width: 50%;
-//   padding-right: 2rem;
-//   gap: 1rem;
-// `;
+export const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center;
+  align-items: center; */
+  width: 70%;
+  /* padding-right: 2rem; */
+  /* gap: 1rem; */
+`;
 
 // const StyledAnimationContainer = styled.div`
 //   width: 100%;
@@ -372,6 +374,11 @@ export const StyledAnimationContainer = styled.div`
 // `;
 
 // //Paragraphs
+
+export const StyledParagraph = styled.p`
+  margin: 1rem;
+  padding-top: 1rem;
+`;
 
 // const ErrorText = styled.p`
 //   margin: -0.5rem 0;
@@ -441,11 +448,11 @@ export const StyledAnimationContainer = styled.div`
 //   align-items: flex-end;
 // `;
 
-// const ErrorSpan = styled.span`
-//   color: red;
-//   font-size: 0.9rem;
-//   width: 100%;
-// `;
+export const ErrorSpan = styled.span`
+  color: red;
+  font-size: 0.9rem;
+  width: 100%;
+`;
 
 // const PasswordErrorSpan = styled.span`
 //   font-size: 0.8rem;
@@ -462,25 +469,26 @@ export const StyledAnimationContainer = styled.div`
 //   padding-top: 1rem;
 // `;
 
-// //Select
+//Select
 
-// const StyledSelect = styled.select`
-//   border: 1px solid #5e8c49;
-//   border-radius: 5px;
-//   margin: 0 1rem 1rem 1rem;
-//   color: #401d1a;
-// `;
+export const StyledSelect = styled.select`
+  border: 1px solid #5e8c49;
+  border-radius: 5px;
+  margin: 0 1rem 1rem 1rem;
+  color: #401d1a;
+`;
 
 // //Lists
 
 export const StyledList = styled.ul`
+  margin-top: -1rem;
   list-style: none;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
 `;
 
 // const AccountsList = styled.ul`

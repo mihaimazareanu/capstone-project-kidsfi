@@ -8,7 +8,7 @@ import {UserContext} from "../components/contexts/UserContext";
 import {PageContext} from "../components/contexts/PageContext";
 import {AccountContext} from "../components/contexts/AccountContext";
 import {useContext, useState} from "react";
-import {LogoutButton} from "../components/StyledComponents";
+import {ErrorSpan, LogoutButton} from "../components/StyledComponents";
 import {FormButton} from "../components/StyledComponents";
 import {StartPageButton} from "../components/StyledComponents";
 import {AddChildButton} from "../components/StyledComponents";
@@ -40,6 +40,7 @@ export default function Home({
   const [accountType, setAccountType] = useState("");
 
   // default Options for Lottie animations
+
   const defaultOptionsWelcome = {
     loop: true,
     autoplay: true,
@@ -82,6 +83,8 @@ export default function Home({
   };
 
   // function to be executed when "Add account" button is pressed
+  const [accountError, setAccountError] = useState(false);
+
   const handleSubmitAccount = async event => {
     event.preventDefault();
     try {
@@ -94,36 +97,45 @@ export default function Home({
         startDate: account.startDate,
         pcs: account.pcs,
       };
-      const endpoint = `/api/children/${selectedChild}/accounts`;
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      };
-      const response = await fetch(endpoint, options);
-      if (response.ok) {
-        setUser(prevUser => {
-          const updatedUser = {
-            ...prevUser,
-            children: prevUser.children.map(child => {
-              if (child._id === selectedChild) {
-                return {
-                  ...child,
-                  accounts: [...child.accounts, account],
-                };
-              }
-              return child;
-            }),
-          };
-          localStorage.setItem("user", JSON.stringify(updatedUser));
-          return updatedUser;
-        });
-        setShowAddAccount(!showAddAccount);
-        setAccountType("");
+
+      if (
+        user?.children.map(child =>
+          child.accounts.map(account => account.name).includes(body.name)
+        )
+      ) {
+        setAccountError(true);
       } else {
-        throw new Error(`Fetch failed with status: ${response.status}`);
+        const endpoint = `/api/children/${selectedChild}/accounts`;
+        const options = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        };
+        const response = await fetch(endpoint, options);
+        if (response.ok) {
+          setUser(prevUser => {
+            const updatedUser = {
+              ...prevUser,
+              children: prevUser.children.map(child => {
+                if (child._id === selectedChild) {
+                  return {
+                    ...child,
+                    accounts: [...child.accounts, account],
+                  };
+                }
+                return child;
+              }),
+            };
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+            return updatedUser;
+          });
+          setShowAddAccount(!showAddAccount);
+          setAccountType("");
+        } else {
+          throw new Error(`Fetch failed with status: ${response.status}`);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -303,6 +315,7 @@ export default function Home({
                               required
                               onChange={event => {
                                 setAccountType(event.target.value);
+                                setAccountError(false);
                               }}
                             >
                               <option value="">Select an option...</option>
@@ -310,10 +323,10 @@ export default function Home({
                               <option value="Savings account">
                                 Savings account
                               </option>
-                              <option value="Stocks account">
+                              {/* <option value="Stocks account">
                                 Stocks account
                               </option>
-                              <option value="Loan account">Loan account</option>
+                              <option value="Loan account">Loan account</option> */}
                             </StyledSelect>
                           </ChildSection>
                           {accountType === "Piggy bank" && (
@@ -323,7 +336,7 @@ export default function Home({
                                 style={{
                                   flexDirection: "row",
                                   gap: "1rem",
-                                  padding: "1rem 0",
+                                  padding: "1rem",
                                 }}
                               >
                                 <label>
@@ -344,11 +357,17 @@ export default function Home({
                                   type="submit"
                                   style={{
                                     alignSelf: "center",
+                                    width: "10rem",
                                   }}
                                 >
                                   Add account
                                 </AddChildButton>
                               </StyledForm>
+                              {accountError && (
+                                <ErrorSpan>
+                                  {accountType} exists already
+                                </ErrorSpan>
+                              )}
                             </>
                           )}
                           {accountType === "Savings account" && (
@@ -405,9 +424,14 @@ export default function Home({
                                   </AddChildButton>
                                 </StyledFieldset>
                               </StyledForm>
+                              {accountError && (
+                                <ErrorSpan>
+                                  {accountType} exists already
+                                </ErrorSpan>
+                              )}
                             </>
                           )}
-                          {accountType === "Stocks account" && (
+                          {/* {accountType === "Stocks account" && (
                             <>
                               <StyledForm onSubmit={handleSubmitAccount}>
                                 <StyledFieldset>
@@ -490,8 +514,8 @@ export default function Home({
                                 </StyledFieldset>
                               </StyledForm>
                             </>
-                          )}
-                          {accountType === "Loan account" && (
+                          )} */}
+                          {/* {accountType === "Loan account" && (
                             <>
                               <StyledForm onSubmit={handleSubmitAccount}>
                                 <StyledFieldset>
@@ -546,7 +570,7 @@ export default function Home({
                                 </StyledFieldset>
                               </StyledForm>
                             </>
-                          )}
+                          )} */}
                         </>
                       )}
                     </>
@@ -648,7 +672,6 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: flex-end; */
   width: 50%;
   font-size: 1.2rem;
 `;

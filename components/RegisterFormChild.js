@@ -18,7 +18,6 @@ export default function RegisterFormChild({
   onShowPassword,
   showConfirmedPassword,
   onShowConfirmedPassword,
-  // onClickSignIn,
 }) {
   const {user, setUser} = useContext(UserContext);
   const [regInput, setRegInput] = useState({
