@@ -5,9 +5,6 @@ export default function SigninButton({onClickSignin}) {
     <StartPageButton
       style={{
         paddingBottom: "0.15rem",
-        // display: "flex",
-        // alignItems: "center",
-        // justifyContent: "center",
       }}
       onClick={onClickSignin}
     >

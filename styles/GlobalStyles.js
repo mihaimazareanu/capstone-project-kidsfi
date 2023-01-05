@@ -20,7 +20,6 @@ const GlobalStyles = createGlobalStyle`
         font-family: "Mulish";
         font-size: 1rem;
         width: 100%;
-        /* min-width: 100vw; */
         min-height: 100vh;
         color: #401d1a; 
         background: #e9f2ef;

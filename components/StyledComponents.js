@@ -375,6 +375,11 @@ export const ButtonContainer = styled.div`
 
 // //Paragraphs
 
+export const StyledParagraph = styled.p`
+  margin: 1rem;
+  padding-top: 1rem;
+`;
+
 // const ErrorText = styled.p`
 //   margin: -0.5rem 0;
 //   color: red;
