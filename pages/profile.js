@@ -73,11 +73,9 @@ export default function Profile() {
                 {account.name}: {currentAmountPB} {` €`}
               </StyledParagraph>
             ) : (
-              <p>
-                <StyledParagraph key={account._id}>
-                  {account.name}: {currentAmountSA.toFixed(2)} {` €`}
-                </StyledParagraph>
-              </p>
+              <StyledParagraph key={account._id}>
+                {account.name}: {currentAmountSA.toFixed(2)} {` €`}
+              </StyledParagraph>
             )
           )}
           <div
