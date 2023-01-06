@@ -5,7 +5,7 @@ The app every kid needs to help them visualise how much money they actually have
 
 # App impressions
 
-https://user-images.githubusercontent.com/49844133/211002196-b5a63bf9-fe02-41a9-959d-5f3f4fd0cc29.mov
+![kidsfi](https://user-images.githubusercontent.com/49844133/211002534-608f9f8d-5ef5-4670-9a89-c48eaf353d30.gif)
 
 
 # Tech stack
